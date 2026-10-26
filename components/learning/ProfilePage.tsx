@@ -174,16 +174,26 @@ function ProfileContent() {
             <div className="space-y-5">
               {[
                 {
-                  title: "已掌握题目",
-                  value: state.mastered.length + resourceValues.filter(item => item.mastered).length,
+                  title: "已掌握知识",
+                  value:
+                    state.mastered.length +
+                    resourceValues.filter((item) => item.mastered).length,
                   icon: GraduationCap,
                 },
-                { title: "收藏题目与资源", value: state.saved.length + resourceValues.filter(item => item.saved).length, icon: Star },
+                {
+                  title: "收藏题目与资源",
+                  value:
+                    state.saved.length +
+                    resourceValues.filter((item) => item.saved).length,
+                  icon: Star,
+                },
                 {
                   title: "学习笔记",
                   value:
                     Object.values(state.notes).filter((note) => note.trim())
-                      .length + state.documents.length + resourceValues.filter(item => item.note.trim()).length,
+                      .length +
+                    state.documents.length +
+                    resourceValues.filter((item) => item.note.trim()).length,
                   icon: NotebookPen,
                 },
                 {

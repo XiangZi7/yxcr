@@ -35,8 +35,12 @@ export function Header({
 }) {
   const [query, setQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
-  const [resourceSearch, setResourceSearch] = useState<{ query: string; items: LearningResource[] }>({ query: "", items: [] });
-  const resourceResults = resourceSearch.query === query ? resourceSearch.items : [];
+  const [resourceSearch, setResourceSearch] = useState<{
+    query: string;
+    items: LearningResource[];
+  }>({ query: "", items: [] });
+  const resourceResults =
+    resourceSearch.query === query ? resourceSearch.items : [];
   const inputRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const results = articles
@@ -50,13 +54,21 @@ export function Header({
     if (!query.trim()) return;
     const controller = new AbortController();
     const timer = setTimeout(() => {
-      void fetch(`/api/resources?q=${encodeURIComponent(query)}`, { signal: controller.signal }).then(async response => {
-        if (!response.ok) return;
-        const items: LearningResource[] = await response.json();
-        if (!controller.signal.aborted) setResourceSearch({ query, items: items.slice(0, 5) });
-      }).catch(() => {});
+      void fetch(`/api/resources?q=${encodeURIComponent(query)}`, {
+        signal: controller.signal,
+      })
+        .then(async (response) => {
+          if (!response.ok) return;
+          const items: LearningResource[] = await response.json();
+          if (!controller.signal.aborted)
+            setResourceSearch({ query, items: items.slice(0, 5) });
+        })
+        .catch(() => {});
     }, 250);
-    return () => { clearTimeout(timer); controller.abort(); };
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [query]);
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
@@ -168,8 +180,43 @@ export function Header({
                   可以在资源知识库中继续查找相关知识。
                 </p>
               )}
-              {query.trim() && resourceResults.length > 0 && <div className="resource-global-results"><p>资源知识库</p>{resourceResults.map(resource => <a key={resource.id} className="search-result flex items-center justify-between gap-3" href={resource.url} target="_blank" rel="noopener noreferrer" onClick={() => { setSearchOpen(false); setQuery(""); }}><span><span className="mb-1 block text-xs text-brand">{getResourceSource(resource.source)?.name}</span>{resource.title}</span><ChevronRight size={16} /></a>)}</div>}
-              <Link href={`/resources${query.trim() ? `?q=${encodeURIComponent(query)}` : ""}`} className="resource-search-more" onClick={() => { setSearchOpen(false); setQuery(""); }}>在资源知识库中搜索<ChevronRight size={14} /></Link>
+              {query.trim() && resourceResults.length > 0 && (
+                <div className="resource-global-results">
+                  <p>资源知识库</p>
+                  {resourceResults.map((resource) => (
+                    <a
+                      key={resource.id}
+                      className="search-result flex items-center justify-between gap-3"
+                      href={resource.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => {
+                        setSearchOpen(false);
+                        setQuery("");
+                      }}
+                    >
+                      <span>
+                        <span className="mb-1 block text-xs text-brand">
+                          {getResourceSource(resource.source)?.name}
+                        </span>
+                        {resource.title}
+                      </span>
+                      <ChevronRight size={16} />
+                    </a>
+                  ))}
+                </div>
+              )}
+              <Link
+                href={`/resources${query.trim() ? `?q=${encodeURIComponent(query)}` : ""}`}
+                className="resource-search-more"
+                onClick={() => {
+                  setSearchOpen(false);
+                  setQuery("");
+                }}
+              >
+                在资源知识库中搜索
+                <ChevronRight size={14} />
+              </Link>
             </motion.div>
           )}
         </AnimatePresence>

@@ -17,7 +17,8 @@ export interface ResourceProgress {
   note: string;
 }
 
-export type ResourceStatus = "all" | "saved" | "mastered" | "unlearned" | "planned";
+export type ResourceStatus =
+  "all" | "saved" | "mastered" | "unlearned" | "planned";
 
 export interface ResourceFilters {
   query?: string;

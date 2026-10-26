@@ -37,11 +37,14 @@ export function TodayPage() {
     toggleMastered,
   } = useLearningStore();
   const [modal, setModal] = useState<"goal" | "add" | null>(null);
-  const resourceActivity = useResourceStore(state => state.activity);
-  const resourceRecords = useResourceStore(state => state.records);
-  const resourcePlan = Object.values(resourceRecords).filter(item => item.inPlan);
+  const resourceActivity = useResourceStore((state) => state.activity);
+  const resourceRecords = useResourceStore((state) => state.records);
+  const resourcePlan = Object.values(resourceRecords).filter(
+    (item) => item.inPlan,
+  );
   const today = hydrated ? dayKey() : "";
-  const todayCount = (activity[today]?.length ?? 0) + (resourceActivity[today]?.length ?? 0);
+  const todayCount =
+    (activity[today]?.length ?? 0) + (resourceActivity[today]?.length ?? 0);
   const planned = articles.filter((article) => plan.includes(article.slug));
   const done = planned.filter((article) =>
     mastered.includes(article.slug),
@@ -210,12 +213,12 @@ export function TodayPage() {
                 { label: "已掌握", value: `${todayCount} 题`, icon: Check },
                 {
                   label: "计划完成",
-                  value: `${done + resourcePlan.filter(item => item.mastered).length} / ${planned.length + resourcePlan.length}`,
+                  value: `${done + resourcePlan.filter((item) => item.mastered).length} / ${planned.length + resourcePlan.length}`,
                   icon: Target,
                 },
                 {
                   label: "预计学习时长",
-                  value: `${(planned.filter((article) => !mastered.includes(article.slug)).length + resourcePlan.filter(item => !item.mastered).length) * 8} 分钟`,
+                  value: `${(planned.filter((article) => !mastered.includes(article.slug)).length + resourcePlan.filter((item) => !item.mastered).length) * 8} 分钟`,
                   icon: Clock3,
                 },
               ].map(({ label, value, icon: Icon }) => (

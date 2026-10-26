@@ -36,12 +36,14 @@ export function OverviewPage() {
     displayName,
     hydrated,
   } = useLearningStore();
-  const resourceRecords = useResourceStore(state => state.records);
-  const resourceActivity = useResourceStore(state => state.activity);
+  const resourceRecords = useResourceStore((state) => state.records);
+  const resourceActivity = useResourceStore((state) => state.activity);
   const resourceValues = Object.values(resourceRecords);
   const today = hydrated ? dayKey() : "";
-  const learnedToday = (activity[today]?.length ?? 0) + (resourceActivity[today]?.length ?? 0);
-  const learnedOnDay = (date: string) => (activity[date]?.length ?? 0) + (resourceActivity[date]?.length ?? 0);
+  const learnedToday =
+    (activity[today]?.length ?? 0) + (resourceActivity[today]?.length ?? 0);
+  const learnedOnDay = (date: string) =>
+    (activity[date]?.length ?? 0) + (resourceActivity[date]?.length ?? 0);
   const progress = Math.round((mastered.length / articles.length) * 100);
   const recommendations = [
     ...articles.filter(
@@ -64,7 +66,8 @@ export function OverviewPage() {
   const stats = [
     {
       label: "累计掌握",
-      value: mastered.length + resourceValues.filter(item => item.mastered).length,
+      value:
+        mastered.length + resourceValues.filter((item) => item.mastered).length,
       unit: "项",
       detail: `${articles.length} 道题目 · ${resourceSummary.total.toLocaleString("en-US")} 条资源`,
       icon: GraduationCap,
@@ -80,7 +83,7 @@ export function OverviewPage() {
     },
     {
       label: "我的收藏",
-      value: saved.length + resourceValues.filter(item => item.saved).length,
+      value: saved.length + resourceValues.filter((item) => item.saved).length,
       unit: "项",
       detail: "留给下一次认真复习",
       icon: Star,
@@ -90,7 +93,8 @@ export function OverviewPage() {
       label: "学习笔记",
       value:
         Object.values(notes).filter((value) => value.trim()).length +
-        documents.length + resourceValues.filter(item => item.note.trim()).length,
+        documents.length +
+        resourceValues.filter((item) => item.note.trim()).length,
       unit: "篇",
       detail: "用自己的语言理解知识",
       icon: NotebookPen,

@@ -34,14 +34,18 @@ import { useResourceStore } from "@/lib/resources/store";
 export function NotesPage() {
   const params = useSearchParams();
   const hydrated = useLearningStore((state) => state.hydrated);
-  const resourcesHydrated = useResourceStore(state => state.hydrated);
+  const resourcesHydrated = useResourceStore((state) => state.hydrated);
   if (!hydrated || !resourcesHydrated) return <PageSkeleton />;
   return (
     <NotesContent
       key={params.toString()}
       selectedId={
         params.get("document") ??
-        (params.get("resource") ? `resource:${params.get("resource")}` : params.get("article") ? `article:${params.get("article")}` : "guide")
+        (params.get("resource")
+          ? `resource:${params.get("resource")}`
+          : params.get("article")
+            ? `article:${params.get("article")}`
+            : "guide")
       }
     />
   );
@@ -49,9 +53,11 @@ export function NotesPage() {
 
 function NotesContent({ selectedId }: { selectedId: string }) {
   const router = useRouter();
-  const resourceRecords = useResourceStore(state => state.records);
-  const setResourceNote = useResourceStore(state => state.setNote);
-  const resourceRecord = selectedId.startsWith("resource:") ? resourceRecords[selectedId.slice(9)] : undefined;
+  const resourceRecords = useResourceStore((state) => state.records);
+  const setResourceNote = useResourceStore((state) => state.setNote);
+  const resourceRecord = selectedId.startsWith("resource:")
+    ? resourceRecords[selectedId.slice(9)]
+    : undefined;
   const { documents, notes, saveDocument, deleteDocument, setNote, notify } =
     useLearningStore();
   const fileInput = useRef<HTMLInputElement>(null);
@@ -73,7 +79,10 @@ function NotesContent({ selectedId }: { selectedId: string }) {
   const [draft, setDraft] = useState(original);
   const title = markdownTitle(
     draft,
-    document?.title ?? resourceRecord?.resource.title ?? article?.title ?? "Markdown 使用指南",
+    document?.title ??
+      resourceRecord?.resource.title ??
+      article?.title ??
+      "Markdown 使用指南",
   );
   const dirty = draft !== original;
   const allNotes = [
@@ -84,7 +93,14 @@ function NotesContent({ selectedId }: { selectedId: string }) {
       content: markdownGuide,
     },
     ...documents.map((item) => ({ ...item, kind: "document" })),
-    ...Object.values(resourceRecords).filter(item => item.note.trim() || item === resourceRecord).map(item => ({ id: `resource:${item.resource.id}`, title: item.resource.title, content: item.note, kind: "resource" })),
+    ...Object.values(resourceRecords)
+      .filter((item) => item.note.trim() || item === resourceRecord)
+      .map((item) => ({
+        id: `resource:${item.resource.id}`,
+        title: item.resource.title,
+        content: item.note,
+        kind: "resource",
+      })),
     ...articles
       .filter((item) => notes[item.slug]?.trim() || item.slug === articleSlug)
       .map((item) => ({
@@ -103,9 +119,9 @@ function NotesContent({ selectedId }: { selectedId: string }) {
         ? "/notes"
         : id.startsWith("resource:")
           ? `/notes?resource=${encodeURIComponent(id.slice(9))}`
-        : id.startsWith("article:")
-          ? `/notes?article=${id.slice(8)}`
-          : `/notes?document=${encodeURIComponent(id)}`,
+          : id.startsWith("article:")
+            ? `/notes?article=${id.slice(8)}`
+            : `/notes?document=${encodeURIComponent(id)}`,
     );
   }
   function save() {
@@ -253,7 +269,7 @@ function NotesContent({ selectedId }: { selectedId: string }) {
                         ? "题目笔记"
                         : item.kind === "resource"
                           ? "资源学习笔记"
-                        : "Markdown 文档"}
+                          : "Markdown 文档"}
                   </span>
                 </span>
               </button>
@@ -369,7 +385,17 @@ function NotesContent({ selectedId }: { selectedId: string }) {
             )}
           </div>
           <footer className="note-status">
-            {resourceRecord && <a href={resourceRecord.resource.url} target="_blank" rel="noopener noreferrer" className="subtle-link">阅读原文<ArrowUpRight size={12} /></a>}
+            {resourceRecord && (
+              <a
+                href={resourceRecord.resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="subtle-link"
+              >
+                阅读原文
+                <ArrowUpRight size={12} />
+              </a>
+            )}
             <span className="flex items-center gap-1.5">
               <span className={`save-indicator ${dirty ? "is-dirty" : ""}`} />
               {dirty ? "尚未保存 · 点击保存保留修改" : "Markdown 已就绪"}

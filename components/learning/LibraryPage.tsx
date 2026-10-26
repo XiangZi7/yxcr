@@ -63,8 +63,10 @@ function LibraryContent({
   const [list, setList] = useState(false);
   const [tab, setTab] = useState("saved");
   const { saved, mastered, mistakes } = useLearningStore();
-  const resourceRecords = useResourceStore(state => state.records);
-  const savedResourceCount = Object.values(resourceRecords).filter(item => item.saved).length;
+  const resourceRecords = useResourceStore((state) => state.records);
+  const savedResourceCount = Object.values(resourceRecords).filter(
+    (item) => item.saved,
+  ).length;
   const matches = articles
     .filter(
       (article) =>
