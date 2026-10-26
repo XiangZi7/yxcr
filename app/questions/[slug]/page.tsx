@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { InterviewWorkspace } from "@/components/interview/InterviewWorkspace";
 import { articles } from "@/lib/interview/data";
+import { getArticleMarkdown } from "@/lib/markdown/content";
 
 export function generateStaticParams() {
   return articles.map(({ slug }) => ({ slug }));
@@ -21,5 +22,11 @@ export default async function QuestionPage({
   const { slug } = await params;
   const article = articles.find((item) => item.slug === slug);
   if (!article) notFound();
-  return <InterviewWorkspace key={article.slug} article={article} />;
+  return (
+    <InterviewWorkspace
+      key={article.slug}
+      article={article}
+      markdown={await getArticleMarkdown(article)}
+    />
+  );
 }

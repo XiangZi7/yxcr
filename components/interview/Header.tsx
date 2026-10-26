@@ -71,7 +71,7 @@ export function Header({
         <Menu size={21} />
       </button>
       <Link
-        href="/"
+        href="/overview"
         className="brand flex shrink-0 items-center gap-3"
         aria-label="Interview OS 首页"
       >

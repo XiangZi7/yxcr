@@ -1,0 +1,96 @@
+"use client";
+
+import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { Check } from "lucide-react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import { Header } from "@/components/interview/Header";
+import { Sidebar } from "@/components/interview/Sidebar";
+import { WorkspaceDialog } from "@/components/interview/WorkspaceDialog";
+import { articles } from "@/lib/interview/data";
+import type { Panel } from "@/lib/interview/types";
+import {
+  initializeLearningState,
+  useLearningStore,
+} from "@/lib/learning/store";
+
+export function AppShell({ children }: { children: ReactNode }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
+  const theme = useLearningStore((state) => state.theme);
+  const mastered = useLearningStore((state) => state.mastered);
+  const toast = useLearningStore((state) => state.toast);
+  const setTheme = useLearningStore((state) => state.setTheme);
+  const notify = useLearningStore((state) => state.notify);
+  const currentArticle = articles.find(
+    (article) =>
+      pathname === `/questions/${article.slug}` ||
+      (pathname === "/" && article.slug === "vue-3"),
+  );
+  const closeMenu = useCallback(() => setMobileOpen(false), []);
+  useEffect(() => {
+    void initializeLearningState();
+  }, []);
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname]);
+  useEffect(() => {
+    if (!toast) return;
+    const timer = setTimeout(() => notify(""), 2600);
+    return () => clearTimeout(timer);
+  }, [toast, notify]);
+  function openPanel(panel: Panel) {
+    if (panel === "help") setHelpOpen(true);
+    else router.push(`/${panel}`);
+  }
+  return (
+    <MotionConfig reducedMotion="user" transition={{ duration: 0.2 }}>
+      <div className="workspace min-h-screen" data-theme={theme}>
+        <a className="skip-link" href="#main-content">
+          跳至主要内容
+        </a>
+        <Header
+          dark={theme === "dark"}
+          onTheme={() => setTheme(theme === "dark" ? "light" : "dark")}
+          onPanel={openPanel}
+          onMenu={() => setMobileOpen(!mobileOpen)}
+          progress={Math.round((mastered.length / articles.length) * 100)}
+        />
+        <div className="workspace-layout">
+          <Sidebar
+            topic={currentArticle?.topic ?? ""}
+            mobileOpen={mobileOpen}
+            onClose={closeMenu}
+          />
+          <div id="main-content" className="min-w-0">
+            {children}
+          </div>
+        </div>
+        {helpOpen && (
+          <WorkspaceDialog
+            panel="help"
+            onClose={() => setHelpOpen(false)}
+            article={articles[0]}
+          />
+        )}
+        <AnimatePresence>
+          {toast && (
+            <motion.div
+              key={toast}
+              className="toast flex items-center gap-2"
+              role="status"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+            >
+              <Check size={16} className="shrink-0 text-brand" />
+              {toast}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </MotionConfig>
+  );
+}

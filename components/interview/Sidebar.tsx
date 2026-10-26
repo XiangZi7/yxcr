@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   AudioLines,
@@ -10,23 +11,22 @@ import {
   House,
   LayoutGrid,
   Star,
+  NotebookPen,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { articles, articleHref, navigationGroups } from "@/lib/interview/data";
-import type { Panel } from "@/lib/interview/types";
 import { BrandIcon } from "./BrandIcon";
 
 export function Sidebar({
   topic,
-  onPanel,
   mobileOpen,
   onClose,
 }: {
   topic: string;
-  onPanel: (panel: Panel) => void;
   mobileOpen: boolean;
   onClose: () => void;
 }) {
+  const pathname = usePathname();
   const [collapsed, setCollapsed] = useState<string[]>([]);
   const [categoriesOpen, setCategoriesOpen] = useState(true);
   useEffect(() => {
@@ -43,11 +43,12 @@ export function Sidebar({
     };
   }, [mobileOpen, onClose]);
   const links = [
-    { label: "学习概览", icon: House, panel: null },
-    { label: "全部题库", icon: LayoutGrid, panel: "library" },
-    { label: "今日学习", icon: ClipboardCheck, panel: "today" },
-    { label: "AI 模拟面试", icon: Bot, panel: "practice" },
-    { label: "收藏与错题", icon: Star, panel: "saved" },
+    { label: "学习概览", icon: House, href: "/overview" },
+    { label: "全部题库", icon: LayoutGrid, href: "/library" },
+    { label: "今日学习", icon: ClipboardCheck, href: "/today" },
+    { label: "AI 模拟面试", icon: Bot, href: "/practice" },
+    { label: "收藏与错题", icon: Star, href: "/saved" },
+    { label: "我的笔记", icon: NotebookPen, href: "/notes" },
   ] as const;
 
   return (
@@ -64,31 +65,18 @@ export function Sidebar({
         aria-label="学习导航"
       >
         <nav className="flex flex-col gap-0.5" aria-label="主要导航">
-          {links.map(({ label, icon: Icon, panel }) =>
-            panel ? (
-              <button
-                key={label}
-                className="primary-nav"
-                onClick={() => {
-                  onPanel(panel);
-                  onClose();
-                }}
-              >
-                <Icon size={19} strokeWidth={1.8} />
-                <span>{label}</span>
-              </button>
-            ) : (
-              <Link
-                key={label}
-                href="/"
-                className="primary-nav is-active"
-                onClick={onClose}
-              >
-                <Icon size={19} strokeWidth={1.8} />
-                <span>{label}</span>
-              </Link>
-            ),
-          )}
+          {links.map(({ label, icon: Icon, href }) => (
+            <Link
+              key={label}
+              href={href}
+              className={`primary-nav ${pathname === href || (href === "/library" && (pathname === "/" || pathname.startsWith("/questions/"))) ? "is-active" : ""}`}
+              aria-current={pathname === href ? "page" : undefined}
+              onClick={onClose}
+            >
+              <Icon size={19} strokeWidth={1.8} />
+              <span>{label}</span>
+            </Link>
+          ))}
         </nav>
         <button
           className="category-label flex w-full items-center justify-between"
