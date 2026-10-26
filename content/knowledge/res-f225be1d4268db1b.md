@@ -1,0 +1,9 @@
+- `Partial<T>`：全部可选。
+- `Required<T>`：全部必选。
+- `Readonly<T>`：全部只读。
+- `Pick<T, K>`：选取部分属性。
+- `Omit<T, K>`：剔除部分属性。
+- `Record<K, T>`：构造键值对类型。
+- `ReturnType<T>`：取函数返回类型。
+- `Parameters<T>`：取函数参数类型。
+- `Exclude/Extract`、`NonNullable`。

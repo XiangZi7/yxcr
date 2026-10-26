@@ -15,6 +15,7 @@ import {
 import type { LearningResource } from "@/lib/resources/types";
 import { getResourceCollection } from "@/lib/resources/config";
 import { useKnowledgeProgress } from "@/lib/resources/progress";
+import { knowledgeHref } from "@/lib/resources/links";
 import { useLearningStore } from "@/lib/learning/store";
 import { Modal } from "@/components/ui/Modal";
 import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
@@ -48,10 +49,7 @@ export function ResourceCard({
           <Star size={16} fill={progress?.saved ? "currentColor" : "none"} />
         </button>
       </div>
-      <Link
-        className="resource-title"
-        href={`/questions/${resource.originalSlug ?? resource.id}`}
-      >
+      <Link className="resource-title" href={knowledgeHref(resource)}>
         <h2>{resource.title}</h2>
         <ArrowRight size={16} />
       </Link>
@@ -125,10 +123,7 @@ export function ResourceNoteDialog({
     <Modal title="学习笔记" onClose={onClose}>
       <p className="mb-4 text-sm font-medium leading-6">{resource.title}</p>
       <div className="mb-3 flex items-center justify-between">
-        <Link
-          href={`/questions/${resource.originalSlug ?? resource.id}`}
-          className="subtle-link text-xs"
-        >
+        <Link href={knowledgeHref(resource)} className="subtle-link text-xs">
           阅读正文
           <ArrowRight size={12} />
         </Link>

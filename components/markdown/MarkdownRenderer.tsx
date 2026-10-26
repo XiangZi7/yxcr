@@ -12,6 +12,7 @@ import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
 import { CodeBlock } from "@/components/interview/CodeBlock";
+import { remarkCodeLanguage } from "@/lib/markdown/code-language";
 
 function plainText(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
@@ -43,10 +44,10 @@ export function MarkdownRenderer({
   return (
     <div className={`markdown-content ${className}`}>
       <Markdown
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={[remarkGfm, remarkCodeLanguage]}
         rehypePlugins={[
           rehypeSlug,
-          [rehypeHighlight, { detect: false, ignoreMissing: true }],
+          [rehypeHighlight, { detect: false, ignoreMissing: true, plainText: ["text", "plaintext", "mermaid"] }],
         ]}
         skipHtml
         components={{

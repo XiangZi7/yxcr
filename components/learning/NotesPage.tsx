@@ -30,6 +30,7 @@ import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
 import { Modal } from "@/components/ui/Modal";
 import { PageHeading, PageSkeleton } from "./PageHeading";
 import { useResourceStore } from "@/lib/resources/store";
+import { knowledgeHref } from "@/lib/resources/links";
 
 export function NotesPage() {
   const params = useSearchParams();
@@ -387,7 +388,7 @@ function NotesContent({ selectedId }: { selectedId: string }) {
           <footer className="note-status">
             {resourceRecord && (
               <a
-                href={`/questions/${resourceRecord.resource.id}`}
+                href={knowledgeHref(resourceRecord.resource)}
                 className="subtle-link"
               >
                 阅读正文

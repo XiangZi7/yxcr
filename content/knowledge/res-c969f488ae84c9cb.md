@@ -1,0 +1,2 @@
+- **SQL 注入**：拼接 SQL 导致被注入恶意语句。防御：参数化查询/预编译、白名单校验。
+- **点击劫持**：透明 iframe 覆盖诱导点击。防御：设置 `X-Frame-Options`、`frame-ancestors`。

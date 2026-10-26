@@ -136,7 +136,13 @@ export function Sidebar({
                           {group.topics.map((name) => {
                             return (
                               <Link
-                                href={`/library?q=${encodeURIComponent(name)}`}
+                                href={
+                                  name === "浏览器与网络"
+                                    ? "/library?collection=network-interview"
+                                    : name === "工程化"
+                                      ? "/library?collection=frontend-system"
+                                      : `/library?q=${encodeURIComponent(name === "Vue 3" ? "Vue" : name)}`
+                                }
                                 key={name}
                                 className={`topic-link flex items-center gap-3 ${topic === name ? "is-active" : ""}`}
                                 aria-current={

@@ -1,0 +1,4 @@
+- **字体系列**：`font-family`、`font-weight`、`font-size`、`font-style`、`line-height`。
+- **文本系列**：`text-indent`、`text-align`、`letter-spacing`、`word-spacing`、`color`、`text-transform`。
+- **列表系列**：`list-style`。
+- **其他**：`cursor`、`visibility`（继承但不影响布局）等。

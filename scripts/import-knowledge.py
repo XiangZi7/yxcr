@@ -32,9 +32,11 @@ SOURCES = [
 GROUPS = {
     'Vue', 'JS', 'React', 'Network', '前端进阶', 'AIFuture', 'TS',
     'Node', 'Python', 'Linux', '数据库', 'Docker', 'CommonSense', 'Git', 'Nginx',
+    'Angular', 'Next', 'Aliyun', 'ProblemNotes', 'Ecology', 'Interview',
 }
 LABELS = {'JS': 'JavaScript', 'TS': 'TypeScript', 'Network': '计算机网络',
-          'AIFuture': 'AI 工程', 'CommonSense': '计算机基础', '前端进阶': '前端工程'}
+          'AIFuture': 'AI 工程', 'CommonSense': '计算机基础', '前端进阶': '前端工程',
+          'ProblemNotes': '开发实践', 'Aliyun': '云服务', 'Ecology': '前端生态', 'Interview': '面试复习'}
 
 
 def snapshot(source, repo, kind):
@@ -52,7 +54,8 @@ def selected(source, p):
     if source == 'aifuture':
         parts = p.split('/')
         return len(parts) > 3 and parts[:2] == ['docs', 'column'] and parts[2] in GROUPS
-    return p.startswith(('docs/interview/', 'docs/fe/', 'docs/html2canvas/')) and '/lxy/' not in p
+    return p.startswith(('docs/interview/', 'docs/fe/', 'docs/html2canvas/',
+                         'docs/notes/', 'docs/workflow/', 'docs/pit/', 'docs/analysis/')) and '/lxy/' not in p
 
 
 def fetch_blob(repo, item):
@@ -109,15 +112,15 @@ def clean(text):
     return '\n'.join(lines).strip()
 
 
-def heading_parts(text):
-    """Split interview collections at H2, excluding headings inside code fences."""
+def heading_parts(text, depth=2):
+    """Split question collections at the specified level, excluding fenced examples."""
     cuts, fence = [], None
     for match in re.finditer(r'^.*$', text, re.M):
         line = match[0]
         marker = re.match(r'^\s*(`{3,}|~{3,})', line)
         if marker:
             fence = None if fence == marker[1][0] else marker[1][0]
-        elif fence is None and re.match(r'^##\s+\S', line):
+        elif fence is None and re.match(r'^' + '#' * depth + r'\s+\S', line):
             cuts.append(match.start())
     if len(cuts) < 3:
         return [text]
@@ -130,11 +133,26 @@ def title_for(text, p):
     return re.sub(r'^[一二三四五六七八九十百\d]+[.、．]\s*', '', re.sub(r'[*`#]', '', title)).strip()
 
 
+def excerpt(body):
+    for paragraph in body.split('\n\n'):
+        if re.match(r'^\s*(?:#{1,6}\s|!\[|```|~~~|\||---|:::)', paragraph):
+            continue
+        text = re.sub(r'\[([^\]]+)\]\([^)]+\)', r'\1', paragraph)
+        text = re.sub(r'[`*#>!]', '', text)
+        text = re.sub(r'\s+', ' ', text).strip()
+        if len(text) >= 30:
+            return text[:145]
+    return ''
+
+
 def collections_for(p, title, source):
     group = p.split('/')[2] if source == 'aifuture' else ''
     core = {'AIFuture': 'ai', 'Network': 'network-interview', 'Docker': 'docker', 'Node': 'node',
             'CommonSense': 'computer', 'Linux': 'computer', '数据库': 'advanced',
-            '前端进阶': 'frontend-system', 'Git': 'tools', 'Nginx': 'http'}.get(group, 'base')
+            '前端进阶': 'frontend-system', 'Git': 'tools', 'Nginx': 'http',
+            'Next': 'frontend-system', 'Aliyun': 'advanced', 'ProblemNotes': 'scenarios',
+            'Ecology': 'tools', 'Interview': 'frequent'}.get(group, 'base')
+    if '/miniProgram/' in p: core = 'weapp'
     if source == 'bingkele':
         core = 'frequent' if '/interview/' in p else 'base'
         if 'network/' in p or p.endswith('/http.md'):
@@ -145,6 +163,8 @@ def collections_for(p, title, source):
             core = 'canvas'
         elif 'big-business' in p:
             core = 'experience'
+        elif p.startswith(('docs/workflow/', 'docs/pit/', 'docs/analysis/')):
+            core = 'frontend-system'
     tags = {core}
     if group == 'AIFuture': tags.add('ai-future')
     if re.search(r'HTTP|HTTPS|缓存|Cookie|跨域|WebSocket|SSE', title, re.I): tags.add('http')
@@ -156,7 +176,7 @@ def collections_for(p, title, source):
     if re.search(r'算法|排序|二叉树|链表|复杂度|递归', title): tags.add('algorithm')
     if re.search(r'实战|方案|优化', title): tags.add('scenarios')
     if re.search(r'原理|性能|架构|源码|工程化|泛型', title): tags.add('advanced')
-    if group in {'Vue', 'React', 'JS', 'TS', '前端进阶'}: tags.add('comprehensive')
+    if group in {'Vue', 'React', 'JS', 'TS', '前端进阶', 'Next', 'Angular', 'ProblemNotes'}: tags.add('comprehensive')
     if source == 'bingkele' and '/interview/' in p:
         tags.update(['daily', 'self-check'])
     if group in {'AIFuture', 'Network', 'Vue', 'React'} and re.search(r'基础|核心|入门|原理', title): tags.add('curated')
@@ -182,7 +202,7 @@ def main():
     for (source, p), (text, repo, lic, blob) in sorted(raw.items()):
         if len(text) < 180 or Path(p).stem == 'index' and len(text) < 600:
             continue
-        parts = heading_parts(text) if source == 'bingkele' and '/interview/' in p else [text]
+        parts = heading_parts(text) if source == 'bingkele' and '/interview/' in p else heading_parts(text, 3) if '/column/Interview/' in p else [text]
         first_id = None
         for index, part in enumerate(parts):
             if len(part) < 100: continue
@@ -194,11 +214,10 @@ def main():
             core, tags = collections_for(p, title, source)
             if len(part) < 1000 and len(parts) > 1: tags.append('flashcards')
             group = p.split('/')[2] if source == 'aifuture' else ''
-            category = 'AI / LLM' if group == 'AIFuture' else '后端' if group in {'Python', 'Node', '数据库', 'Docker', 'Linux', 'Nginx'} else '计算机网络' if core == 'network-interview' else '前端'
+            category = 'AI / LLM' if group == 'AIFuture' else '后端' if group in {'Python', 'Node', '数据库', 'Docker', 'Linux', 'Nginx', 'Aliyun'} else '计算机网络' if core == 'network-interview' else '前端'
             section = LABELS.get(group, group) or {'network-interview': '计算机网络', 'frequent': '面试复习'}.get(core, '前端基础')
             body = re.sub(r'\A#{1,3}\s+[^\n]+\n*', '', part).strip()
-            description = re.sub(r'[`*#\[\]>!]', '', re.sub(r'\([^)]*\)', '', body))
-            description = re.sub(r'\s+', ' ', description)[:145]
+            description = excerpt(body)
             entries.append(dict(id=id, title=title, url=f'/questions/{id}', source=source, collection=core, collections=tags, section=section, category=category, kind='knowledge' if len(parts) > 1 else 'document', description=description))
             bodies[id] = (body, source, p, repo)
             manifest[id] = dict(repository=repo, path=p, blob=blob, license=lic, author='gouxinjie' if source == 'aifuture' else '冰可乐', modified=True)
@@ -209,7 +228,9 @@ def main():
             prefix, target, suffix = match.groups()
             target = html.unescape(target)
             parsed = urllib.parse.urlsplit(target)
-            if parsed.scheme or target.startswith(('#', '//')): return match[0]
+            own_host = 'gouxinjie.github.io' if source == 'aifuture' else 'bingkele.cc'
+            local_absolute = parsed.hostname == own_host
+            if parsed.scheme and not local_absolute or target.startswith(('#', '//')): return match[0]
             file = urllib.parse.unquote(parsed.path)
             resolved = posixpath.normpath('docs/' + file.lstrip('/') if file.startswith('/') else posixpath.join(posixpath.dirname(p), file))
             options = [resolved, resolved.removesuffix('.html') + '.md', resolved.rstrip('/') + '/index.md']
@@ -219,6 +240,8 @@ def main():
                 # Source-generated heading IDs differ: open the correct local chapter.
             elif prefix.startswith('!'):
                 url = f'https://raw.githubusercontent.com/{repo}/main/' + urllib.parse.quote(resolved)
+            elif local_absolute:
+                return match[0]
             else:
                 base = 'https://gouxinjie.github.io/' if source == 'aifuture' else 'https://bingkele.cc/'
                 url = urllib.parse.urljoin(base + p.removeprefix('docs/'), target).replace('.md', '.html')

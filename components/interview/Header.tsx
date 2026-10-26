@@ -18,6 +18,7 @@ import { BrandMark } from "@/components/brand/BrandMark";
 import { AuthorAvatar } from "@/components/brand/AuthorAvatar";
 import { site } from "@/lib/site";
 import type { LearningResource } from "@/lib/resources/types";
+import { resourceSummary } from "@/lib/resources/config";
 
 export function Header({
   dark,
@@ -44,24 +45,25 @@ export function Header({
   const searchRef = useRef<HTMLDivElement>(null);
   const results: LearningResource[] = query.trim()
     ? resourceResults
-    : articles
-        .slice(0, 6)
-        .map((article) => ({
-          id: article.slug,
-          title: article.title,
-          url: `/questions/${article.slug}`,
-          source: "yxcr",
-          collection: "frequent",
-          section: article.topic,
-          kind: "knowledge",
-        }));
+    : articles.slice(0, 6).map((article) => ({
+        id: article.slug,
+        title: article.title,
+        url: `/questions/${article.slug}`,
+        source: "yxcr",
+        collection: "frequent",
+        section: article.topic,
+        kind: "knowledge",
+      }));
   useEffect(() => {
     if (!query.trim()) return;
     const controller = new AbortController();
     const timer = setTimeout(() => {
-      void fetch(`/api/resources?q=${encodeURIComponent(query)}`, {
-        signal: controller.signal,
-      })
+      void fetch(
+        `/api/resources?q=${encodeURIComponent(query)}&v=${encodeURIComponent(resourceSummary.syncedAt)}`,
+        {
+          signal: controller.signal,
+        },
+      )
         .then(async (response) => {
           if (!response.ok) return;
           const items: LearningResource[] = await response.json();

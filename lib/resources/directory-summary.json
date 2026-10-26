@@ -1,0 +1,42 @@
+{
+  "syncedAt": "2026-10-26T10:54:34.535437+00:00",
+  "total": 7385,
+  "collections": {
+    "base": 377,
+    "advanced": 187,
+    "frequent": 212,
+    "curated": 54,
+    "handwritten": 250,
+    "experience": 582,
+    "ai": 718,
+    "principles": 90,
+    "daily": 488,
+    "weapp": 1,
+    "flashcards": 386,
+    "scenarios": 612,
+    "yearly": 141,
+    "algorithm": 1236,
+    "self-check": 4,
+    "http": 33,
+    "browser": 45,
+    "computer": 117,
+    "patterns": 34,
+    "frontend-system": 760,
+    "comprehensive": 320,
+    "node": 106,
+    "npm": 1,
+    "docker": 1,
+    "canvas": 1,
+    "mindmaps": 81,
+    "roadmaps": 10,
+    "blog": 434,
+    "tools": 3,
+    "network-interview": 72,
+    "ai-future": 29
+  },
+  "sources": {
+    "poetries": 7284,
+    "bingkele": 72,
+    "aifuture": 29
+  }
+}
