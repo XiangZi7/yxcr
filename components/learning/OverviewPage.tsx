@@ -22,7 +22,7 @@ import { dayKey, useLearningStore } from "@/lib/learning/store";
 import { PageHeading } from "./PageHeading";
 import { BrandIcon } from "@/components/interview/BrandIcon";
 import { useResourceStore } from "@/lib/resources/store";
-import { resourceSummary } from "@/lib/resources/config";
+import { resourceSummary, categoryKnowledgeCount } from "@/lib/resources/config";
 
 export function OverviewPage() {
   const {
@@ -299,9 +299,10 @@ export function OverviewPage() {
                 const groupArticles = articles.filter(
                   (article) => article.category === group.title,
                 );
+                const groupTotal = categoryKnowledgeCount(group.title);
                 const completed = groupArticles.filter((article) =>
                   mastered.includes(article.slug),
-                ).length;
+                ).length + resourceValues.filter((item) => item.mastered && item.resource.category === group.title).length;
                 return (
                   <Link
                     href={`/library?category=${encodeURIComponent(group.title)}`}
@@ -314,13 +315,13 @@ export function OverviewPage() {
                         {group.title}
                       </span>
                       <span className="text-muted">
-                        {completed} / {groupArticles.length}
+                        {completed} / {groupTotal}
                       </span>
                     </div>
                     <div className="progress-track">
                       <div
                         style={{
-                          width: `${(completed / groupArticles.length) * 100}%`,
+                          width: `${(completed / groupTotal) * 100}%`,
                         }}
                       />
                     </div>
