@@ -2,6 +2,7 @@
 
 import {
   Children,
+  createElement,
   isValidElement,
   type ReactNode,
   type ReactElement,
@@ -23,10 +24,22 @@ function plainText(node: ReactNode): string {
 export function MarkdownRenderer({
   content,
   className = "",
+  headingOffset = 0,
 }: {
   content: string;
   className?: string;
+  headingOffset?: number;
 }) {
+  function heading(
+    level: number,
+    { id, children }: { id?: string; children?: ReactNode },
+  ) {
+    return createElement(
+      `h${Math.min(6, Math.max(2, level + headingOffset))}`,
+      { id, className: `markdown-h${level}` },
+      children,
+    );
+  }
   return (
     <div className={`markdown-content ${className}`}>
       <Markdown
@@ -37,6 +50,12 @@ export function MarkdownRenderer({
         ]}
         skipHtml
         components={{
+          h1: (props) => heading(1, props),
+          h2: (props) => heading(2, props),
+          h3: (props) => heading(3, props),
+          h4: (props) => heading(4, props),
+          h5: (props) => heading(5, props),
+          h6: (props) => heading(6, props),
           pre({ children }) {
             const child = Children.toArray(children).find(
               (

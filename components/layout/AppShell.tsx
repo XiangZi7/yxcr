@@ -64,7 +64,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             mobileOpen={mobileOpen}
             onClose={closeMenu}
           />
-          <div id="main-content" className="min-w-0">
+          <div id="main-content" tabIndex={-1} className="min-w-0">
             {children}
           </div>
         </div>

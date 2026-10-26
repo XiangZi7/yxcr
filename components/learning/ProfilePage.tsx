@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useLearningStore } from "@/lib/learning/store";
 import { PageHeading, PageSkeleton } from "./PageHeading";
+import { CreatorLinks } from "@/components/layout/CreatorLinks";
 
 export function ProfilePage() {
   const hydrated = useLearningStore((state) => state.hydrated);
@@ -163,7 +164,8 @@ function ProfileContent() {
             </div>
           </section>
         </div>
-        <aside>
+        <aside className="space-y-5">
+          <CreatorLinks />
           <section className="panel">
             <h2 className="mb-6 text-base font-semibold">知识积累</h2>
             <div className="space-y-5">

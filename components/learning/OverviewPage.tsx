@@ -27,6 +27,7 @@ export function OverviewPage() {
     mastered,
     saved,
     notes,
+    documents,
     activity,
     dailyGoal,
     plan,
@@ -81,7 +82,9 @@ export function OverviewPage() {
     },
     {
       label: "学习笔记",
-      value: Object.values(notes).filter((value) => value.trim()).length,
+      value:
+        Object.values(notes).filter((value) => value.trim()).length +
+        documents.length,
       unit: "篇",
       detail: "用自己的语言理解知识",
       icon: NotebookPen,

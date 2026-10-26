@@ -80,11 +80,17 @@ export function Header({
         </span>
         <span>Interview OS</span>
       </Link>
-      <div ref={searchRef} className="search-container relative">
+      <div
+        ref={searchRef}
+        className="search-container relative"
+        role="search"
+        aria-label="全站题目搜索"
+      >
         <div className="search-field flex items-center gap-2.5">
           <Search size={17} strokeWidth={1.8} />
           <input
             ref={inputRef}
+            type="search"
             value={query}
             onChange={(event) => {
               setQuery(event.target.value);

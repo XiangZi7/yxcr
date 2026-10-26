@@ -1,8 +1,13 @@
-import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/seo";
 import { Suspense } from "react";
 import { LibraryPage } from "@/components/learning/LibraryPage";
 import { PageSkeleton } from "@/components/learning/PageHeading";
-export const metadata: Metadata = { title: "收藏与错题 · Interview OS" };
+export const metadata = pageMetadata(
+  "我的收藏与错题",
+  "整理收藏的面试题，复盘错题与待掌握知识点，让每一次复习更有方向。",
+  "/saved",
+  true,
+);
 export default function Page() {
   return (
     <Suspense fallback={<PageSkeleton />}>

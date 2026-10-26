@@ -24,6 +24,7 @@ import { downloadMarkdown, getMarkdownHeadings } from "@/lib/markdown/utils";
 import { ArticleContent } from "./ArticleContent";
 import { RightSidebar } from "./RightSidebar";
 import { WorkspaceDialog } from "./WorkspaceDialog";
+import { author } from "@/lib/site";
 
 export function InterviewWorkspace({
   article,
@@ -90,114 +91,135 @@ export function InterviewWorkspace({
   return (
     <div className="content-layout grid min-w-0 items-start">
       <main id="article" className="article-card min-w-0 rounded-xl">
-        <div className="article-topline flex items-center justify-between gap-3">
-          <nav
-            className="breadcrumbs flex items-center gap-2"
-            aria-label="面包屑"
-          >
-            <Link href="/library">题库</Link>
-            <ChevronRight size={13} />
-            <Link
-              href={`/library?category=${encodeURIComponent(article.category)}`}
+        <article aria-labelledby="question-title">
+          <div className="article-topline flex items-center justify-between gap-3">
+            <nav
+              className="breadcrumbs flex items-center gap-2"
+              aria-label="面包屑"
             >
-              {article.category}
-            </Link>
-            <ChevronRight size={13} />
-            <span>{article.topic}</span>
-          </nav>
-          <div className="article-actions flex items-center">
-            <motion.button
-              className={`article-action flex items-center gap-1.5 ${isSaved ? "text-brand" : ""}`}
-              onClick={() => toggleSaved(article.slug)}
-              aria-pressed={isSaved}
-              whileTap={{ scale: 0.94 }}
-            >
-              <Star size={16} fill={isSaved ? "currentColor" : "none"} />
-              <span>{isSaved ? "已收藏" : "收藏"}</span>
-            </motion.button>
-            <motion.button
-              className={`article-action flex items-center gap-1.5 ${!isMastered ? "text-muted" : ""}`}
-              onClick={() => toggleMastered(article.slug)}
-              aria-pressed={isMastered}
-              whileTap={{ scale: 0.94 }}
-            >
-              <Check size={17} />
-              <span>{isMastered ? "已掌握" : "待掌握"}</span>
-            </motion.button>
-            <button
-              className="article-action flex items-center gap-1.5"
-              onClick={openNotes}
-            >
-              <NotebookPen size={16} />
-              <span>记笔记</span>
-            </button>
-            <details className="more-menu relative">
-              <summary className="icon-button" aria-label="更多文章操作">
-                <MoreHorizontal size={18} />
-              </summary>
-              <div className="more-popover absolute right-0 flex flex-col">
-                <button onClick={() => void copyLink()}>
-                  <Link2 size={15} />
-                  复制文章链接
-                </button>
-                <button
-                  onClick={() => downloadMarkdown(article.title, markdown)}
-                >
-                  <Download size={15} />
-                  导出 Markdown
-                </button>
-                <button onClick={() => toggleMistake(article.slug)}>
-                  <CircleAlert size={15} />
-                  {isMistake ? "移出错题本" : "加入错题本"}
-                </button>
-                <button onClick={() => window.print()}>
-                  <Printer size={15} />
-                  打印文章
-                </button>
-              </div>
-            </details>
-          </div>
-        </div>
-        <header className="article-header">
-          <h1>{article.title}</h1>
-          <p className="article-description">{article.description}</p>
-          <div className="article-tags flex flex-wrap gap-2.5">
-            {article.tags.map((tag, index) => (
+              <Link href="/library">题库</Link>
+              <ChevronRight size={13} />
               <Link
-                href={`/library?q=${encodeURIComponent(tag)}`}
-                key={tag}
-                className={`tag ${index === 0 ? "tag-blue" : ""}`}
+                href={`/library?category=${encodeURIComponent(article.category)}`}
               >
-                {tag}
+                {article.category}
               </Link>
-            ))}
+              <ChevronRight size={13} />
+              <span aria-current="page">{article.topic}</span>
+            </nav>
+            <div className="article-actions flex items-center">
+              <motion.button
+                className={`article-action flex items-center gap-1.5 ${isSaved ? "text-brand" : ""}`}
+                onClick={() => toggleSaved(article.slug)}
+                aria-pressed={isSaved}
+                whileTap={{ scale: 0.94 }}
+              >
+                <Star size={16} fill={isSaved ? "currentColor" : "none"} />
+                <span>{isSaved ? "已收藏" : "收藏"}</span>
+              </motion.button>
+              <motion.button
+                className={`article-action flex items-center gap-1.5 ${!isMastered ? "text-muted" : ""}`}
+                onClick={() => toggleMastered(article.slug)}
+                aria-pressed={isMastered}
+                whileTap={{ scale: 0.94 }}
+              >
+                <Check size={17} />
+                <span>{isMastered ? "已掌握" : "待掌握"}</span>
+              </motion.button>
+              <button
+                className="article-action flex items-center gap-1.5"
+                onClick={openNotes}
+              >
+                <NotebookPen size={16} />
+                <span>记笔记</span>
+              </button>
+              <details className="more-menu relative">
+                <summary className="icon-button" aria-label="更多文章操作">
+                  <MoreHorizontal size={18} />
+                </summary>
+                <div className="more-popover absolute right-0 flex flex-col">
+                  <button onClick={() => void copyLink()}>
+                    <Link2 size={15} />
+                    复制文章链接
+                  </button>
+                  <button
+                    onClick={() => downloadMarkdown(article.title, markdown)}
+                  >
+                    <Download size={15} />
+                    导出 Markdown
+                  </button>
+                  <button onClick={() => toggleMistake(article.slug)}>
+                    <CircleAlert size={15} />
+                    {isMistake ? "移出错题本" : "加入错题本"}
+                  </button>
+                  <button onClick={() => window.print()}>
+                    <Printer size={15} />
+                    打印文章
+                  </button>
+                </div>
+              </details>
+            </div>
           </div>
-          <div className="article-meta flex flex-wrap items-center">
-            <span className="flex items-center gap-2">
-              <Shapes size={16} />
-              <span>
-                难度 <strong>中等</strong>
+          <header className="article-header">
+            <h1 id="question-title">{article.title}</h1>
+            <p className="article-description">{article.description}</p>
+            <div className="article-tags flex flex-wrap gap-2.5">
+              {article.tags.map((tag, index) => (
+                <Link
+                  href={`/library?q=${encodeURIComponent(tag)}`}
+                  key={tag}
+                  className={`tag ${index === 0 ? "tag-blue" : ""}`}
+                >
+                  {tag}
+                </Link>
+              ))}
+            </div>
+            <div className="article-meta flex flex-wrap items-center">
+              <span className="flex items-center gap-2">
+                <Shapes size={16} />
+                <span>
+                  难度 <strong>中等</strong>
+                </span>
               </span>
-            </span>
-            <span className="flex items-center gap-2">
-              <Flame size={16} />
-              <span>
-                高频率 <b>78%</b>
+              <span className="flex items-center gap-2">
+                <Flame size={16} />
+                <span>
+                  高频率 <b>78%</b>
+                </span>
               </span>
-            </span>
-            <span className="flex items-center gap-2">
-              <Clock3 size={16} />
-              <span>
-                预计阅读 <b>8 分钟</b>
+              <span className="flex items-center gap-2">
+                <Clock3 size={16} />
+                <span>
+                  预计阅读 <b>8 分钟</b>
+                </span>
               </span>
+              <span className="markdown-badge ml-auto flex items-center gap-1.5">
+                <BookOpen size={13} />
+                Markdown
+              </span>
+            </div>
+          </header>
+          <ArticleContent markdown={markdown} />
+          <footer className="article-byline">
+            <span>
+              整理与分享：
+              <a
+                href={author.github}
+                target="_blank"
+                rel="author noopener noreferrer"
+              >
+                {author.name}
+              </a>
             </span>
-            <span className="markdown-badge ml-auto flex items-center gap-1.5">
-              <BookOpen size={13} />
-              Markdown
-            </span>
-          </div>
-        </header>
-        <ArticleContent markdown={markdown} />
+            <a
+              href={author.bilibili}
+              target="_blank"
+              rel="me noopener noreferrer"
+            >
+              在 B 站一起学习 ↗
+            </a>
+          </footer>
+        </article>
       </main>
       <RightSidebar
         article={article}

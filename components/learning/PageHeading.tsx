@@ -15,11 +15,14 @@ export function PageHeading({
 }) {
   return (
     <header className="page-heading">
-      <div className="breadcrumbs mb-5 flex items-center gap-2">
+      <nav
+        className="breadcrumbs mb-5 flex items-center gap-2"
+        aria-label="面包屑"
+      >
         <Link href="/overview">工作台</Link>
         <ChevronRight size={13} />
-        <span>{label}</span>
-      </div>
+        <span aria-current="page">{label}</span>
+      </nav>
       <div className="flex flex-wrap items-end justify-between gap-5">
         <div>
           <h1 className="text-[26px] font-semibold tracking-tight">{title}</h1>

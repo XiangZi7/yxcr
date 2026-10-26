@@ -28,7 +28,16 @@ import { PageHeading } from "./PageHeading";
 
 export function PracticePage() {
   const params = useSearchParams();
-  const topic = params.get("topic");
+  return (
+    <PracticeContent key={params.toString()} topic={params.get("topic")} />
+  );
+}
+
+export function PracticePreview() {
+  return <PracticeContent topic={null} />;
+}
+
+function PracticeContent({ topic }: { topic: string | null }) {
   const topicArticle = articles.find((article) => article.slug === topic);
   const [category, setCategory] = useState(
     topicArticle?.category ?? "全部方向",

@@ -16,6 +16,7 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { articles, articleHref, navigationGroups } from "@/lib/interview/data";
 import { BrandIcon } from "./BrandIcon";
+import { CreatorLinks } from "@/components/layout/CreatorLinks";
 
 export function Sidebar({
   topic,
@@ -213,6 +214,9 @@ export function Sidebar({
             />
           </svg>
         </div>
+        <footer className="sidebar-credits">
+          <CreatorLinks compact />
+        </footer>
       </aside>
     </>
   );

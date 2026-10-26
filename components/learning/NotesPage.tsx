@@ -270,7 +270,7 @@ function NotesContent({ selectedId }: { selectedId: string }) {
               <span className="document-type">MD</span>
               <div className="min-w-0">
                 <h2 className="truncate text-sm font-semibold">{title}</h2>
-                <p className="mt-1 text-[11px] text-muted">
+                <p className="mt-1 truncate text-[11px] text-muted">
                   {isGuide
                     ? "支持标准 Markdown 与 GFM 语法"
                     : dirty
@@ -347,6 +347,7 @@ function NotesContent({ selectedId }: { selectedId: string }) {
             {mode !== "edit" && (
               <div className="note-preview-body">
                 <MarkdownRenderer
+                  headingOffset={1}
                   content={draft || "*这里会实时显示你的 Markdown 内容。*"}
                 />
               </div>
@@ -393,5 +394,5 @@ function NotesContent({ selectedId }: { selectedId: string }) {
   );
 }
 function articleHrefForNote(slug: string) {
-  return slug === "vue-3" ? "/" : `/questions/${slug}`;
+  return `/questions/${slug}`;
 }

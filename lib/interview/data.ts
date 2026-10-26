@@ -225,5 +225,5 @@ export const navigationGroups = [
 ] as const;
 
 export function articleHref(slug: string) {
-  return slug === "vue-3" ? "/" : `/questions/${slug}`;
+  return `/questions/${slug}`;
 }

@@ -31,6 +31,15 @@ export function LibraryPage({ savedOnly = false }: { savedOnly?: boolean }) {
     />
   );
 }
+
+// Keep the public question list and its links in the prerendered HTML while
+// the URL-dependent filters hydrate in their Suspense boundary.
+export function LibraryPreview() {
+  return (
+    <LibraryContent savedOnly={false} initialQuery="" initialCategory="全部" />
+  );
+}
+
 function LibraryContent({
   savedOnly,
   initialQuery,

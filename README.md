@@ -47,3 +47,13 @@ pnpm build
 - 两种拉丁字体都仅引用本地 latin 可变字体文件，不加载其他语言子集。
 - 图标使用 Lucide React，交互动画使用 Motion。Zustand 管理主题、学习状态、收藏、错题、笔记、计划与练习记录，并迁移旧版浏览器本地记录。
 - 当前为前端本地学习工作台，模拟面试尚未接入在线 AI 服务。
+
+## 作者与 SEO
+
+- 作者：[XiangZi7 · GitHub](https://github.com/XiangZi7)，[哔哩哔哩](https://space.bilibili.com/52419790)。侧栏、个人档案和文章署名包含社交入口。
+- 正式域名默认为 `https://yxcr.top`，可通过 `.env.example` 中的 `NEXT_PUBLIC_SITE_URL` 覆盖。生产环境修改后需要重新构建。
+- 每页配置独立标题、摘要、canonical、Open Graph 和 Twitter 分享卡片，分享图片由 `/opengraph-image` 生成。
+- `/robots.txt` 与 `/sitemap.xml` 自动生成。站点地图仅包含公开页面与题目详情；今日计划、收藏、私人笔记和个人档案使用 `noindex, follow`。
+- `/` 与 `/questions/vue-3` 展示相同内容，以 `/questions/vue-3` 为规范地址，避免重复收录。
+- 使用 `main`、`article`、`nav`、`aside`、`header`、`footer` 和分级标题；题目正文在服务端输出。JSON-LD 包含 WebSite、Person、TechArticle 与 BreadcrumbList，并转义 HTML 特殊字符。
+- 部署到正式域名后，可向搜索引擎站长平台提交 `https://yxcr.top/sitemap.xml`。当前修改不包含域名解析或线上部署。
