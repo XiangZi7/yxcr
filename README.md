@@ -25,7 +25,7 @@ pnpm build
 | `/`、`/questions/[slug]` | Markdown 题目详情、文章目录与学习笔记        |
 | `/overview`              | 学习概览、每日统计与知识版图                 |
 | `/library`               | 分类筛选、搜索、收藏与掌握状态               |
-| `/resources`             | 三个来源的资源目录、栏目筛选、学习计划与笔记 |
+| `/resources`             | 兼容旧地址，308 重定向到 `/library` |
 | `/today`                 | 每日目标与学习计划                           |
 | `/practice`              | 限时自测、参考思路与练习复盘                 |
 | `/saved`                 | 收藏题目与错题本                             |
@@ -49,14 +49,15 @@ pnpm build
 - 图标使用 Lucide React，交互动画使用 Motion。Zustand 管理主题、学习状态、收藏、错题、笔记、计划与练习记录，并迁移旧版浏览器本地记录。
 - 当前为前端本地学习工作台，模拟面试尚未接入在线 AI 服务。
 
-## 学习资源目录
+## 统一知识题库
 
-- 接入[前端进阶之旅](https://feinterview.poetries.top)、[冰可乐网络面试专题](https://bingkele.cc/interview/new/network/)与 [AI Future](https://gouxinjie.github.io/column/AIFuture/)，覆盖截图中的主栏目、更多专项与知识库。
-- `content/resources/sources.json` 定义来源和栏目，`lib/resources/catalog.json` 保存公开的标题、分类、章节锚点与原文链接，`summary.json` 记录实际目录数量。
-- 资源与知识点目录不等于独立面试题数量；其中包含文档、章节知识点和专题入口。小程序题库作为原站专题入口接入，不用不透明的题目 ID 充当题目标题。
-- 资源卡片支持原文阅读、收藏、标记掌握、加入计划和 Markdown 笔记，联动今日学习、收藏、我的笔记、概览和记录导出。学习数据保存在浏览器本地，原文及访问权限归来源站。
-- 目录通过 `/api/resources` 按需读取；顶部全站搜索只请求匹配结果，不把完整目录放入首屏 JavaScript。资源页服务端输出首批内容与来源信息。
-- 更新目录：安装 `beautifulsoup4` 后运行 `python -X utf8 scripts/sync-resources.py`。脚本只提取公开站点地图、链接与标题目录，不导入正文或会员内容；原始抓取缓存保存在忽略的 `.tmp-resources/`，生产构建不依赖来源站在线。
+- `/library` 统一呈现原有题目与新增知识，使用一套栏目、搜索、收藏、计划和笔记。所有知识卡片及搜索结果都进入 `/questions/[slug]` 阅读正文。
+- 正文存于 `content/knowledge/{id}.md`；目录元数据存于 `lib/resources/catalog.json`。只有实际存在正文的内容才进入列表和 sitemap，不将外站标题索引计为可阅读题目。
+- `scripts/import-knowledge.py` 导入公开许可仓库的 Markdown，校验 Git blob 哈希，保留源文件及许可证清单，转换文档语法与内部章节链接。使用 Python 标准库即可运行，不需要额外抓取依赖。
+- 首次运行会读取 GitHub 的公开文件树与许可证，原始 Markdown 缓存到忽略的 `.tmp-resources/markdown/`。仓库正文更新后，删除对应 `.tmp-resources/*-tree.json` 再执行导入以刷新快照。
+- 独立维护的补充文章位于 `content/guides/`。旧的 `scripts/sync-resources.py` 只用于分析公开目录，输出独立索引，不会覆盖可阅读正文目录。
+- `content/knowledge/manifest.json` 记录每篇改编文档的原路径、blob、作者、许可证及修改声明；完整许可证和通知保存在 `public/licenses/`。界面按知识主题组织，不按来源分组。
+- 原站会员或未声明可再分发的正文不导入。构建和站内阅读均使用本地正文，不依赖来源站实时响应。
 
 ## 作者与 SEO
 

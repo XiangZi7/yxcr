@@ -12,13 +12,12 @@ import {
   Sun,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { articles, articleHref } from "@/lib/interview/data";
+import { articles } from "@/lib/interview/data";
 import type { Panel } from "@/lib/interview/types";
 import { BrandMark } from "@/components/brand/BrandMark";
 import { AuthorAvatar } from "@/components/brand/AuthorAvatar";
 import { site } from "@/lib/site";
 import type { LearningResource } from "@/lib/resources/types";
-import { getResourceSource } from "@/lib/resources/config";
 
 export function Header({
   dark,
@@ -43,13 +42,7 @@ export function Header({
     resourceSearch.query === query ? resourceSearch.items : [];
   const inputRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
-  const results = articles
-    .filter((item) =>
-      `${item.title} ${item.topic} ${item.tags.join(" ")}`
-        .toLowerCase()
-        .includes(query.toLowerCase()),
-    )
-    .slice(0, 6);
+  const results: LearningResource[] = query.trim() ? resourceResults : articles.slice(0, 6).map((article) => ({ id: article.slug, title: article.title, url: `/questions/${article.slug}`, source: "yxcr", collection: "frequent", section: article.topic, kind: "knowledge" }));
   useEffect(() => {
     if (!query.trim()) return;
     const controller = new AbortController();
@@ -155,66 +148,16 @@ export function Header({
               <p className="px-3 pb-2 pt-1 text-xs text-muted">
                 {query ? `搜索结果 · ${results.length}` : "继续探索知识"}
               </p>
-              {results.length ? (
-                results.map((article) => (
-                  <Link
-                    className="search-result flex items-center justify-between gap-3"
-                    href={articleHref(article.slug)}
-                    key={article.slug}
-                    onClick={() => {
-                      setSearchOpen(false);
-                      setQuery("");
-                    }}
-                  >
-                    <span>
-                      <span className="mb-1 block text-xs text-brand">
-                        {article.topic}
-                      </span>
-                      {article.title}
-                    </span>
-                    <ChevronRight size={16} />
-                  </Link>
-                ))
-              ) : (
-                <p className="p-4 text-sm text-muted">
-                  可以在资源知识库中继续查找相关知识。
-                </p>
-              )}
-              {query.trim() && resourceResults.length > 0 && (
-                <div className="resource-global-results">
-                  <p>资源知识库</p>
-                  {resourceResults.map((resource) => (
-                    <a
-                      key={resource.id}
-                      className="search-result flex items-center justify-between gap-3"
-                      href={resource.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => {
-                        setSearchOpen(false);
-                        setQuery("");
-                      }}
-                    >
-                      <span>
-                        <span className="mb-1 block text-xs text-brand">
-                          {getResourceSource(resource.source)?.name}
-                        </span>
-                        {resource.title}
-                      </span>
-                      <ChevronRight size={16} />
-                    </a>
-                  ))}
-                </div>
-              )}
+              {results.length ? results.map((item) => <Link className="search-result flex items-center justify-between gap-3" href={`/questions/${item.id}`} key={item.id} onClick={() => { setSearchOpen(false); setQuery(""); }}><span><span className="mb-1 block text-xs text-brand">{item.section}</span>{item.title}</span><ChevronRight size={16} /></Link>) : <p className="p-4 text-sm text-muted">{resourceSearch.query === query ? "没有找到相关知识，试试其他关键词。" : "正在查找知识…"}</p>}
               <Link
-                href={`/resources${query.trim() ? `?q=${encodeURIComponent(query)}` : ""}`}
+                href={`/library${query.trim() ? `?q=${encodeURIComponent(query)}` : ""}`}
                 className="resource-search-more"
                 onClick={() => {
                   setSearchOpen(false);
                   setQuery("");
                 }}
               >
-                在资源知识库中搜索
+                查看全部搜索结果
                 <ChevronRight size={14} />
               </Link>
             </motion.div>

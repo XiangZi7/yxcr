@@ -127,7 +127,7 @@ function NotesContent({ selectedId }: { selectedId: string }) {
   function save() {
     if (resourceRecord) {
       setResourceNote(resourceRecord.resource, draft);
-      notify("资源学习笔记已保存");
+      notify("学习笔记已保存");
     } else if (article) {
       setNote(article.slug, draft);
       notify("学习笔记已保存");
@@ -268,7 +268,7 @@ function NotesContent({ selectedId }: { selectedId: string }) {
                       : item.kind === "article"
                         ? "题目笔记"
                         : item.kind === "resource"
-                          ? "资源学习笔记"
+                          ? "学习笔记"
                           : "Markdown 文档"}
                   </span>
                 </span>
@@ -387,12 +387,10 @@ function NotesContent({ selectedId }: { selectedId: string }) {
           <footer className="note-status">
             {resourceRecord && (
               <a
-                href={resourceRecord.resource.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={`/questions/${resourceRecord.resource.id}`}
                 className="subtle-link"
               >
-                阅读原文
+                阅读正文
                 <ArrowUpRight size={12} />
               </a>
             )}

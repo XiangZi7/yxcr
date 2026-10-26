@@ -52,7 +52,7 @@ export const useResourceStore = create<ResourceState>()(
         }));
         useLearningStore
           .getState()
-          .notify(saved ? "已收藏这条学习资源" : "已取消收藏");
+          .notify(saved ? "已收藏这个知识点" : "已取消收藏");
       },
       toggleMastered(resource) {
         const mastered = !get().records[resource.id]?.mastered;
@@ -103,7 +103,7 @@ let initialization: Promise<void> | undefined;
 export function initializeResourceState() {
   initialization ??= Promise.resolve(useResourceStore.persist.rehydrate())
     .catch(() => {
-      useLearningStore.getState().notify("资源学习记录暂时无法读取。");
+      useLearningStore.getState().notify("学习记录暂时无法读取。");
     })
     .finally(() => useResourceStore.setState({ hydrated: true }));
   return initialization;

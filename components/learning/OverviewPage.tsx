@@ -44,7 +44,8 @@ export function OverviewPage() {
     (activity[today]?.length ?? 0) + (resourceActivity[today]?.length ?? 0);
   const learnedOnDay = (date: string) =>
     (activity[date]?.length ?? 0) + (resourceActivity[date]?.length ?? 0);
-  const progress = Math.round((mastered.length / articles.length) * 100);
+  const totalMastered = mastered.length + resourceValues.filter((item) => item.mastered).length;
+  const progress = Math.round((totalMastered / resourceSummary.total) * 100);
   const recommendations = [
     ...articles.filter(
       (article) =>
@@ -69,7 +70,7 @@ export function OverviewPage() {
       value:
         mastered.length + resourceValues.filter((item) => item.mastered).length,
       unit: "项",
-      detail: `${articles.length} 道题目 · ${resourceSummary.total.toLocaleString("en-US")} 条资源`,
+      detail: `${resourceSummary.total.toLocaleString("en-US")} 个知识点`,
       icon: GraduationCap,
       color: "blue",
     },
@@ -290,7 +291,7 @@ export function OverviewPage() {
                   {progress}
                   <small>%</small>
                 </strong>
-                <span className="text-xs text-muted">站内题库掌握度</span>
+                <span className="text-xs text-muted">知识掌握进度</span>
               </span>
             </div>
             <div className="space-y-5">

@@ -1,0 +1,93 @@
+在 `TypeScript` 中，**非空断言操作符**（`!`）用于告诉编译器某个值在特定上下文中是 **非空的**，即该值不会是 `null` 或 `undefined`。当你确定一个值在某个时刻不会是 `null` 或 `undefined` 时，可以使用非空断言操作符来绕过 TypeScript 的空值检查，避免报错。
+
+### 1. 基本语法
+
+非空断言操作符是一个后缀 `!`，直接加在变量或表达式后面：
+
+```typescript
+let value: string | null = "Hello";
+let length: number = value!.length; // 非空断言操作符
+```
+
+在上面的例子中，`value` 被声明为 `string | null` 类型。通过使用 `value!`，我们告诉 TypeScript 编译器：**在这里，`value` 不是 `null`**。因此，TypeScript 会跳过对 `value` 是否为 `null` 的检查，并允许我们安全地访问其属性。
+
+### 2. 非空断言的使用场景
+
+#### 2.1 防止 `null` 或 `undefined` 报错
+
+通常情况下，TypeScript 会对可能为 `null` 或 `undefined` 的变量进行类型检查，如果你尝试访问这些值的属性或方法，TypeScript 会报错：
+
+```typescript
+let user: { name: string } | null = null;
+console.log(user.name); // Error: Object is possibly 'null'.
+```
+
+在这种情况下，使用非空断言操作符可以告诉 TypeScript 你确定 `user` 不为 `null`，这样就不会报错：
+
+```typescript
+let user: { name: string } | null = { name: "Alice" };
+console.log(user!.name); // 输出: Alice
+```
+
+这里，`user!` 告诉 TypeScript 编译器：**我确信 `user` 不是 `null`**。
+
+#### 2.2 用于 DOM 元素
+
+在与 DOM 操作交互时，通常通过 `document.getElementById()` 等方法获取元素，但这些方法可能返回 `null`。TypeScript 默认会警告你访问一个可能为 `null` 的元素。在这种情况下，非空断言可以用来绕过警告。
+
+```typescript
+const button = document.getElementById("submitButton");
+button!.addEventListener("click", () => {
+  console.log("Button clicked!");
+});
+```
+
+在这个例子中，`button!` 表示 `button` 一定不是 `null`。如果 `getElementById` 返回 `null`，这时会引发运行时错误，因此你要确保在使用非空断言时，变量确实会被正确赋值。
+
+#### 2.3 与函数返回值一起使用
+
+在某些情况下，函数可能返回 `null` 或某些类型的值。你可以使用非空断言操作符来确保在访问返回值之前，变量不会是 `null` 或 `undefined`。
+
+```typescript
+function getUser(): { name: string } | null {
+  return { name: "Bob" };
+}
+
+let user = getUser();
+console.log(user!.name); // 输出: Bob
+```
+
+这里，`user!` 表示你确信 `getUser()` 的返回值不会是 `null`。
+
+### 3. 非空断言操作符的风险
+
+虽然非空断言操作符能够绕过 TypeScript 的类型检查，但它是一个危险的操作，因为它会禁用 TypeScript 对 `null` 或 `undefined` 的检查。如果你使用不当，可能会导致运行时错误。**除非你完全确信某个变量不会为 `null` 或 `undefined`，否则不建议使用非空断言**。
+
+例如，如果我们错误地使用非空断言操作符：
+
+```typescript
+let user: { name: string } | null = null;
+console.log(user!.name); // 运行时错误：Cannot read property 'name' of null
+```
+
+这会导致 **运行时错误**，因为 `user` 实际上是 `null`，而非空断言并不会阻止运行时的错误发生。
+
+### 4. 非空断言 vs 可选链（`?.`）
+
+有时你可能希望在某个值是 `null` 或 `undefined` 时避免报错，可以使用 **可选链操作符**（`?.`）来进行安全访问，而不需要使用非空断言。
+
+#### 可选链示例：
+
+```typescript
+let user: { name: string } | null = null;
+console.log(user?.name); // 输出: undefined，而不是报错
+```
+
+`?.` 会检查值是否为 `null` 或 `undefined`，如果是，则返回 `undefined`，而不是继续执行后续的操作。
+
+### 5. 总结
+
+- **非空断言操作符（`!`）** 用于告诉 TypeScript 编译器一个值不会是 `null` 或 `undefined`，从而绕过类型检查。
+- 常用于访问可能为 `null` 的值，或者在 DOM 操作中避免类型检查。
+- 使用时需要非常小心，确保值在访问时确实不为 `null`，否则可能会导致 **运行时错误**。
+- 如果你希望更安全地处理 `null` 或 `undefined`，可以使用 **可选链操作符（`?.`）** 来避免直接访问潜在的 `null` 值。

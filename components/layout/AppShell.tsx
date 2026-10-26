@@ -8,7 +8,8 @@ import { Header } from "@/components/interview/Header";
 import { Sidebar } from "@/components/interview/Sidebar";
 import { WorkspaceDialog } from "@/components/interview/WorkspaceDialog";
 import { articles } from "@/lib/interview/data";
-import { initializeResourceState } from "@/lib/resources/store";
+import { resourceSummary } from "@/lib/resources/config";
+import { initializeResourceState, useResourceStore } from "@/lib/resources/store";
 import type { Panel } from "@/lib/interview/types";
 import {
   initializeLearningState,
@@ -22,6 +23,8 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [helpOpen, setHelpOpen] = useState(false);
   const theme = useLearningStore((state) => state.theme);
   const mastered = useLearningStore((state) => state.mastered);
+  const resourceRecords = useResourceStore((state) => state.records);
+  const totalMastered = mastered.length + Object.values(resourceRecords).filter((item) => item.mastered).length;
   const toast = useLearningStore((state) => state.toast);
   const setTheme = useLearningStore((state) => state.setTheme);
   const notify = useLearningStore((state) => state.notify);
@@ -58,7 +61,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           onTheme={() => setTheme(theme === "dark" ? "light" : "dark")}
           onPanel={openPanel}
           onMenu={() => setMobileOpen(!mobileOpen)}
-          progress={Math.round((mastered.length / articles.length) * 100)}
+          progress={Math.round((totalMastered / resourceSummary.total) * 100)}
         />
         <div className="workspace-layout">
           <Sidebar

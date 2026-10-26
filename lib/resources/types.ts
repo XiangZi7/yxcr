@@ -7,6 +7,10 @@ export interface LearningResource {
   section: string;
   kind: "document" | "knowledge" | "collection";
   featured?: boolean;
+  description?: string;
+  collections?: string[];
+  originalSlug?: string;
+  category?: string;
 }
 
 export interface ResourceProgress {
@@ -25,4 +29,5 @@ export interface ResourceFilters {
   source?: string;
   collection?: string;
   status?: ResourceStatus;
+  category?: string;
 }

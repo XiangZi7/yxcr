@@ -1,0 +1,7 @@
+YXCR OS adapted Markdown content
+
+gouxinjie/gouxinjie.github.io — Apache-2.0
+hcer1999/vitepress_blog — MIT
+
+Modified: layout, Markdown normalization, local links, chapter extraction.
+Per-document provenance: content/knowledge/manifest.json

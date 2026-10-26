@@ -1,0 +1,5 @@
+- 元素为行内元素，设置父元素 `text-align` 为 `center`
+- 如果元素宽度固定，可以设置左右 `margin` 为 `auto`;
+- 如果元素为绝对定位，设置父元素 `position` 为 `relative`，元素设 `left:0`;`right:0`;`margin:auto`;
+- 使用 `flex-box` 布局，指定 `justify-content` 属性为 `center`
+- `display` 设置为 `tabel-ceil`

@@ -5,9 +5,14 @@ import { articles } from "@/lib/interview/data";
 import { getArticleMarkdown } from "@/lib/markdown/content";
 import { articleMetadata, articleStructuredData } from "@/lib/seo";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { KnowledgeWorkspace } from "@/components/resources/KnowledgeWorkspace";
+import { findKnowledge, resources } from "@/lib/resources/catalog";
+import { getKnowledgeMarkdown } from "@/lib/resources/content";
+import { pageMetadata } from "@/lib/seo";
+import { absoluteUrl } from "@/lib/site";
 
 export function generateStaticParams() {
-  return articles.map(({ slug }) => ({ slug }));
+  return [...articles.map(({ slug }) => ({ slug })), ...resources.filter((item) => !item.originalSlug).slice(0, 4).map((item) => ({ slug: item.id }))];
 }
 
 export async function generateMetadata({
@@ -15,9 +20,10 @@ export async function generateMetadata({
 }: PageProps<"/questions/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const article = articles.find((item) => item.slug === slug);
+  const knowledge = findKnowledge(slug);
   return article
     ? articleMetadata(article)
-    : { title: "题目未找到", robots: { index: false, follow: false } };
+    : knowledge ? pageMetadata(knowledge.title, knowledge.description || `${knowledge.section}知识解析与代码示例。`, `/questions/${slug}`) : { title: "题目未找到", robots: { index: false, follow: false } };
 }
 
 export default async function QuestionPage({
@@ -25,7 +31,13 @@ export default async function QuestionPage({
 }: PageProps<"/questions/[slug]">) {
   const { slug } = await params;
   const article = articles.find((item) => item.slug === slug);
-  if (!article) notFound();
+  if (!article) {
+    const resource = findKnowledge(slug);
+    if (!resource) notFound();
+    const markdown = await getKnowledgeMarkdown(slug);
+    if (!markdown) notFound();
+    return <><JsonLd data={{ "@context": "https://schema.org", "@type": "TechArticle", headline: resource.title, description: resource.description, articleSection: resource.section, inLanguage: "zh-CN", url: absoluteUrl(`/questions/${slug}`), isAccessibleForFree: true }} /><KnowledgeWorkspace resource={resource} markdown={markdown} /></>;
+  }
   return (
     <>
       <JsonLd data={articleStructuredData(article)} />

@@ -1,9 +1,10 @@
 import config from "@/content/resources/sources.json";
 import summary from "./summary.json";
+import { articles } from "@/lib/interview/data";
 
 export const resourceSources = config.sources;
 export const resourceCollections = config.collections;
-export const resourceSummary = summary;
+export const resourceSummary = { ...summary, total: summary.total + articles.length };
 export const resourceGroups = [
   ...new Set(resourceCollections.map((collection) => collection.group)),
 ];
@@ -18,5 +19,9 @@ export function collectionResourceCount(id: string) {
     resourceSummary.collections[
       id as keyof typeof resourceSummary.collections
     ] ?? 0
-  );
+  ) + articles.filter((article) => ["curated", "frequent", "principles"].includes(id) || (id === "ai" && article.category === "AI / LLM")).length;
+}
+
+export function categoryKnowledgeCount(category: string) {
+  return (summary.categories[category as keyof typeof summary.categories] ?? 0) + articles.filter((article) => article.category === category).length;
 }

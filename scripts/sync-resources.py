@@ -199,8 +199,8 @@ def main() -> None:
     summary = {"syncedAt": datetime.now(timezone.utc).isoformat(), "total": len(snapshot), "collections": {collection["id"]: sum(item["collection"] == collection["id"] for item in snapshot) for collection in COLLECTIONS}, "sources": {source: sum(item["source"] == source for item in snapshot) for source in SOURCES}}
     output = ROOT / "lib/resources"
     output.mkdir(parents=True, exist_ok=True)
-    (output / "catalog.json").write_text(json.dumps(snapshot, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-    (output / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    (output / "directory-index.json").write_text(json.dumps(snapshot, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
+    (output / "directory-summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2), flush=True)
 
 

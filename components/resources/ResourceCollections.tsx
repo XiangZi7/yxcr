@@ -19,11 +19,11 @@ export function SavedResources({ query = "" }: { query?: string }) {
     <section className="mt-8">
       <div className="section-heading mb-5">
         <div>
-          <h2>收藏的学习资源</h2>
+          <h2>已收藏的知识点</h2>
           <p>把值得深入的知识，留给下一次认真阅读。</p>
         </div>
-        <Link href="/resources?status=saved" className="subtle-link text-xs">
-          全部资源收藏
+        <Link href="/library?status=saved" className="subtle-link text-xs">
+          查看全部收藏
           <ArrowRight size={13} />
         </Link>
       </div>
@@ -43,11 +43,11 @@ export function PlannedResources() {
     <section className="panel">
       <div className="section-heading">
         <div>
-          <h2>资源学习计划</h2>
-          <p>从三个资源库中挑选的下一步。</p>
+          <h2>接下来学习</h2>
+          <p>为今天的进步，安排下一步。</p>
         </div>
-        <Link href="/resources" className="subtle-link text-xs">
-          添加资源
+        <Link href="/library" className="subtle-link text-xs">
+          添加知识点
           <ArrowRight size={13} />
         </Link>
       </div>
@@ -62,9 +62,9 @@ export function PlannedResources() {
           ))}
         </div>
       ) : (
-        <Link href="/resources" className="resource-plan-empty">
+        <Link href="/library" className="resource-plan-empty">
           <Layers3 size={21} />
-          <span>从资源知识库选择一个感兴趣的知识点</span>
+          <span>选择一个感兴趣的知识点，开始学习</span>
           <ArrowRight size={15} />
         </Link>
       )}

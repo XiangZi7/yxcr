@@ -1,15 +1,9 @@
-import { pageMetadata } from "@/lib/seo";
 import { Suspense } from "react";
-import { LibraryPage, LibraryPreview } from "@/components/learning/LibraryPage";
-export const metadata = pageMetadata(
-  "技术面试题库：前端、后端与 AI",
-  "浏览 JavaScript、TypeScript、Vue、React、Python 与大模型精选面试题，阅读原理解析和代码示例，按技术分类查找与复习。",
-  "/library",
-);
+import { pageMetadata } from "@/lib/seo";
+import { resources } from "@/lib/resources/catalog";
+import { ResourceLibraryPage, ResourceLibraryPreview } from "@/components/resources/ResourcesPage";
+export const metadata = pageMetadata("全部题库：前端、网络与 AI", "按分类浏览技术知识，站内阅读 Markdown 正文、代码示例与原理解析，收藏、记录笔记并安排复习。", "/library");
 export default function Page() {
-  return (
-    <Suspense fallback={<LibraryPreview />}>
-      <LibraryPage />
-    </Suspense>
-  );
+  const initialResources = resources.slice(0, 24);
+  return <Suspense fallback={<ResourceLibraryPreview initialResources={initialResources} />}><ResourceLibraryPage initialResources={initialResources} /></Suspense>;
 }

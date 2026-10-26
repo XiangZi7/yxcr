@@ -21,6 +21,7 @@ export function filterResources(
     .split(" ")
     .filter(Boolean);
   return resources.filter((resource) => {
+    if (filters.category && resource.category !== filters.category) return false;
     if (
       filters.source &&
       filters.source !== "all" &&
@@ -30,7 +31,8 @@ export function filterResources(
     if (
       filters.collection &&
       filters.collection !== "all" &&
-      resource.collection !== filters.collection
+      resource.collection !== filters.collection &&
+      !resource.collections?.includes(filters.collection)
     )
       return false;
     const progress = records[resource.id];
@@ -39,7 +41,7 @@ export function filterResources(
     if (filters.status === "unlearned" && progress?.mastered) return false;
     if (filters.status === "planned" && !progress?.inPlan) return false;
     const text = normalizeResourceSearch(
-      `${resource.title} ${resource.section}`,
+      `${resource.title} ${resource.section} ${resource.description ?? ""}`,
     );
     return terms.every((term) => text.includes(term));
   });

@@ -12,10 +12,9 @@ import {
   LayoutGrid,
   Star,
   NotebookPen,
-  LibraryBig,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { articles, articleHref, navigationGroups } from "@/lib/interview/data";
+import { navigationGroups } from "@/lib/interview/data";
 import { BrandIcon } from "./BrandIcon";
 import { CreatorLinks } from "@/components/layout/CreatorLinks";
 
@@ -46,7 +45,6 @@ export function Sidebar({
   }, [mobileOpen, onClose]);
   const links = [
     { label: "学习概览", icon: House, href: "/overview" },
-    { label: "资源知识库", icon: LibraryBig, href: "/resources" },
     { label: "全部题库", icon: LayoutGrid, href: "/library" },
     { label: "今日学习", icon: ClipboardCheck, href: "/today" },
     { label: "AI 模拟面试", icon: Bot, href: "/practice" },
@@ -136,12 +134,9 @@ export function Sidebar({
                           className="overflow-hidden"
                         >
                           {group.topics.map((name) => {
-                            const article = articles.find(
-                              (item) => item.topic === name,
-                            )!;
                             return (
                               <Link
-                                href={articleHref(article.slug)}
+                                href={`/library?q=${encodeURIComponent(name)}`}
                                 key={name}
                                 className={`topic-link flex items-center gap-3 ${topic === name ? "is-active" : ""}`}
                                 aria-current={
