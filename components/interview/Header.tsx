@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {
-  BookOpenCheck,
   ChevronRight,
   CircleHelp,
   Command,
@@ -11,11 +10,15 @@ import {
   Moon,
   Search,
   Sun,
-  UserRound,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { articles, articleHref } from "@/lib/interview/data";
 import type { Panel } from "@/lib/interview/types";
+import { BrandMark } from "@/components/brand/BrandMark";
+import { AuthorAvatar } from "@/components/brand/AuthorAvatar";
+import { site } from "@/lib/site";
+import type { LearningResource } from "@/lib/resources/types";
+import { getResourceSource } from "@/lib/resources/config";
 
 export function Header({
   dark,
@@ -32,6 +35,8 @@ export function Header({
 }) {
   const [query, setQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
+  const [resourceSearch, setResourceSearch] = useState<{ query: string; items: LearningResource[] }>({ query: "", items: [] });
+  const resourceResults = resourceSearch.query === query ? resourceSearch.items : [];
   const inputRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
   const results = articles
@@ -41,6 +46,18 @@ export function Header({
         .includes(query.toLowerCase()),
     )
     .slice(0, 6);
+  useEffect(() => {
+    if (!query.trim()) return;
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      void fetch(`/api/resources?q=${encodeURIComponent(query)}`, { signal: controller.signal }).then(async response => {
+        if (!response.ok) return;
+        const items: LearningResource[] = await response.json();
+        if (!controller.signal.aborted) setResourceSearch({ query, items: items.slice(0, 5) });
+      }).catch(() => {});
+    }, 250);
+    return () => { clearTimeout(timer); controller.abort(); };
+  }, [query]);
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
@@ -73,12 +90,12 @@ export function Header({
       <Link
         href="/overview"
         className="brand flex shrink-0 items-center gap-3"
-        aria-label="Interview OS 首页"
+        aria-label={`${site.name} 首页`}
       >
-        <span className="brand-mark flex items-center justify-center">
-          <BookOpenCheck size={18} strokeWidth={2.5} />
+        <BrandMark size={30} className="brand-mark" id="header-mark" />
+        <span className="brand-wordmark">
+          YXCR <span className="brand-os">OS</span>
         </span>
-        <span>Interview OS</span>
       </Link>
       <div
         ref={searchRef}
@@ -148,9 +165,11 @@ export function Header({
                 ))
               ) : (
                 <p className="p-4 text-sm text-muted">
-                  没有找到相关题目，试试 Vue、React 或响应式。
+                  可以在资源知识库中继续查找相关知识。
                 </p>
               )}
+              {query.trim() && resourceResults.length > 0 && <div className="resource-global-results"><p>资源知识库</p>{resourceResults.map(resource => <a key={resource.id} className="search-result flex items-center justify-between gap-3" href={resource.url} target="_blank" rel="noopener noreferrer" onClick={() => { setSearchOpen(false); setQuery(""); }}><span><span className="mb-1 block text-xs text-brand">{getResourceSource(resource.source)?.name}</span>{resource.title}</span><ChevronRight size={16} /></a>)}</div>}
+              <Link href={`/resources${query.trim() ? `?q=${encodeURIComponent(query)}` : ""}`} className="resource-search-more" onClick={() => { setSearchOpen(false); setQuery(""); }}>在资源知识库中搜索<ChevronRight size={14} /></Link>
             </motion.div>
           )}
         </AnimatePresence>
@@ -222,7 +241,7 @@ export function Header({
           aria-label="个人学习档案"
           onClick={() => onPanel("profile")}
         >
-          <UserRound size={19} strokeWidth={1.8} />
+          <AuthorAvatar size={28} decorative />
         </button>
       </div>
     </header>

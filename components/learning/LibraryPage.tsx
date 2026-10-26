@@ -19,6 +19,9 @@ import { articles } from "@/lib/interview/data";
 import { useLearningStore } from "@/lib/learning/store";
 import { PageHeading } from "./PageHeading";
 import { QuestionCard } from "./QuestionCard";
+import { ResourceLibraryTabs } from "@/components/resources/ResourcesPage";
+import { SavedResources } from "@/components/resources/ResourceCollections";
+import { useResourceStore } from "@/lib/resources/store";
 
 export function LibraryPage({ savedOnly = false }: { savedOnly?: boolean }) {
   const params = useSearchParams();
@@ -60,6 +63,8 @@ function LibraryContent({
   const [list, setList] = useState(false);
   const [tab, setTab] = useState("saved");
   const { saved, mastered, mistakes } = useLearningStore();
+  const resourceRecords = useResourceStore(state => state.records);
+  const savedResourceCount = Object.values(resourceRecords).filter(item => item.saved).length;
   const matches = articles
     .filter(
       (article) =>
@@ -106,13 +111,14 @@ function LibraryContent({
           </Link>
         }
       />
+      {!savedOnly && <ResourceLibraryTabs active="questions" />}
       {savedOnly ? (
         <div className="collection-tabs mb-6 flex gap-2">
           {[
             {
               id: "saved",
-              title: "收藏的题目",
-              count: saved.length,
+              title: "我的收藏",
+              count: saved.length + savedResourceCount,
               icon: Star,
             },
             {
@@ -281,7 +287,7 @@ function LibraryContent({
             <QuestionCard key={article.slug} article={article} list={list} />
           ))}
         </div>
-      ) : (
+      ) : savedOnly && tab === "saved" && savedResourceCount > 0 ? null : (
         <section className="empty-library panel">
           <span className="empty-icon">
             {savedOnly ? <Star size={30} /> : <Search size={30} />}
@@ -309,6 +315,7 @@ function LibraryContent({
           )}
         </section>
       )}
+      {savedOnly && tab === "saved" && <SavedResources query={query} />}
     </main>
   );
 }

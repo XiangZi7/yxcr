@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
-export const alt = "Interview OS — Learn. Practice. Grow. by XiangZi7";
+import { BrandMark } from "@/components/brand/BrandMark";
+import { author, site } from "@/lib/site";
+export const alt = `${site.name} — Learn. Practice. Grow. by ${author.name}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export default function OpenGraphImage() {
@@ -26,22 +28,8 @@ export default function OpenGraphImage() {
           fontWeight: 700,
         }}
       >
-        <span
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 48,
-            height: 48,
-            borderRadius: 12,
-            color: "white",
-            background: "#4d8bf3",
-            fontSize: 28,
-          }}
-        >
-          I
-        </span>
-        Interview OS
+        <BrandMark size={54} id="share-mark" />
+        {site.name}
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
         <div
@@ -84,7 +72,7 @@ export default function OpenGraphImage() {
           ))}
         </div>
         <div style={{ display: "flex", fontSize: 20, color: "#6581a9" }}>
-          yxcr.top · XiangZi7
+          {new URL(site.url).host} · {author.name}
         </div>
       </div>
     </div>,

@@ -21,6 +21,8 @@ import { articles, articleHref, navigationGroups } from "@/lib/interview/data";
 import { dayKey, useLearningStore } from "@/lib/learning/store";
 import { PageHeading } from "./PageHeading";
 import { BrandIcon } from "@/components/interview/BrandIcon";
+import { useResourceStore } from "@/lib/resources/store";
+import { resourceSummary } from "@/lib/resources/config";
 
 export function OverviewPage() {
   const {
@@ -34,8 +36,12 @@ export function OverviewPage() {
     displayName,
     hydrated,
   } = useLearningStore();
+  const resourceRecords = useResourceStore(state => state.records);
+  const resourceActivity = useResourceStore(state => state.activity);
+  const resourceValues = Object.values(resourceRecords);
   const today = hydrated ? dayKey() : "";
-  const learnedToday = activity[today]?.length ?? 0;
+  const learnedToday = (activity[today]?.length ?? 0) + (resourceActivity[today]?.length ?? 0);
+  const learnedOnDay = (date: string) => (activity[date]?.length ?? 0) + (resourceActivity[date]?.length ?? 0);
   const progress = Math.round((mastered.length / articles.length) * 100);
   const recommendations = [
     ...articles.filter(
@@ -58,9 +64,9 @@ export function OverviewPage() {
   const stats = [
     {
       label: "累计掌握",
-      value: mastered.length,
-      unit: "题",
-      detail: `共 ${articles.length} 道精选面试题`,
+      value: mastered.length + resourceValues.filter(item => item.mastered).length,
+      unit: "项",
+      detail: `${articles.length} 道题目 · ${resourceSummary.total.toLocaleString("en-US")} 条资源`,
       icon: GraduationCap,
       color: "blue",
     },
@@ -74,8 +80,8 @@ export function OverviewPage() {
     },
     {
       label: "我的收藏",
-      value: saved.length,
-      unit: "题",
+      value: saved.length + resourceValues.filter(item => item.saved).length,
+      unit: "项",
       detail: "留给下一次认真复习",
       icon: Star,
       color: "violet",
@@ -84,7 +90,7 @@ export function OverviewPage() {
       label: "学习笔记",
       value:
         Object.values(notes).filter((value) => value.trim()).length +
-        documents.length,
+        documents.length + resourceValues.filter(item => item.note.trim()).length,
       unit: "篇",
       detail: "用自己的语言理解知识",
       icon: NotebookPen,
@@ -227,10 +233,10 @@ export function OverviewPage() {
             <div
               className="weekly-chart"
               role="img"
-              aria-label={`最近七天掌握题目：${week.map((day) => `${day.label} ${activity[day.date]?.length ?? 0}题`).join("，")}`}
+              aria-label={`最近七天掌握知识：${week.map((day) => `${day.label} ${learnedOnDay(day.date)}项`).join("，")}`}
             >
               {week.map((day) => {
-                const count = activity[day.date]?.length ?? 0;
+                const count = learnedOnDay(day.date);
                 return (
                   <div className="chart-day" key={day.date}>
                     <span className="text-xs text-muted">{count || ""}</span>
@@ -280,7 +286,7 @@ export function OverviewPage() {
                   {progress}
                   <small>%</small>
                 </strong>
-                <span className="text-xs text-muted">整体掌握度</span>
+                <span className="text-xs text-muted">站内题库掌握度</span>
               </span>
             </div>
             <div className="space-y-5">

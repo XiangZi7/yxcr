@@ -29,17 +29,19 @@ import {
 import { MarkdownRenderer } from "@/components/markdown/MarkdownRenderer";
 import { Modal } from "@/components/ui/Modal";
 import { PageHeading, PageSkeleton } from "./PageHeading";
+import { useResourceStore } from "@/lib/resources/store";
 
 export function NotesPage() {
   const params = useSearchParams();
   const hydrated = useLearningStore((state) => state.hydrated);
-  if (!hydrated) return <PageSkeleton />;
+  const resourcesHydrated = useResourceStore(state => state.hydrated);
+  if (!hydrated || !resourcesHydrated) return <PageSkeleton />;
   return (
     <NotesContent
       key={params.toString()}
       selectedId={
         params.get("document") ??
-        (params.get("article") ? `article:${params.get("article")}` : "guide")
+        (params.get("resource") ? `resource:${params.get("resource")}` : params.get("article") ? `article:${params.get("article")}` : "guide")
       }
     />
   );
@@ -47,6 +49,9 @@ export function NotesPage() {
 
 function NotesContent({ selectedId }: { selectedId: string }) {
   const router = useRouter();
+  const resourceRecords = useResourceStore(state => state.records);
+  const setResourceNote = useResourceStore(state => state.setNote);
+  const resourceRecord = selectedId.startsWith("resource:") ? resourceRecords[selectedId.slice(9)] : undefined;
   const { documents, notes, saveDocument, deleteDocument, setNote, notify } =
     useLearningStore();
   const fileInput = useRef<HTMLInputElement>(null);
@@ -58,16 +63,17 @@ function NotesContent({ selectedId }: { selectedId: string }) {
     : "";
   const article = articles.find((item) => item.slug === articleSlug);
   const document = documents.find((item) => item.id === selectedId);
-  const isGuide = !article && !document;
+  const isGuide = !article && !document && !resourceRecord;
   const original =
     document?.content ??
+    resourceRecord?.note ??
     (article
       ? (notes[article.slug] ?? `# ${article.topic} 学习笔记\n\n`)
       : markdownGuide);
   const [draft, setDraft] = useState(original);
   const title = markdownTitle(
     draft,
-    document?.title ?? article?.title ?? "Markdown 使用指南",
+    document?.title ?? resourceRecord?.resource.title ?? article?.title ?? "Markdown 使用指南",
   );
   const dirty = draft !== original;
   const allNotes = [
@@ -78,6 +84,7 @@ function NotesContent({ selectedId }: { selectedId: string }) {
       content: markdownGuide,
     },
     ...documents.map((item) => ({ ...item, kind: "document" })),
+    ...Object.values(resourceRecords).filter(item => item.note.trim() || item === resourceRecord).map(item => ({ id: `resource:${item.resource.id}`, title: item.resource.title, content: item.note, kind: "resource" })),
     ...articles
       .filter((item) => notes[item.slug]?.trim() || item.slug === articleSlug)
       .map((item) => ({
@@ -94,13 +101,18 @@ function NotesContent({ selectedId }: { selectedId: string }) {
     router.push(
       id === "guide"
         ? "/notes"
+        : id.startsWith("resource:")
+          ? `/notes?resource=${encodeURIComponent(id.slice(9))}`
         : id.startsWith("article:")
           ? `/notes?article=${id.slice(8)}`
           : `/notes?document=${encodeURIComponent(id)}`,
     );
   }
   function save() {
-    if (article) {
+    if (resourceRecord) {
+      setResourceNote(resourceRecord.resource, draft);
+      notify("资源学习笔记已保存");
+    } else if (article) {
       setNote(article.slug, draft);
       notify("学习笔记已保存");
     } else {
@@ -166,7 +178,8 @@ function NotesContent({ selectedId }: { selectedId: string }) {
     }
   }
   function remove() {
-    if (document) deleteDocument(document.id);
+    if (resourceRecord) setResourceNote(resourceRecord.resource, "");
+    else if (document) deleteDocument(document.id);
     else if (article) setNote(article.slug, "");
     setDeletePending(false);
     router.push("/notes");
@@ -238,6 +251,8 @@ function NotesContent({ selectedId }: { selectedId: string }) {
                       ? "从这里开始 · Markdown"
                       : item.kind === "article"
                         ? "题目笔记"
+                        : item.kind === "resource"
+                          ? "资源学习笔记"
                         : "Markdown 文档"}
                   </span>
                 </span>
@@ -354,6 +369,7 @@ function NotesContent({ selectedId }: { selectedId: string }) {
             )}
           </div>
           <footer className="note-status">
+            {resourceRecord && <a href={resourceRecord.resource.url} target="_blank" rel="noopener noreferrer" className="subtle-link">阅读原文<ArrowUpRight size={12} /></a>}
             <span className="flex items-center gap-1.5">
               <span className={`save-indicator ${dirty ? "is-dirty" : ""}`} />
               {dirty ? "尚未保存 · 点击保存保留修改" : "Markdown 已就绪"}

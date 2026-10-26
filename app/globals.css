@@ -171,14 +171,21 @@ a {
   letter-spacing: -0.35px;
 }
 .brand-mark {
-  width: 24px;
-  height: 24px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #98e2fb, #599eff 65%, #307aff);
-  box-shadow:
-    0 0 0 3px #fff7,
-    inset 0 0 0 1px #ffffff4d;
-  color: white;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 3px #24344c14);
+}
+.brand-wordmark {
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.65px;
+}
+.brand-os {
+  margin-left: 2px;
+  color: var(--secondary);
+  font-weight: 450;
+  letter-spacing: -0.5px;
 }
 .search-container {
   position: absolute;
@@ -263,17 +270,11 @@ a {
   white-space: nowrap;
 }
 .avatar {
-  width: 27px;
-  height: 27px;
+  width: 28px;
+  height: 28px;
   overflow: hidden;
-  color: #635a55;
-  background: radial-gradient(
-    circle at 48% 25%,
-    #d7c6b6 0,
-    #b8b9b9 45%,
-    #aab3be 100%
-  );
-  border: 3px solid #e1e5eb;
+  background: var(--surface);
+  border: 1px solid var(--line);
   border-radius: 50%;
 }
 .mobile-menu {

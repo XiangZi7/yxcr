@@ -11,11 +11,12 @@ import {
   Settings2,
   Star,
   Sun,
-  UserRound,
 } from "lucide-react";
 import { useLearningStore } from "@/lib/learning/store";
 import { PageHeading, PageSkeleton } from "./PageHeading";
 import { CreatorLinks } from "@/components/layout/CreatorLinks";
+import { AuthorAvatar } from "@/components/brand/AuthorAvatar";
+import { useResourceStore } from "@/lib/resources/store";
 
 export function ProfilePage() {
   const hydrated = useLearningStore((state) => state.hydrated);
@@ -23,6 +24,8 @@ export function ProfilePage() {
 }
 function ProfileContent() {
   const state = useLearningStore();
+  const resourceState = useResourceStore();
+  const resourceValues = Object.values(resourceState.records);
   const [name, setName] = useState(state.displayName);
   function exportData() {
     const content = JSON.stringify(
@@ -35,6 +38,8 @@ function ProfileContent() {
         documents: state.documents,
         activity: state.activity,
         sessions: state.sessions,
+        resourceRecords: resourceState.records,
+        resourceActivity: resourceState.activity,
       },
       null,
       2,
@@ -44,7 +49,7 @@ function ProfileContent() {
     );
     const link = document.createElement("a");
     link.href = url;
-    link.download = "interview-os-learning.json";
+    link.download = "yxcr-os-learning.json";
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
@@ -65,9 +70,7 @@ function ProfileContent() {
         <div className="space-y-5">
           <section className="panel">
             <div className="flex items-center gap-5">
-              <span className="profile-avatar">
-                <UserRound size={34} />
-              </span>
+              <AuthorAvatar size={73} className="profile-avatar" />
               <div>
                 <h2 className="text-xl font-semibold">{state.displayName}</h2>
                 <p className="mt-2 text-sm text-muted">
@@ -172,15 +175,15 @@ function ProfileContent() {
               {[
                 {
                   title: "已掌握题目",
-                  value: state.mastered.length,
+                  value: state.mastered.length + resourceValues.filter(item => item.mastered).length,
                   icon: GraduationCap,
                 },
-                { title: "收藏题目", value: state.saved.length, icon: Star },
+                { title: "收藏题目与资源", value: state.saved.length + resourceValues.filter(item => item.saved).length, icon: Star },
                 {
                   title: "学习笔记",
                   value:
                     Object.values(state.notes).filter((note) => note.trim())
-                      .length + state.documents.length,
+                      .length + state.documents.length + resourceValues.filter(item => item.note.trim()).length,
                   icon: NotebookPen,
                 },
                 {

@@ -1,0 +1,40 @@
+{
+  "sources": [
+    { "id": "poetries", "name": "前端进阶之旅", "author": "poetries", "url": "https://feinterview.poetries.top", "description": "从基础面试到工程实践的系统学习资源。" },
+    { "id": "bingkele", "name": "冰可乐的前端笔记", "author": "冰可乐", "url": "https://bingkele.cc/interview/new/network/", "description": "计算机网络面试题与知识点整理。" },
+    { "id": "aifuture", "name": "AI Future", "author": "苟新节", "url": "https://gouxinjie.github.io/column/AIFuture/", "description": "AI 基础、MCP、Skills 与 Agent 工程专题。" }
+  ],
+  "collections": [
+    { "id": "base", "title": "基础篇", "group": "面试专栏", "icon": "foundation", "description": "HTML、CSS、JavaScript 与 Web 基本功。", "source": "poetries", "path": "/docs/docs/base", "prefixes": ["/docs/docs/base"] },
+    { "id": "advanced", "title": "进阶篇", "group": "面试专栏", "icon": "layers", "description": "深入语言机制、性能与工程能力。", "source": "poetries", "path": "/docs/docs/base/improve", "prefixes": ["/docs/docs/base/improve"] },
+    { "id": "frequent", "title": "高频篇", "group": "面试专栏", "icon": "flame", "description": "围绕面试重点进行集中复习。", "source": "poetries", "path": "/docs/docs/base/high-frequency", "prefixes": ["/docs/docs/base/high-frequency"] },
+    { "id": "curated", "title": "精选篇", "group": "面试专栏", "icon": "sparkles", "description": "按技术模块组织的面试知识。", "source": "poetries", "path": "/docs/docs/excellent-docs/1-HTML模块", "prefixes": ["/docs/docs/excellent-docs/"] },
+    { "id": "handwritten", "title": "手写篇", "group": "面试专栏", "icon": "code", "description": "用代码理解常见实现与边界。", "source": "poetries", "path": "/docs/docs/base/handwritten", "prefixes": ["/docs/docs/base/handwritten"] },
+    { "id": "experience", "title": "面经篇", "group": "面试专栏", "icon": "messages", "description": "了解真实面试流程与复盘方法。", "source": "poetries", "path": "/docs/interview-exp/前端面经汇总", "prefixes": ["/docs/interview-exp/"] },
+    { "id": "ai", "title": "AI 篇", "group": "面试专栏", "icon": "brain", "description": "大模型、RAG、MCP 与 Agent 工程。", "source": "poetries", "path": "/docs/ai-interview/summary", "prefixes": ["/docs/ai-interview/"] },
+    { "id": "principles", "title": "原理篇", "group": "面试专栏", "icon": "workflow", "description": "框架、构建工具与运行机制。", "source": "poetries", "path": "/docs/principle-docs/react/01-React router原理", "prefixes": ["/docs/principle-docs/"] },
+    { "id": "daily", "title": "每日一题", "group": "面试专栏", "icon": "calendar", "description": "把学习拆成每天一个小问题。", "source": "poetries", "path": "/docs/days/每日一题", "prefixes": ["/docs/days/"] },
+    { "id": "weapp", "title": "小程序题库", "group": "面试专栏", "icon": "phone", "description": "连接原站的小程序与网页题库。", "source": "poetries", "path": "/weapp-interview", "prefixes": ["/weapp-interview"] },
+    { "id": "flashcards", "title": "知识卡片", "group": "面试专栏", "icon": "cards", "description": "按知识主题进行主动回忆。", "source": "poetries", "path": "/flashcards", "prefixes": ["/flashcards"] },
+    { "id": "scenarios", "title": "场景篇", "group": "专项练习", "icon": "boxes", "description": "从业务场景出发练习方案设计。", "source": "poetries", "path": "/docs/frontend-scenarios/summary", "prefixes": ["/docs/frontend-scenarios/"] },
+    { "id": "yearly", "title": "历年面经", "group": "专项练习", "icon": "history", "description": "按年份整理面试经验与考点。", "source": "poetries", "path": "/docs/yearly-interview", "prefixes": ["/docs/yearly-interview"] },
+    { "id": "algorithm", "title": "算法题库", "group": "专项练习", "icon": "network", "description": "数据结构、算法思路与编码练习。", "source": "poetries", "path": "/algorithm", "prefixes": ["/algorithm", "/docs/algorithm/"] },
+    { "id": "self-check", "title": "专项自测", "group": "专项练习", "icon": "check", "description": "通过问题清单检查知识盲区。", "source": "poetries", "path": "/docs/qa/1-前端100题自检", "prefixes": ["/docs/qa/"] },
+    { "id": "http", "title": "HTTP", "group": "知识库", "icon": "globe", "description": "协议、缓存、连接与安全传输。", "source": "poetries", "path": "/docs/fe-base-docs/http-protocol/base/01-HTTP的前世今生", "prefixes": ["/docs/fe-base-docs/http-protocol/"] },
+    { "id": "browser", "title": "浏览器", "group": "知识库", "icon": "browser", "description": "进程、渲染与浏览器工作机制。", "source": "poetries", "path": "/docs/fe-base-docs/browser/part1/01-Chrome架构：仅仅打开了1个页面，为什么有4个进程", "prefixes": ["/docs/fe-base-docs/browser/"] },
+    { "id": "computer", "title": "计算机基础", "group": "知识库", "icon": "cpu", "description": "Linux、网络与操作系统。", "source": "poetries", "path": "/docs/fe-base-docs/compute-docs/Linux", "prefixes": ["/docs/fe-base-docs/compute-docs/"] },
+    { "id": "patterns", "title": "设计模式", "group": "知识库", "icon": "shapes", "description": "理解设计模式与适用场景。", "source": "poetries", "path": "/docs/docs/base/design-pattern", "prefixes": ["/docs/docs/base/design-pattern"] },
+    { "id": "frontend-system", "title": "前端系统进阶", "group": "知识库", "icon": "layers", "description": "React、工程化与大型项目实践。", "source": "poetries", "path": "/docs/fe-improve-docs/react/react-web-action/01-前端开发的四个时代", "prefixes": ["/docs/fe-improve-docs/"] },
+    { "id": "comprehensive", "title": "前端综合文章", "group": "知识库", "icon": "book", "description": "按技术方向积累实践知识。", "source": "poetries", "path": "/docs/fe-blog-docs/blog-docs/javascript/-Ajax总结篇", "prefixes": ["/docs/fe-blog-docs/"] },
+    { "id": "node", "title": "Node 学习指南", "group": "知识库", "icon": "server", "description": "从环境与语言走向服务端开发。", "source": "poetries", "path": "/docs/fe-node-docs/nodejs-docs/base/01-环境搭建", "prefixes": ["/docs/fe-node-docs/"] },
+    { "id": "npm", "title": "NPM 工作流", "group": "知识库", "icon": "package", "description": "脚本、依赖管理与包发布。", "source": "poetries", "path": "/docs/improve-learn/npm-script", "prefixes": ["/docs/improve-learn/npm-script"] },
+    { "id": "docker", "title": "Docker", "group": "知识库", "icon": "boxes", "description": "容器、镜像与部署基础。", "source": "poetries", "path": "/docs/improve-learn/docker", "prefixes": ["/docs/improve-learn/docker"] },
+    { "id": "canvas", "title": "Canvas", "group": "知识库", "icon": "pen", "description": "图形绘制与动画实践。", "source": "poetries", "path": "/docs/improve-learn/canvas", "prefixes": ["/docs/improve-learn/canvas"] },
+    { "id": "mindmaps", "title": "思维导图", "group": "知识库", "icon": "network", "description": "连接前后端与计算机知识。", "source": "poetries", "path": "/docs/mind-map/frontend/javascript/JS变量", "prefixes": ["/docs/mind-map/"] },
+    { "id": "roadmaps", "title": "学习路线", "group": "知识库", "icon": "route", "description": "按学习阶段规划自己的路径。", "source": "poetries", "path": "/docs/roadmap/frontend", "prefixes": ["/docs/roadmap/"] },
+    { "id": "blog", "title": "技术博客", "group": "知识库", "icon": "newspaper", "description": "技术解析、工具与工程实践。", "source": "poetries", "path": "/blog", "prefixes": ["/blog/"] },
+    { "id": "tools", "title": "开发者导航", "group": "知识库", "icon": "compass", "description": "连接工具、文档与开发资源。", "source": "poetries", "path": "/nav", "prefixes": ["/docs/tools/"] },
+    { "id": "network-interview", "title": "网络面试专题", "group": "扩展专栏", "icon": "globe", "description": "冰可乐整理的计算机网络面试题。", "source": "bingkele", "path": "/interview/new/network/", "prefixes": ["/interview/new/network/"] },
+    { "id": "ai-future", "title": "AI Future", "group": "扩展专栏", "icon": "brain", "description": "AI 基础、MCP、Skills 与 Agent 专题。", "source": "aifuture", "path": "/column/AIFuture/", "prefixes": ["/column/AIFuture/"] }
+  ]
+}

@@ -8,6 +8,7 @@ import { Header } from "@/components/interview/Header";
 import { Sidebar } from "@/components/interview/Sidebar";
 import { WorkspaceDialog } from "@/components/interview/WorkspaceDialog";
 import { articles } from "@/lib/interview/data";
+import { initializeResourceState } from "@/lib/resources/store";
 import type { Panel } from "@/lib/interview/types";
 import {
   initializeLearningState,
@@ -32,6 +33,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const closeMenu = useCallback(() => setMobileOpen(false), []);
   useEffect(() => {
     void initializeLearningState();
+    void initializeResourceState();
   }, []);
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });

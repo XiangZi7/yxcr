@@ -1,5 +1,6 @@
 import { ArrowUpRight, GitBranch, TvMinimalPlay } from "lucide-react";
 import { author } from "@/lib/site";
+import { AuthorAvatar } from "@/components/brand/AuthorAvatar";
 
 export function CreatorLinks({ compact = false }: { compact?: boolean }) {
   return (
@@ -8,9 +9,7 @@ export function CreatorLinks({ compact = false }: { compact?: boolean }) {
       aria-label="作者与社交主页"
     >
       <div className="flex items-center gap-3">
-        <span className="creator-avatar">
-          X<span>.</span>
-        </span>
+        <AuthorAvatar size={compact ? 34 : 40} className="creator-avatar" />
         <div>
           <a
             href={author.github}

@@ -12,6 +12,7 @@ import {
   LayoutGrid,
   Star,
   NotebookPen,
+  LibraryBig,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { articles, articleHref, navigationGroups } from "@/lib/interview/data";
@@ -45,6 +46,7 @@ export function Sidebar({
   }, [mobileOpen, onClose]);
   const links = [
     { label: "学习概览", icon: House, href: "/overview" },
+    { label: "资源知识库", icon: LibraryBig, href: "/resources" },
     { label: "全部题库", icon: LayoutGrid, href: "/library" },
     { label: "今日学习", icon: ClipboardCheck, href: "/today" },
     { label: "AI 模拟面试", icon: Bot, href: "/practice" },

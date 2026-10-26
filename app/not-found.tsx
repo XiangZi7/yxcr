@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, BookOpen, Search } from "lucide-react";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: { absolute: "页面未找到 · Interview OS" },
+  title: { absolute: `页面未找到 · ${site.name}` },
   robots: { index: false, follow: true },
 };
 
