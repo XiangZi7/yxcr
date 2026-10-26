@@ -42,7 +42,19 @@ export function Header({
     resourceSearch.query === query ? resourceSearch.items : [];
   const inputRef = useRef<HTMLInputElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
-  const results: LearningResource[] = query.trim() ? resourceResults : articles.slice(0, 6).map((article) => ({ id: article.slug, title: article.title, url: `/questions/${article.slug}`, source: "yxcr", collection: "frequent", section: article.topic, kind: "knowledge" }));
+  const results: LearningResource[] = query.trim()
+    ? resourceResults
+    : articles
+        .slice(0, 6)
+        .map((article) => ({
+          id: article.slug,
+          title: article.title,
+          url: `/questions/${article.slug}`,
+          source: "yxcr",
+          collection: "frequent",
+          section: article.topic,
+          kind: "knowledge",
+        }));
   useEffect(() => {
     if (!query.trim()) return;
     const controller = new AbortController();
@@ -148,7 +160,33 @@ export function Header({
               <p className="px-3 pb-2 pt-1 text-xs text-muted">
                 {query ? `搜索结果 · ${results.length}` : "继续探索知识"}
               </p>
-              {results.length ? results.map((item) => <Link className="search-result flex items-center justify-between gap-3" href={`/questions/${item.id}`} key={item.id} onClick={() => { setSearchOpen(false); setQuery(""); }}><span><span className="mb-1 block text-xs text-brand">{item.section}</span>{item.title}</span><ChevronRight size={16} /></Link>) : <p className="p-4 text-sm text-muted">{resourceSearch.query === query ? "没有找到相关知识，试试其他关键词。" : "正在查找知识…"}</p>}
+              {results.length ? (
+                results.map((item) => (
+                  <Link
+                    className="search-result flex items-center justify-between gap-3"
+                    href={`/questions/${item.id}`}
+                    key={item.id}
+                    onClick={() => {
+                      setSearchOpen(false);
+                      setQuery("");
+                    }}
+                  >
+                    <span>
+                      <span className="mb-1 block text-xs text-brand">
+                        {item.section}
+                      </span>
+                      {item.title}
+                    </span>
+                    <ChevronRight size={16} />
+                  </Link>
+                ))
+              ) : (
+                <p className="p-4 text-sm text-muted">
+                  {resourceSearch.query === query
+                    ? "没有找到相关知识，试试其他关键词。"
+                    : "正在查找知识…"}
+                </p>
+              )}
               <Link
                 href={`/library${query.trim() ? `?q=${encodeURIComponent(query)}` : ""}`}
                 className="resource-search-more"

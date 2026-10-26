@@ -126,7 +126,8 @@ export function TodayPage() {
                 <p>先理解，再表达。勾选已学会的知识，记录今天的进步。</p>
               </div>
               <span className="tag tag-blue">
-                {done + resourcePlan.filter((item) => item.mastered).length} / {planned.length + resourcePlan.length} 已掌握
+                {done + resourcePlan.filter((item) => item.mastered).length} /{" "}
+                {planned.length + resourcePlan.length} 已掌握
               </span>
             </div>
             <div className="mt-5 space-y-3">
@@ -182,7 +183,13 @@ export function TodayPage() {
                   </article>
                 );
               })}
-              {resourcePlan.map((item) => <ResourceCard key={item.resource.id} resource={item.resource} list />)}
+              {resourcePlan.map((item) => (
+                <ResourceCard
+                  key={item.resource.id}
+                  resource={item.resource}
+                  list
+                />
+              ))}
               {!planned.length && !resourcePlan.length && (
                 <div className="py-12 text-center">
                   <BookOpen size={30} className="mx-auto mb-4 text-muted" />

@@ -12,7 +12,13 @@ import { pageMetadata } from "@/lib/seo";
 import { absoluteUrl } from "@/lib/site";
 
 export function generateStaticParams() {
-  return [...articles.map(({ slug }) => ({ slug })), ...resources.filter((item) => !item.originalSlug).slice(0, 4).map((item) => ({ slug: item.id }))];
+  return [
+    ...articles.map(({ slug }) => ({ slug })),
+    ...resources
+      .filter((item) => !item.originalSlug)
+      .slice(0, 4)
+      .map((item) => ({ slug: item.id })),
+  ];
 }
 
 export async function generateMetadata({
@@ -23,7 +29,13 @@ export async function generateMetadata({
   const knowledge = findKnowledge(slug);
   return article
     ? articleMetadata(article)
-    : knowledge ? pageMetadata(knowledge.title, knowledge.description || `${knowledge.section}知识解析与代码示例。`, `/questions/${slug}`) : { title: "题目未找到", robots: { index: false, follow: false } };
+    : knowledge
+      ? pageMetadata(
+          knowledge.title,
+          knowledge.description || `${knowledge.section}知识解析与代码示例。`,
+          `/questions/${slug}`,
+        )
+      : { title: "题目未找到", robots: { index: false, follow: false } };
 }
 
 export default async function QuestionPage({
@@ -36,7 +48,23 @@ export default async function QuestionPage({
     if (!resource) notFound();
     const markdown = await getKnowledgeMarkdown(slug);
     if (!markdown) notFound();
-    return <><JsonLd data={{ "@context": "https://schema.org", "@type": "TechArticle", headline: resource.title, description: resource.description, articleSection: resource.section, inLanguage: "zh-CN", url: absoluteUrl(`/questions/${slug}`), isAccessibleForFree: true }} /><KnowledgeWorkspace resource={resource} markdown={markdown} /></>;
+    return (
+      <>
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "TechArticle",
+            headline: resource.title,
+            description: resource.description,
+            articleSection: resource.section,
+            inLanguage: "zh-CN",
+            url: absoluteUrl(`/questions/${slug}`),
+            isAccessibleForFree: true,
+          }}
+        />
+        <KnowledgeWorkspace resource={resource} markdown={markdown} />
+      </>
+    );
   }
   return (
     <>

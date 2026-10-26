@@ -21,7 +21,8 @@ export function filterResources(
     .split(" ")
     .filter(Boolean);
   return resources.filter((resource) => {
-    if (filters.category && resource.category !== filters.category) return false;
+    if (filters.category && resource.category !== filters.category)
+      return false;
     if (
       filters.source &&
       filters.source !== "all" &&

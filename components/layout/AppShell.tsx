@@ -9,7 +9,10 @@ import { Sidebar } from "@/components/interview/Sidebar";
 import { WorkspaceDialog } from "@/components/interview/WorkspaceDialog";
 import { articles } from "@/lib/interview/data";
 import { resourceSummary } from "@/lib/resources/config";
-import { initializeResourceState, useResourceStore } from "@/lib/resources/store";
+import {
+  initializeResourceState,
+  useResourceStore,
+} from "@/lib/resources/store";
 import type { Panel } from "@/lib/interview/types";
 import {
   initializeLearningState,
@@ -24,7 +27,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   const theme = useLearningStore((state) => state.theme);
   const mastered = useLearningStore((state) => state.mastered);
   const resourceRecords = useResourceStore((state) => state.records);
-  const totalMastered = mastered.length + Object.values(resourceRecords).filter((item) => item.mastered).length;
+  const totalMastered =
+    mastered.length +
+    Object.values(resourceRecords).filter((item) => item.mastered).length;
   const toast = useLearningStore((state) => state.toast);
   const setTheme = useLearningStore((state) => state.setTheme);
   const notify = useLearningStore((state) => state.notify);

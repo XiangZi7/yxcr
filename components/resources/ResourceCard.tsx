@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  ArrowUpRight,
+  ArrowRight,
   Check,
   Star,
   Plus,
@@ -13,9 +13,7 @@ import {
   Braces,
 } from "lucide-react";
 import type { LearningResource } from "@/lib/resources/types";
-import {
-  getResourceCollection,
-} from "@/lib/resources/config";
+import { getResourceCollection } from "@/lib/resources/config";
 import { useKnowledgeProgress } from "@/lib/resources/progress";
 import { useLearningStore } from "@/lib/learning/store";
 import { Modal } from "@/components/ui/Modal";
@@ -55,9 +53,11 @@ export function ResourceCard({
         href={`/questions/${resource.originalSlug ?? resource.id}`}
       >
         <h2>{resource.title}</h2>
-        <ArrowUpRight size={16} />
+        <ArrowRight size={16} />
       </Link>
-      {resource.description && <p className="knowledge-excerpt">{resource.description}</p>}
+      {resource.description && (
+        <p className="knowledge-excerpt">{resource.description}</p>
+      )}
       <p className="resource-card-context">
         <ResourceIcon name={collection?.icon ?? "book"} size={13} />
         <span>{collection?.title}</span>
@@ -130,7 +130,7 @@ export function ResourceNoteDialog({
           className="subtle-link text-xs"
         >
           阅读正文
-          <ArrowUpRight size={12} />
+          <ArrowRight size={12} />
         </Link>
         <button
           className="subtle-link text-xs"
@@ -159,10 +159,14 @@ export function ResourceNoteDialog({
       )}
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
         <Link
-          href={resource.originalSlug ? `/notes?article=${resource.originalSlug}` : `/notes?resource=${resource.id}`}
+          href={
+            resource.originalSlug
+              ? `/notes?article=${resource.originalSlug}`
+              : `/notes?resource=${resource.id}`
+          }
           className="text-xs text-muted hover:text-brand"
           onClick={() => {
-            setNote( draft || `# ${resource.title}\n\n`);
+            setNote(draft || `# ${resource.title}\n\n`);
             onClose();
           }}
         >
@@ -171,7 +175,7 @@ export function ResourceNoteDialog({
         <button
           className="solid-button"
           onClick={() => {
-            setNote( draft);
+            setNote(draft);
             useLearningStore.getState().notify("学习笔记已保存");
             onClose();
           }}

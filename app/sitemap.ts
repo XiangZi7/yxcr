@@ -16,6 +16,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.7,
     })),
-    ...resources.filter((item) => !item.originalSlug).map((item) => ({ url: absoluteUrl(`/questions/${item.id}`), changeFrequency: "monthly" as const, priority: 0.6 })),
+    ...resources
+      .filter((item) => !item.originalSlug)
+      .map((item) => ({
+        url: absoluteUrl(`/questions/${item.id}`),
+        changeFrequency: "monthly" as const,
+        priority: 0.6,
+      })),
   ];
 }

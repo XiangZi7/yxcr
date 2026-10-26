@@ -22,7 +22,10 @@ import { dayKey, useLearningStore } from "@/lib/learning/store";
 import { PageHeading } from "./PageHeading";
 import { BrandIcon } from "@/components/interview/BrandIcon";
 import { useResourceStore } from "@/lib/resources/store";
-import { resourceSummary, categoryKnowledgeCount } from "@/lib/resources/config";
+import {
+  resourceSummary,
+  categoryKnowledgeCount,
+} from "@/lib/resources/config";
 
 export function OverviewPage() {
   const {
@@ -44,7 +47,8 @@ export function OverviewPage() {
     (activity[today]?.length ?? 0) + (resourceActivity[today]?.length ?? 0);
   const learnedOnDay = (date: string) =>
     (activity[date]?.length ?? 0) + (resourceActivity[date]?.length ?? 0);
-  const totalMastered = mastered.length + resourceValues.filter((item) => item.mastered).length;
+  const totalMastered =
+    mastered.length + resourceValues.filter((item) => item.mastered).length;
   const progress = Math.round((totalMastered / resourceSummary.total) * 100);
   const recommendations = [
     ...articles.filter(
@@ -300,9 +304,14 @@ export function OverviewPage() {
                   (article) => article.category === group.title,
                 );
                 const groupTotal = categoryKnowledgeCount(group.title);
-                const completed = groupArticles.filter((article) =>
-                  mastered.includes(article.slug),
-                ).length + resourceValues.filter((item) => item.mastered && item.resource.category === group.title).length;
+                const completed =
+                  groupArticles.filter((article) =>
+                    mastered.includes(article.slug),
+                  ).length +
+                  resourceValues.filter(
+                    (item) =>
+                      item.mastered && item.resource.category === group.title,
+                  ).length;
                 return (
                   <Link
                     href={`/library?category=${encodeURIComponent(group.title)}`}

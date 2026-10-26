@@ -125,7 +125,11 @@ function ResourceLibrary({
 
   const matches = useMemo(
     () =>
-      filterResources(catalog, { query, category, collection, status }, records),
+      filterResources(
+        catalog,
+        { query, category, collection, status },
+        records,
+      ),
     [catalog, query, category, collection, status, records],
   );
   const total = ready
@@ -333,17 +337,22 @@ function ResourceLibrary({
             ))}
           </select>
         </form>
-        {(query || category || collection !== "all" || status !== "all") && <button className="resource-reset mt-3" onClick={reset}><RefreshCw size={12} />重置筛选</button>}
+        {(query || category || collection !== "all" || status !== "all") && (
+          <button className="resource-reset mt-3" onClick={reset}>
+            <RefreshCw size={12} />
+            重置筛选
+          </button>
+        )}
       </section>
       <div className="resource-results-heading">
         <div>
           <p>
-            {currentCollection?.title ?? (category ? `${category}知识点` : "全部知识点")}
+            {currentCollection?.title ??
+              (category ? `${category}知识点` : "全部知识点")}
             <span>{total.toLocaleString("en-US")} 条</span>
           </p>
           <small>
-            {currentCollection?.description ??
-              "每一次理解，都让知识更进一步。"}
+            {currentCollection?.description ?? "每一次理解，都让知识更进一步。"}
           </small>
         </div>
         <div className="flex items-center gap-3">
@@ -432,7 +441,6 @@ function ResourceLibrary({
           </div>
         </nav>
       )}
-
     </main>
   );
 }

@@ -223,7 +223,7 @@ def main():
                 base = 'https://gouxinjie.github.io/' if source == 'aifuture' else 'https://bingkele.cc/'
                 url = urllib.parse.urljoin(base + p.removeprefix('docs/'), target).replace('.md', '.html')
             return prefix + url + suffix
-        return re.sub(r'(!?\[[^\]\n]*\]\()([^\s)]+)(\))', destination, body)
+        return re.sub(r'(!?\[[^\]\n]*\]\()([^\s)]+)(\s*\))', destination, body)
 
     for id, (body, source, p, repo) in bodies.items():
         (DEST / f'{id}.md').write_text(rewrite(body, source, p, repo) + '\n', encoding='utf8')

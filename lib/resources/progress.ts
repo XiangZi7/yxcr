@@ -11,14 +11,26 @@ export function useKnowledgeProgress(resource: LearningResource) {
   const resources = useResourceStore();
   const slug = resource.originalSlug;
   return {
-    saved: slug ? learning.saved.includes(slug) : !!resources.records[resource.id]?.saved,
-    mastered: slug ? learning.mastered.includes(slug) : !!resources.records[resource.id]?.mastered,
-    inPlan: slug ? learning.plan.includes(slug) : !!resources.records[resource.id]?.inPlan,
-    note: slug ? learning.notes[slug] ?? "" : resources.records[resource.id]?.note ?? "",
-    toggleSaved: () => slug ? learning.toggleSaved(slug) : resources.toggleSaved(resource),
-    toggleMastered: () => slug ? learning.toggleMastered(slug) : resources.toggleMastered(resource),
-    togglePlan: () => slug ? learning.togglePlan(slug) : resources.togglePlan(resource),
-    setNote: (note: string) => slug ? learning.setNote(slug, note) : resources.setNote(resource, note),
+    saved: slug
+      ? learning.saved.includes(slug)
+      : !!resources.records[resource.id]?.saved,
+    mastered: slug
+      ? learning.mastered.includes(slug)
+      : !!resources.records[resource.id]?.mastered,
+    inPlan: slug
+      ? learning.plan.includes(slug)
+      : !!resources.records[resource.id]?.inPlan,
+    note: slug
+      ? (learning.notes[slug] ?? "")
+      : (resources.records[resource.id]?.note ?? ""),
+    toggleSaved: () =>
+      slug ? learning.toggleSaved(slug) : resources.toggleSaved(resource),
+    toggleMastered: () =>
+      slug ? learning.toggleMastered(slug) : resources.toggleMastered(resource),
+    togglePlan: () =>
+      slug ? learning.togglePlan(slug) : resources.togglePlan(resource),
+    setNote: (note: string) =>
+      slug ? learning.setNote(slug, note) : resources.setNote(resource, note),
   };
 }
 
@@ -32,7 +44,14 @@ export function useKnowledgeRecords(catalog: LearningResource[]) {
     const combined: Record<string, ResourceProgress> = { ...records };
     for (const resource of catalog) {
       const slug = resource.originalSlug;
-      if (slug) combined[resource.id] = { resource, saved: saved.includes(slug), mastered: mastered.includes(slug), inPlan: plan.includes(slug), note: notes[slug] ?? "" };
+      if (slug)
+        combined[resource.id] = {
+          resource,
+          saved: saved.includes(slug),
+          mastered: mastered.includes(slug),
+          inPlan: plan.includes(slug),
+          note: notes[slug] ?? "",
+        };
     }
     return combined;
   }, [catalog, records, saved, mastered, plan, notes]);

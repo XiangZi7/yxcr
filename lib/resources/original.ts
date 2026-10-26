@@ -1,6 +1,7 @@
 import { articles } from "@/lib/interview/data";
 import type { LearningResource } from "./types";
-export const originalKnowledge: LearningResource[] = articles.map((article) => ({
+export const originalKnowledge: LearningResource[] = articles.map(
+  (article) => ({
     id: article.slug,
     originalSlug: article.slug,
     category: article.category,
@@ -12,4 +13,5 @@ export const originalKnowledge: LearningResource[] = articles.map((article) => (
     collections: ["curated", "frequent", "principles"],
     section: article.topic,
     kind: "knowledge" as const,
-  }));
+  }),
+);

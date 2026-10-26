@@ -2,3 +2,4 @@ lib/resources/catalog.json
 .tmp-resources/
 .pnpm-store/
 .next/
+content/knowledge/

@@ -171,9 +171,19 @@ function ProfileContent() {
           <CreatorLinks />
           <details className="side-card text-xs text-muted">
             <summary className="cursor-pointer">内容许可</summary>
-            <p className="mt-3 leading-6">部分学习文档按开源许可改编，保留版权及修改记录。</p>
-            <a className="subtle-link mt-2 inline-block" href="/licenses/NOTICE.txt">查看许可通知</a>
-            <div className="mt-2 flex gap-3"><a href="/licenses/MIT.txt">MIT</a><a href="/licenses/Apache-2.0.txt">Apache 2.0</a></div>
+            <p className="mt-3 leading-6">
+              部分学习文档按开源许可改编，保留版权及修改记录。
+            </p>
+            <a
+              className="subtle-link mt-2 inline-block"
+              href="/licenses/NOTICE.txt"
+            >
+              查看许可通知
+            </a>
+            <div className="mt-2 flex gap-3">
+              <a href="/licenses/MIT.txt">MIT</a>
+              <a href="/licenses/Apache-2.0.txt">Apache 2.0</a>
+            </div>
           </details>
           <section className="panel">
             <h2 className="mb-6 text-base font-semibold">知识积累</h2>
