@@ -18,6 +18,38 @@ pnpm test
 pnpm build
 ```
 
+## 部署到 Cloudflare Workers
+
+项目使用 [OpenNext](https://developers.cloudflare.com/workers/framework-guides/web-apps/opennext/) 适配 Next.js 服务端功能。Worker 配置在 `wrangler.jsonc`，缓存配置在 `open-next.config.ts`。
+
+```bash
+pnpm exec wrangler login
+pnpm preview
+pnpm deploy
+```
+
+- `pnpm preview` 构建并在本地 Workers 运行时预览，默认地址为 `http://localhost:8787`。
+- `pnpm deploy` 构建、复制 Markdown 正文、填充 KV 缓存并发布 `yxcr` Worker。已有构建时可运行 `pnpm exec opennextjs-cloudflare deploy`。
+- 当前配置绑定此账号下的 `NEXT_INC_CACHE_KV`。更换 Cloudflare 账号时，修改 `account_id`，运行 `pnpm exec wrangler kv namespace create NEXT_INC_CACHE_KV`，再将返回的 ID 填入 `kv_namespaces`。
+- 内容随代码部署更新，使用 KV 缓存，无需开通 R2；没有配置按需缓存失效。后续如接入在线内容编辑或 `revalidateTag`，应重新配置缓存和失效机制。
+- `content/knowledge` 与 `content/questions` 的 `.md` 文件由 `scripts/copy-cloudflare-content.mjs` 复制到构建资源目录；线上通过 `ASSETS` 绑定读取，本地开发和普通 Node.js 部署仍读取原文件。
+- `pnpm cf:typegen` 可生成本地 Cloudflare 绑定类型。生成文件、Worker 构建产物与本地运行状态均已加入忽略列表。
+
+在 Cloudflare 控制台关联 Git 仓库实现自动部署时，选择 **Workers** 项目，使用以下设置：
+
+| 设置 | 值 |
+| --- | --- |
+| 根目录 | 仓库根目录 |
+| 构建命令 | `pnpm build:cloudflare` |
+| 部署命令 | `pnpm exec opennextjs-cloudflare deploy` |
+| 构建环境变量 | `NEXT_PUBLIC_SITE_URL=https://yxcr.top` |
+
+使用 Node.js 22，安装依赖使用 `pnpm install --frozen-lockfile`。`NEXT_PUBLIC_SITE_URL` 会写入浏览器与预渲染输出，必须配置为**构建变量**；只修改 Worker 运行变量不会更新这些网址。更换域名时同步修改 `wrangler.jsonc` 中的值并重新构建。
+
+首次发布后可先访问部署输出的 `workers.dev` 地址。绑定正式域名时，在 Worker 的 **Settings → Domains & Routes → Add → Custom Domain** 添加 `yxcr.top`；域名需位于对应 Cloudflare 账号中。正式域名默认用于 canonical 和 sitemap。
+
+构建脚本在 Windows 上为 OpenNext 的目录符号链接提供 junction 回退，无需修改系统设置。OpenNext 对原生 Windows 的支持仍有限；遇到其他平台问题时，使用 WSL 或 Cloudflare 的 Linux 构建环境。
+
 ## 页面
 
 | 地址                     | 页面                                    |
@@ -79,7 +111,7 @@ pnpm build
 - `/robots.txt` 与 `/sitemap.xml` 自动生成。站点地图包含公开信息页、规范文章地址、学习方向、栏目及其分页；学习概览、今日计划、收藏、私人笔记、个人档案及站内搜索/个人筛选使用 `noindex, follow`。
 - `/` 为独立学习首页，使用自身 canonical；知识详情使用 `/learn/[slug]`。旧文章和别名通过 HTTP 308 跳转，分页使用自身 canonical，第一页省略 `page` 参数。
 - 使用 `main`、`article`、`nav`、`aside`、`header`、`footer` 和分级标题；题目正文在服务端输出。JSON-LD 包含 WebSite、Person、TechArticle 与 BreadcrumbList，并转义 HTML 特殊字符。
-- 部署到正式域名后，可向搜索引擎站长平台提交 `https://yxcr.top/sitemap.xml`。当前修改不包含域名解析或线上部署。
+- 部署到正式域名后，可向搜索引擎站长平台提交 `https://yxcr.top/sitemap.xml`。
 
 - `pnpm seo:sync` 更新稳定网址与文章修订记录；`pnpm build` 会自动先执行此同步。同步后的两个 JSON 注册文件应随内容修改一起提交，避免标题修改后改变既有地址。维护方法见 [SEO 路由与分页](docs/seo-migration.md)。
 
