@@ -17,7 +17,7 @@ export function PageHeading({
         className="breadcrumbs mb-5 flex items-center gap-2"
         aria-label="面包屑"
       >
-        <Link href="/overview">工作台</Link>
+        <Link href="/">工作台</Link>
         <ChevronRight size={13} />
         <span aria-current="page">{label}</span>
       </nav>

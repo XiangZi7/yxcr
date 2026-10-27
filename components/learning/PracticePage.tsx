@@ -540,7 +540,7 @@ function PracticeContent({ topic }: { topic: string | null }) {
               <RotateCcw size={15} />
               再练一次
             </button>
-            <Link className="solid-button" href="/overview">
+            <Link className="solid-button" href="/">
               回到学习概览
               <ArrowRight size={15} />
             </Link>

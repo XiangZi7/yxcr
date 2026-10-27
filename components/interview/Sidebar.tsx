@@ -28,6 +28,7 @@ export function Sidebar({
   onClose: () => void;
 }) {
   const pathname = usePathname();
+  const currentPath = pathname === "/overview" ? "/" : pathname;
   useEffect(() => {
     if (!mobileOpen) return;
     const previousOverflow = document.body.style.overflow;
@@ -42,7 +43,7 @@ export function Sidebar({
     };
   }, [mobileOpen, onClose]);
   const links = [
-    { label: "学习概览", icon: House, href: "/overview" },
+    { label: "学习概览", icon: House, href: "/" },
     { label: "全部知识库", icon: LayoutGrid, href: "/library" },
     { label: "今日学习", icon: ClipboardCheck, href: "/today" },
     { label: "自测练习", icon: Bot, href: "/practice" },
@@ -68,8 +69,8 @@ export function Sidebar({
             <Link
               key={label}
               href={href}
-              className={`primary-nav ${pathname === href || (href === "/library" && (pathname.startsWith("/learn/") || pathname.startsWith("/library/") || pathname.startsWith("/topics/"))) ? "is-active" : ""}`}
-              aria-current={pathname === href ? "page" : undefined}
+              className={`primary-nav ${currentPath === href || (href === "/library" && (currentPath.startsWith("/learn/") || currentPath.startsWith("/library/") || currentPath.startsWith("/topics/"))) ? "is-active" : ""}`}
+              aria-current={currentPath === href ? "page" : undefined}
               onClick={onClose}
             >
               <Icon size={19} strokeWidth={1.8} />

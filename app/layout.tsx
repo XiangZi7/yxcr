@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import "./workspace.css";
 import "./resources.css";
@@ -86,6 +87,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
           <SiteFooter />
         </AppShell>
+        <GoogleAnalytics gaId="G-RVZ6G4NWQ0" />
       </body>
     </html>
   );

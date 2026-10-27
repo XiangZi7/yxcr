@@ -28,7 +28,7 @@ export default function NotFound() {
           页面可能已移动，或链接暂不可用。回到知识库，继续探索下一个值得理解的问题。
         </p>
         <div className="flex flex-wrap justify-center gap-3">
-          <Link href="/overview" className="outline-button">
+          <Link href="/" className="outline-button">
             <ArrowLeft size={15} />
             学习概览
           </Link>
