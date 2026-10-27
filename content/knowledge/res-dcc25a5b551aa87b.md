@@ -1,0 +1,83 @@
+## 解法
+
+
+
+
+### 方法一：数学
+
+
+
+> **思考**
+>
+> 若将整数转为字符串再反转，不必处理算术溢出。题目假定环境无法存储 $64$ 位整数，因此需要在 $32$ 位范围内逐位还原，并在运算过程中判断是否越界。
+>
+> 我们可以不断取出 $x$ 的个位 $y$，再累加到答案末尾，等价于 $\textit{ans} \leftarrow 10\cdot\textit{ans}+y$。在乘 $10$ 之前就必须判断结果是否仍落在 $[-2^{31}, 2^{31}-1]$ 内，一旦越界则返回 $0$。
+>
+> 该判断可以化简为：当前 $\textit{ans}$ 是否仍位于 $[\lfloor mi/10 \rfloor, \lfloor mx/10 \rfloor]$。若在此范围内，再接入一位数字一定合法；若已经越出，则必然溢出。
+
+
+
+我们不妨记 $mi$ 和 $mx$ 分别为 $-2^{31}$ 和 $2^{31} - 1$，则 $x$ 的反转结果 $ans$ 需要满足 $mi \le ans \le mx$。
+
+我们可以通过不断地对 $x$ 取余来获取 $x$ 的最后一位数字 $y$，并将 $y$ 添加到 $ans$ 的末尾。在添加 $y$ 之前，我们需要判断 $ans$ 是否溢出。即判断 $ans \times 10 + y$ 是否在 $[mi, mx]$ 的范围内。
+
+若 $x \gt 0$，那么需要满足 $ans \times 10 + y \leq mx$，即 $ans \times 10 + y \leq \left \lfloor \frac{mx}{10} \right \rfloor \times 10 + 7$。整理得 $(ans - \left \lfloor \frac{mx}{10} \right \rfloor) \times 10 \leq 7 - y$。
+
+下面我们讨论上述不等式成立的条件：
+
+- 当 $ans \lt \left \lfloor \frac{mx}{10} \right \rfloor$ 时，不等式显然成立；
+- 当 $ans = \left \lfloor \frac{mx}{10} \right \rfloor$ 时，不等式成立的充要条件是 $y \leq 7$。如果 $ans = \left \lfloor \frac{mx}{10} \right \rfloor$ 并且还能继续添加数字，说明此时数字是最高位，即此时 $y$ 一定不超过 $2$，因此，不等式一定成立；
+- 当 $ans \gt \left \lfloor \frac{mx}{10} \right \rfloor$ 时，不等式显然不成立。
+
+综上，当 $x \gt 0$ 时，不等式成立的充要条件是 $ans \leq \left \lfloor \frac{mx}{10} \right \rfloor$。
+
+同理，当 $x \lt 0$ 时，不等式成立的充要条件是 $ans \geq \left \lfloor \frac{mi}{10} \right \rfloor$。
+
+因此，我们可以通过判断 $ans$ 是否在 $[\left \lfloor \frac{mi}{10} \right \rfloor, \left \lfloor \frac{mx}{10} \right \rfloor]$ 的范围内来判断 $ans$ 是否溢出。若溢出，则返回 $0$。否则，将 $y$ 添加到 $ans$ 的末尾，然后将 $x$ 的最后一位数字去除，即 $x \gets \left \lfloor \frac{x}{10} \right \rfloor$。
+
+时间复杂度 $O(\log |x|)$，其中 $|x|$ 为 $x$ 的绝对值。空间复杂度 $O(1)$。
+
+
+
+
+#### Python3
+
+
+```python
+class Solution:
+    def reverse(self, x: int) -> int:
+        ans = 0
+        mi, mx = -(2**31), 2**31 - 1
+        while x:
+            if ans < mi // 10 + 1 or ans > mx // 10:
+                return 0
+            y = x % 10
+            if x < 0 and y > 0:
+                y -= 10
+            ans = ans * 10 + y
+            x = (x - y) // 10
+        return ans
+```
+
+
+#### JavaScript
+
+
+```js
+/**
+ * @param {number} x
+ * @return {number}
+ */
+var reverse = function (x) {
+    const mi = -(2 ** 31);
+    const mx = 2 ** 31 - 1;
+    let ans = 0;
+    for (; x != 0; x = ~~(x / 10)) {
+        if (ans < ~~(mi / 10) || ans > ~~(mx / 10)) {
+            return 0;
+        }
+        ans = ans * 10 + (x % 10);
+    }
+    return ans;
+};
+```

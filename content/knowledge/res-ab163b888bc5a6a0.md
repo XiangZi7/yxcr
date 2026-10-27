@@ -1,0 +1,67 @@
+## 解法
+
+
+
+
+### 方法一：数学推导
+
+
+
+> **思考**
+>
+> $n$ 写成 $k$ 个连续正整数之和，即 $n=k\cdot a+k(k-1)/2$。 $n$ 达 $10^9$，枚举起点不可行，应枚举长度 $k$。
+>
+> 整理得 $2n/k-k+1$ 为偶数正整数。 $k(k+1)\le 2n$ 即可枚举完所有合法长度，判断整除与奇偶后计数。
+
+
+
+连续正整数构成一个公差 $d = 1$ 的等差数列。我们假设等差数列的第一项为 $a$，项数为 $k$，那么 $n = (a + a + k - 1) \times k / 2$，即 $n \times 2 = (a \times 2 + k - 1) \times k$。这里我们可以得出 $k$ 一定能整除 $n \times 2$，并且 $(n \times 2) / k - k + 1$ 一定是偶数。
+
+由于 $a \geq 1$，所以 $n \times 2 = (a \times 2 + k - 1) \times k \geq k \times (k + 1)$。
+
+综上，我们可以得出：
+
+1. $k$ 一定能整除 $n \times 2$；
+2. $k \times (k + 1) \leq n \times 2$；
+3. $(n \times 2) / k - k + 1$ 一定是偶数。
+
+我们从 $k = 1$ 开始枚举，当 $k \times (k + 1) > n \times 2$ 时，我们可以结束枚举。在枚举的过程中，我们判断 $k$ 是否能整除 $n \times 2$，并且 $(n \times 2) / k - k + 1$ 是否是偶数，如果是则满足条件，答案加一。
+
+枚举结束后，返回答案即可。
+
+时间复杂度 $O(\sqrt{n})$，其中 $n$ 为给定的正整数。空间复杂度 $O(1)$。
+
+
+
+
+#### Python3
+
+
+```python
+class Solution:
+    def consecutiveNumbersSum(self, n: int) -> int:
+        n <<= 1
+        ans, k = 0, 1
+        while k * (k + 1) <= n:
+            if n % k == 0 and (n // k + 1 - k) % 2 == 0:
+                ans += 1
+            k += 1
+        return ans
+```
+
+
+#### TypeScript
+
+
+```ts
+function consecutiveNumbersSum(n: number): number {
+    let ans = 0;
+    n <<= 1;
+    for (let k = 1; k * (k + 1) <= n; ++k) {
+        if (n % k === 0 && (Math.floor(n / k) + 1 - k) % 2 === 0) {
+            ++ans;
+        }
+    }
+    return ans;
+}
+```

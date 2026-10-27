@@ -183,6 +183,7 @@ function ProfileContent() {
             <div className="mt-2 flex gap-3">
               <a href="/licenses/MIT.txt">MIT</a>
               <a href="/licenses/Apache-2.0.txt">Apache 2.0</a>
+              <a href="/licenses/CC-BY-SA-4.0.txt">CC BY-SA 4.0</a>
             </div>
           </details>
           <section className="panel">

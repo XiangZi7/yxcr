@@ -4,6 +4,7 @@ import {
   Children,
   createElement,
   isValidElement,
+  memo,
   type ReactNode,
   type ReactElement,
 } from "react";
@@ -11,8 +12,11 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import rehypeSlug from "rehype-slug";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
 import { CodeBlock } from "@/components/interview/CodeBlock";
 import { remarkCodeLanguage } from "@/lib/markdown/code-language";
+import { highlightOptions } from "@/lib/markdown/highlight";
 
 function plainText(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
@@ -22,7 +26,7 @@ function plainText(node: ReactNode): string {
   return "";
 }
 
-export function MarkdownRenderer({
+export const MarkdownRenderer = memo(function MarkdownRenderer({
   content,
   className = "",
   headingOffset = 0,
@@ -44,10 +48,11 @@ export function MarkdownRenderer({
   return (
     <div className={`markdown-content ${className}`}>
       <Markdown
-        remarkPlugins={[remarkGfm, remarkCodeLanguage]}
+        remarkPlugins={[remarkGfm, remarkMath, remarkCodeLanguage]}
         rehypePlugins={[
           rehypeSlug,
-          [rehypeHighlight, { detect: false, ignoreMissing: true, plainText: ["text", "plaintext", "mermaid"] }],
+          [rehypeKatex, { strict: false, throwOnError: false, trust: false }],
+          [rehypeHighlight, highlightOptions],
         ]}
         skipHtml
         components={{
@@ -103,4 +108,4 @@ export function MarkdownRenderer({
       </Markdown>
     </div>
   );
-}
+});

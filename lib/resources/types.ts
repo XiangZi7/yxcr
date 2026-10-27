@@ -11,6 +11,8 @@ export interface LearningResource {
   collections?: string[];
   originalSlug?: string;
   category?: string;
+  searchAliases?: string[];
+  aliasIds?: string[];
 }
 
 export interface ResourceProgress {

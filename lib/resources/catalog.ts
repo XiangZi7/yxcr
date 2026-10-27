@@ -9,5 +9,7 @@ export const resources: LearningResource[] = [
 ];
 
 export function findKnowledge(id: string) {
-  return resources.find((resource) => resource.id === id);
+  return resources.find(
+    (resource) => resource.id === id || resource.aliasIds?.includes(id),
+  );
 }

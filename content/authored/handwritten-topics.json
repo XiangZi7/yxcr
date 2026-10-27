@@ -1,0 +1,105 @@
+{
+  "promises": {
+    "aliases": "implement promise all|implement promise all settled|implement promise finally|implement promise race|implement promise reject|implement promise request|implement promise resolve|implement promisify",
+    "pattern": "Promise[. ]?(all|race|resolve|reject|finally|allSettled)|promisify"
+  },
+  "scheduling": {
+    "aliases": "implement ajax serial and parallel|implement async pool|implement async serial and parallel|implement concurrency limited scheduler",
+    "pattern": "并发.{0,5}(限制|控制|调度)|异步.{0,5}(串行|并行)|async.?pool"
+  },
+  "timers": {
+    "aliases": "implement debounce|implement throttle|implement sleep|implement interval with timeout|implement timeout with interval",
+    "pattern": "防抖|节流|sleep|setTimeout.{0,8}setInterval|setInterval.{0,8}setTimeout"
+  },
+  "arrays": {
+    "aliases": "implement array deduplication|implement array deduplication by key|implement array flat|implement array like to array|implement array of|implement chunk|implement intersection|implement my every|implement my filter|implement my find|implement my find index|implement my for each|implement my map|implement my reduce|implement my some|implement object array deduplication|implement reduce use cases|implement pick values greater than",
+    "pattern": "数组.{0,8}(去重|扁平|交集|分组)|Array[.]?(from|of)|手写.{0,8}(map|filter|reduce|every|some|find)|类数组"
+  },
+  "cloning": {
+    "aliases": "implement complete deep clone|implement simple deep clone|implement deep freeze",
+    "pattern": "深拷贝|深复制|deep.?clone|deep.?freeze|递归冻结"
+  },
+  "functions": {
+    "aliases": "implement chainable add|implement compose|implement const semantics|implement function currying|implement instanceof|implement is array|implement get type|implement my apply|implement my bind|implement my call|implement my new|implement object create|implement object is",
+    "pattern": "柯里化|curry|instanceof|Object[.]is|Object[.]create|手写.{0,5}(call|apply|bind|new)|链式.{0,4}(加|求和)|compose|模拟.{0,4}const"
+  },
+  "inheritance": {
+    "aliases": "implement extends class|implement inherit|implement inherit es5",
+    "pattern": "继承|extends"
+  },
+  "strings": {
+    "aliases": "implement add big integers|implement format thousands|implement longest common prefix|implement longest unique substring length|implement most frequent char|implement pad start and end|implement sort versions|implement string index of|implement strstr|implement to camel case",
+    "pattern": "千分位|大数.{0,4}(加|求和)|版本号.{0,4}(比|排)|最长公共前缀|驼峰|padStart|padEnd|手写.{0,4}indexOf"
+  },
+  "caches": {
+    "aliases": "implement expiring local cache|implement get cookie|implement get set nested value|implement parse url params",
+    "pattern": "解析.{0,4}(URL|url|查询参数)|过期.{0,5}(缓存|存储)|带.{0,4}过期时间|cookie.{0,4}(获取|读取)"
+  },
+  "collections": {
+    "aliases": "implement linked list|implement lru cache|implement queue|implement recursive linked list reversal|implement trie|kth node from end|queue using two stacks offer",
+    "pattern": "LRU|字典树|手写.{0,4}(队列|链表)|反转链表|倒数第.?k|两个栈.{0,5}队列"
+  },
+  "sorting": {
+    "aliases": "implement binary search|implement bubble sort|implement insertion sort|implement quick sort|implement selection sort|reverse pairs offer",
+    "pattern": "冒泡排序|插入排序|选择排序|快速排序|二分查找|逆序对|排序算法专题"
+  },
+  "trees": {
+    "aliases": "implement binary tree depth first traversal|implement binary tree level order|implement binary tree search|implement list to tree|implement tree to list",
+    "pattern": "二叉树.{0,5}遍历|树.{0,3}列表.{0,3}转换|列表.{0,3}树|递归遍历"
+  },
+  "events": {
+    "aliases": "implement event emitter|implement subject|implement vue event bus",
+    "pattern": "发布订阅|发布.?订阅|观察者|EventEmitter|事件总线|event.?bus"
+  },
+  "reactivity": {
+    "aliases": "implement mini vue|implement simple mvvm|implement two way data binding|implement vue reactive",
+    "pattern": "手写.{0,5}(响应式|reactive|Vue|MVVM)|双向绑定"
+  },
+  "browser": {
+    "aliases": "implement chunked large list rendering|implement dom to json|implement drag and drop|implement image lazy loading|implement indexed click handlers|implement virtual dom renderer",
+    "pattern": "手写.{0,5}(虚拟.?DOM|拖拽|懒加载)|DOM.{0,4}JSON|分片渲染|图片懒加载"
+  },
+  "iterators": {
+    "aliases": "implement async await|implement es6 iterator|implement iterator generator|implement run generator",
+    "pattern": "Generator|迭代器|手写.{0,5}async"
+  },
+  "validation": {
+    "aliases": "implement is chinese id|implement is email|implement is phone|implement unique random array",
+    "pattern": "身份证.{0,4}(验|校)|邮箱.{0,4}校验|不重复.{0,3}随机"
+  },
+  "object-transforms": {
+    "aliases": "implement deep key renaming|implement flatten object|implement is equal",
+    "pattern": "对象.{0,4}(扁平化|深比较)|深度.{0,4}相等|键名.{0,4}转换"
+  },
+  "state": {
+    "aliases": "implement redux middleware|implement redux thunk|implement singleton",
+    "pattern": "Redux.{0,5}(中间件|middleware)|redux.?thunk|单例"
+  },
+  "network-code": {
+    "aliases": "implement native ajax|implement jsonp|implement hash router",
+    "pattern": "手写.{0,6}(AJAX|JSONP|路由)|实现.{0,5}hash.{0,4}路由"
+  },
+  "promise-core": {
+    "aliases": "implement mini promise|implement promise from scratch|implement promises a plus",
+    "pattern": "手写.{0,5}Promise|Promise.?A\\+|Promise.{0,5}实现原理"
+  },
+  "json": {
+    "aliases": "implement json parse|implement json stringify",
+    "pattern": "手写.{0,5}JSON|JSON[.](parse|stringify)"
+  },
+  "modules": {
+    "aliases": "implement node require",
+    "pattern": "手写.{0,5}require|CommonJS.{0,5}模块加载"
+  },
+  "templates": {
+    "aliases": "implement number add minus chain|implement template renderer|implement is valid brackets",
+    "pattern": "模板.{0,4}(替换|渲染器)|括号.{0,3}(匹配|有效)|链式.{0,3}计算"
+  },
+  "algorithms-core": {
+    "aliases": "JS数据结构介绍|JS数据结构应用场景|README|odd before even|string compression ii|二叉树真题归纳与解读|场景化解读递归与回溯思想在真题中的应用|姿势特别的链表——环形链表专题|字符串的应用——真题归纳与解读|快慢指针与多指针——玩转链表复杂操作|快速上手——从0到1掌握算法面试需要的数据结构（一）|快速上手——从0到1掌握算法面试需要的数据结构（三）|快速上手——从0到1掌握算法面试需要的数据结构（二）|数组的应用——真题归纳与解读|普通人也能吃透的动态规划思想专题（上）|普通人也能吃透的动态规划思想专题（下）|栈与队列怎么玩（上）|栈与队列怎么玩（下）|特殊的二叉树——二叉搜索树专题|特殊的二叉树——堆结构及其在排序中的应用|特殊的二叉树——平衡二叉树专题|算法的衡量——轻松理解时间复杂度与空间复杂度|算法题库|遍历专题 DFS 与 BFS|链表的应用——真题归纳与解读",
+    "pattern": "数据结构|快慢指针|回溯|动态规划思想|环形链表|堆结构|平衡二叉树|时间复杂度与空间复杂度|DFS 与 BFS",
+    "scope": ["algorithm"],
+    "collection": "algorithm",
+    "category": "算法"
+  }
+}

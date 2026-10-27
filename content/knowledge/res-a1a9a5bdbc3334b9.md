@@ -1,0 +1,121 @@
+## 解法
+
+
+
+
+### 方法一：模拟
+
+
+
+> **思考**
+>
+> 题目进阶要求额外空间 $O(1)$。若按组递归翻转， $n \le 5000$ 时时间可以接受，但递归栈会随组数增长，不满足进阶条件。
+>
+> 一组内部就是普通的链表翻转；组与组之间只需记住上一组的尾。真正需要先确认的是当前组是否凑满 $k$ 个——不足则保持原序，够则摘下翻转后再接回。
+>
+> 因此从虚拟头出发，每次先走 $k$ 步探测：若够 $k$ 个则翻转该段并重接；若不够则结束。探测、翻转与重接都是指针操作，额外空间 $O(1)$。
+
+
+
+我们可以根据题意，模拟整个翻转的过程。
+
+首先，我们定义一个辅助函数 $\textit{reverse}$，用于翻转一个链表。然后，我们定义一个虚拟头结点 $\textit{dummy}$，并将其 $\textit{next}$ 指针指向 $\textit{head}$。
+
+接着，我们遍历链表，每次遍历 $k$ 个节点，若剩余节点不足 $k$ 个，则不进行翻转。否则，我们将 $k$ 个节点取出，然后调用 $\textit{reverse}$ 函数翻转这 $k$ 个节点。然后将翻转后的链表与原链表连接起来。继续遍历下一个 $k$ 个节点，直到遍历完整个链表。
+
+时间复杂度 $O(n)$，其中 $n$ 为链表的长度。空间复杂度 $O(1)$。
+
+
+
+
+#### Python3
+
+
+```python
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+        def reverse(head: Optional[ListNode]) -> Optional[ListNode]:
+            dummy = ListNode()
+            cur = head
+            while cur:
+                nxt = cur.next
+                cur.next = dummy.next
+                dummy.next = cur
+                cur = nxt
+            return dummy.next
+
+        dummy = pre = ListNode(next=head)
+        while pre:
+            cur = pre
+            for _ in range(k):
+                cur = cur.next
+                if cur is None:
+                    return dummy.next
+            node = pre.next
+            nxt = cur.next
+            cur.next = None
+            pre.next = reverse(node)
+            node.next = nxt
+            pre = node
+        return dummy.next
+```
+
+
+#### TypeScript
+
+
+```ts
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
+ * }
+ */
+
+function reverseKGroup(head: ListNode | null, k: number): ListNode | null {
+    const dummy = new ListNode(0, head);
+    let pre = dummy;
+    while (pre !== null) {
+        let cur: ListNode | null = pre;
+        for (let i = 0; i < k; i++) {
+            cur = cur?.next || null;
+            if (cur === null) {
+                return dummy.next;
+            }
+        }
+
+        const node = pre.next;
+        const nxt = cur?.next || null;
+        cur!.next = null;
+        pre.next = reverse(node);
+        node!.next = nxt;
+        pre = node!;
+    }
+
+    return dummy.next;
+}
+
+function reverse(head: ListNode | null): ListNode | null {
+    let dummy: ListNode | null = null;
+    let cur = head;
+
+    while (cur !== null) {
+        const nxt = cur.next;
+        cur.next = dummy;
+        dummy = cur;
+        cur = nxt;
+    }
+
+    return dummy;
+}
+```

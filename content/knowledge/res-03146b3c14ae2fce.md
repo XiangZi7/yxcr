@@ -1,0 +1,112 @@
+## 解法
+
+
+
+
+### 方法一：字典树计数 + 贪心构造
+
+
+
+> **思考**
+>
+> $n$ 可达 $10^9$，不能列出再排序。字典序对应一棵十叉子树：结点 $x$ 的孩子是 $10x,\ldots,10x+9$（不超过 $n$）。
+>
+> 在当前前缀 $curr$ 上统计子树大小：把 $[curr,curr+1)$ 逐层乘 $10$ 并与 $n$ 取交。若子树大小 $\le k$，则整棵跳过并 $curr{+}1$；否则进入孩子 $curr\times 10$ 且 $k$ 减一（消耗前缀本身）。
+>
+> 先把 $k$ 减一表示从 $1$ 出发已选中当前前缀。按层计数避免枚举子树中的每个整数。
+
+
+
+本题要求在区间 $[1, n]$ 中，按**字典序**排序后，找到第 $k$ 小的数字。由于 $n$ 的范围非常大（最多可达 $10^9$），我们无法直接枚举所有数字后排序。因此我们采用**贪心 + 字典树模拟**的策略。
+
+我们将 $[1, n]$ 看作一棵 **十叉字典树（Trie）**：
+
+- 每个节点是一个前缀，根节点为空串；
+- 节点的子节点是当前前缀拼接上 $0 \sim 9$；
+- 例如前缀 $1$ 会有子节点 $10, 11, \ldots, 19$，而 $10$ 会有 $100, 101, \ldots, 109$；
+- 这种结构天然符合字典序遍历。
+
+```
+根
+├── 1
+│   ├── 10
+│   ├── 11
+│   ├── ...
+├── 2
+├── ...
+```
+
+我们使用变量 $\textit{curr}$ 表示当前前缀，初始为 $1$。每次我们尝试向下扩展前缀，直到找到第 $k$ 小的数字。
+
+每次我们计算当前前缀下有多少个合法数字（即以 $\textit{curr}$ 为前缀、且不超过 $n$ 的整数个数），记作 $\textit{count}(\text{curr})$：
+
+- 如果 $k \ge \text{count}(\text{curr})$：说明目标不在这棵子树中，跳过整棵子树，前缀右移： $\textit{curr} \leftarrow \text{curr} + 1$，并更新 $k \leftarrow k - \text{count}(\text{curr})$；
+- 否则：说明目标在当前前缀的子树中，进入下一层： $\textit{curr} \leftarrow \text{curr} \times 10$，并消耗一个前缀： $k \leftarrow k - 1$。
+
+每一层我们将当前区间扩大 $10$ 倍，向下延伸到更长的前缀，直到超出 $n$。
+
+时间复杂度 $O(\log^2 n)$，空间复杂度 $O(1)$。
+
+
+
+
+#### Python3
+
+
+```python
+class Solution:
+    def findKthNumber(self, n: int, k: int) -> int:
+        def count(curr):
+            next, cnt = curr + 1, 0
+            while curr <= n:
+                cnt += min(n - curr + 1, next - curr)
+                next, curr = next * 10, curr * 10
+            return cnt
+
+        curr = 1
+        k -= 1
+        while k:
+            cnt = count(curr)
+            if k >= cnt:
+                k -= cnt
+                curr += 1
+            else:
+                k -= 1
+                curr *= 10
+        return curr
+```
+
+
+#### TypeScript
+
+
+```ts
+function findKthNumber(n: number, k: number): number {
+    function count(curr: number): number {
+        let next = curr + 1;
+        let cnt = 0;
+        while (curr <= n) {
+            cnt += Math.min(n - curr + 1, next - curr);
+            curr *= 10;
+            next *= 10;
+        }
+        return cnt;
+    }
+
+    let curr = 1;
+    k--;
+
+    while (k > 0) {
+        const cnt = count(curr);
+        if (k >= cnt) {
+            k -= cnt;
+            curr += 1;
+        } else {
+            k -= 1;
+            curr *= 10;
+        }
+    }
+
+    return curr;
+}
+```

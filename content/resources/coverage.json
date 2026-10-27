@@ -1,0 +1,165 @@
+{
+  "complete": false,
+  "scope": "Public directory entries. An entry is linked only when a real local article or explicit topic alias exists. Related topic guides are not copies of the source article.",
+  "directoryEntries": 7385,
+  "localArticles": 1981,
+  "linkedDirectoryEntries": 1498,
+  "remainingEntries": 5887,
+  "collections": {
+    "ai": {
+      "directoryEntries": 718,
+      "linkedEntries": 0,
+      "remainingEntries": 718
+    },
+    "base": {
+      "directoryEntries": 377,
+      "linkedEntries": 32,
+      "remainingEntries": 345
+    },
+    "advanced": {
+      "directoryEntries": 187,
+      "linkedEntries": 11,
+      "remainingEntries": 176
+    },
+    "frequent": {
+      "directoryEntries": 212,
+      "linkedEntries": 20,
+      "remainingEntries": 192
+    },
+    "curated": {
+      "directoryEntries": 54,
+      "linkedEntries": 0,
+      "remainingEntries": 54
+    },
+    "handwritten": {
+      "directoryEntries": 250,
+      "linkedEntries": 83,
+      "remainingEntries": 167
+    },
+    "experience": {
+      "directoryEntries": 582,
+      "linkedEntries": 2,
+      "remainingEntries": 580
+    },
+    "principles": {
+      "directoryEntries": 90,
+      "linkedEntries": 0,
+      "remainingEntries": 90
+    },
+    "daily": {
+      "directoryEntries": 488,
+      "linkedEntries": 0,
+      "remainingEntries": 488
+    },
+    "weapp": {
+      "directoryEntries": 1,
+      "linkedEntries": 0,
+      "remainingEntries": 1
+    },
+    "flashcards": {
+      "directoryEntries": 386,
+      "linkedEntries": 1,
+      "remainingEntries": 385
+    },
+    "scenarios": {
+      "directoryEntries": 612,
+      "linkedEntries": 4,
+      "remainingEntries": 608
+    },
+    "yearly": {
+      "directoryEntries": 141,
+      "linkedEntries": 0,
+      "remainingEntries": 141
+    },
+    "algorithm": {
+      "directoryEntries": 1236,
+      "linkedEntries": 1236,
+      "remainingEntries": 0
+    },
+    "self-check": {
+      "directoryEntries": 4,
+      "linkedEntries": 0,
+      "remainingEntries": 4
+    },
+    "http": {
+      "directoryEntries": 33,
+      "linkedEntries": 0,
+      "remainingEntries": 33
+    },
+    "browser": {
+      "directoryEntries": 45,
+      "linkedEntries": 0,
+      "remainingEntries": 45
+    },
+    "computer": {
+      "directoryEntries": 117,
+      "linkedEntries": 0,
+      "remainingEntries": 117
+    },
+    "patterns": {
+      "directoryEntries": 34,
+      "linkedEntries": 0,
+      "remainingEntries": 34
+    },
+    "frontend-system": {
+      "directoryEntries": 760,
+      "linkedEntries": 7,
+      "remainingEntries": 753
+    },
+    "comprehensive": {
+      "directoryEntries": 320,
+      "linkedEntries": 4,
+      "remainingEntries": 316
+    },
+    "node": {
+      "directoryEntries": 106,
+      "linkedEntries": 0,
+      "remainingEntries": 106
+    },
+    "npm": {
+      "directoryEntries": 1,
+      "linkedEntries": 0,
+      "remainingEntries": 1
+    },
+    "docker": {
+      "directoryEntries": 1,
+      "linkedEntries": 0,
+      "remainingEntries": 1
+    },
+    "canvas": {
+      "directoryEntries": 1,
+      "linkedEntries": 0,
+      "remainingEntries": 1
+    },
+    "mindmaps": {
+      "directoryEntries": 81,
+      "linkedEntries": 0,
+      "remainingEntries": 81
+    },
+    "roadmaps": {
+      "directoryEntries": 10,
+      "linkedEntries": 0,
+      "remainingEntries": 10
+    },
+    "blog": {
+      "directoryEntries": 434,
+      "linkedEntries": 0,
+      "remainingEntries": 434
+    },
+    "tools": {
+      "directoryEntries": 3,
+      "linkedEntries": 0,
+      "remainingEntries": 3
+    },
+    "network-interview": {
+      "directoryEntries": 72,
+      "linkedEntries": 71,
+      "remainingEntries": 1
+    },
+    "ai-future": {
+      "directoryEntries": 29,
+      "linkedEntries": 27,
+      "remainingEntries": 2
+    }
+  }
+}

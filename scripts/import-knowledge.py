@@ -15,6 +15,7 @@ import re
 import time
 import urllib.parse
 import urllib.request
+import unicodedata
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -265,6 +266,58 @@ def main():
         entries.append(dict(id=id, title=title, url=f'/questions/{id}', source='yxcr', collection=core, collections=tags, section=section, category='AI / LLM' if core == 'ai' else '前端', kind='document', description=description, featured=slug == 'agent-harness'))
         (DEST / f'{id}.md').write_text(body + '\n', encoding='utf8')
     entries.sort(key=lambda item: (item['collection'] != 'ai', item['collection'] != 'network-interview', item['title']))
+    extra_index = ROOT / 'content/knowledge/algorithms-index.json'
+    if extra_index.exists():
+        entries.extend(json.loads(extra_index.read_text(encoding='utf8')))
+        manifest.update(json.loads((ROOT / 'content/knowledge/algorithms-manifest.json').read_text(encoding='utf8')))
+    authored = ROOT / 'content/authored/network.md'
+    if authored.exists():
+        directory = {item['id']: item for item in json.loads((ROOT / 'lib/resources/directory-index.json').read_text(encoding='utf8'))}
+        parts = re.split(r'^## (res-[a-f0-9]{16})\s*\n', authored.read_text(encoding='utf8'), flags=re.M)
+        for index in range(1, len(parts), 2):
+            id, body = parts[index], parts[index + 1].strip()
+            if id not in directory:
+                raise ValueError(f'Unknown authored question: {id}')
+            item = directory[id]
+            entries.append(dict(id=id, title=item['title'], url=f'/questions/{id}', source='yxcr', collection='network-interview', collections=['network-interview', 'http', 'frequent'], category='计算机网络', section='计算机网络', kind='knowledge', description=excerpt(body)))
+            (DEST / f'{id}.md').write_text(body + '\n', encoding='utf8')
+    handbook = ROOT / 'content/authored/handwritten.md'
+    if handbook.exists():
+        directory_items = json.loads((ROOT / 'lib/resources/directory-index.json').read_text(encoding='utf8'))
+        topics = json.loads((ROOT / 'content/authored/handwritten-topics.json').read_text(encoding='utf8'))
+        parts = re.split(r'^## ([a-z0-9-]+) \| ([^\n]+)\n', handbook.read_text(encoding='utf8'), flags=re.M)
+        for index in range(1, len(parts), 3):
+            slug, title, body = parts[index], parts[index + 1], parts[index + 2].strip()
+            topic = topics[slug]
+            aliases = topic['aliases'].split('|')
+            matching = [item for item in directory_items if (not topic.get('scope') or item['collection'] in topic['scope']) and (item['title'] in aliases or (item['collection'] in {'base', 'advanced', 'frequent', 'curated', 'handwritten', 'algorithm'} and re.search(topic['pattern'], item['title'], re.I)))]
+            id = 'res-' + hashlib.sha256(f'yxcr:handwritten:{slug}'.encode()).hexdigest()[:16]
+            body = re.sub(r'^### ', '## ', body, flags=re.M)
+            entries.append(dict(id=id, title=title, url=f'/questions/{id}', source='yxcr', collection=topic.get('collection', 'handwritten'), collections=['handwritten', 'algorithm', 'principles'], category=topic.get('category', '前端'), section='算法与数据结构' if topic.get('category') == '算法' else '手写与原理', kind='document', description=excerpt(body), searchAliases=sorted(set(aliases + [item['title'] for item in matching])), aliasIds=[item['id'] for item in matching]))
+            (DEST / f'{id}.md').write_text(body + '\n', encoding='utf8')
+    directory_file = ROOT / 'lib/resources/directory-index.json'
+    if directory_file.exists():
+        directory_items = json.loads(directory_file.read_text(encoding='utf8'))
+        def normalized_path(url):
+            return urllib.parse.unquote(urllib.parse.urlsplit(url).path).removesuffix('.html').removesuffix('.md').removesuffix('/index').rstrip('/')
+        def normalized_title(title):
+            title = re.sub(r'^\d+[.、\s]+', '', title)
+            return re.sub(r'[^a-z0-9\u4e00-\u9fff]', '', unicodedata.normalize('NFKC', title).lower())
+        by_url = {(item['source'], normalized_path(item['url'])): item for item in directory_items if not urllib.parse.urlsplit(item['url']).fragment}
+        by_title = {normalized_title(item['title']): item for item in entries if len(normalized_title(item['title'])) >= 8}
+        for id, origin in manifest.items():
+            source = 'aifuture' if origin['repository'].startswith('gouxinjie/') else 'bingkele' if origin['repository'].startswith('hcer1999/') else None
+            if source:
+                target = by_url.get((source, normalized_path('/' + origin['path'].removeprefix('docs/'))))
+                resource = next((item for item in entries if item['id'] == id), None)
+                if target and resource: resource.setdefault('aliasIds', []).append(target['id'])
+        used = {id for item in entries for id in [item['id'], *item.get('aliasIds', [])]}
+        for item in directory_items:
+            title = normalized_title(item['title'])
+            if item['id'] not in used and title in by_title:
+                by_title[title].setdefault('aliasIds', []).append(item['id'])
+                used.add(item['id'])
+        for item in entries: item['aliasIds'] = sorted(set(item.get('aliasIds', [])))
     (ROOT / 'lib/resources/catalog.json').write_text(json.dumps(entries, ensure_ascii=False, separators=(',', ':')), encoding='utf8')
     counts = Counter(tag for item in entries for tag in item['collections'])
     (ROOT / 'lib/resources/summary.json').write_text(json.dumps(dict(total=len(entries), syncedAt=datetime.now(timezone.utc).isoformat(), collections=dict(counts), categories=dict(Counter(item['category'] for item in entries))), ensure_ascii=False, indent=2), encoding='utf8')
@@ -275,6 +328,10 @@ def main():
         data = json.loads((ROOT / '.tmp-resources' / f'{source}-license.json').read_text(encoding='utf8'))
         (notices / f'{lic}.txt').write_bytes(base64.b64decode(data['content']))
     (notices / 'NOTICE.txt').write_text('YXCR OS adapted Markdown content\n\n' + '\n'.join(f'{repo} — {lic}' for _, repo, lic in SOURCES) + '\n\nModified: layout, Markdown normalization, local links, chapter extraction.\nPer-document provenance: content/knowledge/manifest.json\n', encoding='utf8')
+    if extra_index.exists():
+        with (notices / 'NOTICE.txt').open('a', encoding='utf8') as notice:
+            notice.write('\nAlgorithm solutions: Doocs contributors, https://github.com/doocs/leetcode\nLicense: CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/\nChanges: removed problem statements and non-selected code languages; adapted Markdown and references. Adapted algorithm content remains under CC BY-SA 4.0.\n')
+    (notices / 'knowledge-attribution.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf8')
     print(f'Imported {len(entries)} complete knowledge pages from {len(jobs)} Markdown files.', flush=True)
 
 

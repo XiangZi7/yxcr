@@ -42,7 +42,7 @@ export function filterResources(
     if (filters.status === "unlearned" && progress?.mastered) return false;
     if (filters.status === "planned" && !progress?.inPlan) return false;
     const text = normalizeResourceSearch(
-      `${resource.title} ${resource.section} ${resource.description ?? ""}`,
+      `${resource.title} ${resource.section} ${resource.description ?? ""} ${(resource.searchAliases ?? []).join(" ")}`,
     );
     return terms.every((term) => text.includes(term));
   });

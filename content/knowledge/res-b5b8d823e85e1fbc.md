@@ -1,0 +1,86 @@
+## 解法
+
+
+
+
+### 方法一：前缀和 + 单调队列
+
+
+
+> **思考**
+>
+> 最短子数组和至少为 $k$。含负数时滑动窗口的单调性被破坏， $n\le 10^5$ 不能平方枚举。前缀和 $s$ 上即求最小的 $j-i$ 满足 $s[j]-s[i]\ge k$。
+>
+> 维护 $s$ 下标的单调递增队列：队头已能组成 $\ge k$ 则弹出并更新长度；队尾不小于当前前缀和则丢掉，因为更短且前缀和更大的起点更优。
+
+
+
+题目要求找到一个最短的子数组，使得子数组的和大于等于 $k$。不难想到，可以使用前缀和快速计算子数组的和。
+
+我们用一个长度为 $n+1$ 的数组 $s[i]$ 表示数组 $nums$ 前 $i$ 个元素的和。另外，我们需要维护一个严格单调递增的队列 $q$，队列中存储的是前缀和数组 $s[i]$ 的下标。注意，这里的单调递增是指下标对应的前缀和的大小，而不是下标的大小。
+
+为什么存的是下标呢？这是为了方便计算子数组的长度。那为什么队列严格单调递增？我们可以用反证法来说明。
+
+假设队列元素非严格单调递增，也即是说，存在下标 $i$ 和 $j$，满足 $i < j$，且 $s[i] \geq s[j]$。
+
+当遍历到下标 $k$，其中 $i \lt j \lt k \leq n$，此时 $s[k]-s[j] \geq s[k]-s[i]$，且 $nums[j..k-1]$ 的长度小于 $nums[i..k-1]$ 的长度。由于下标 $j$ 的存在，子数组 $nums[i..k-1]$ 一定不是最优解，队列中的下标 $i$ 是不必要的，需要将其移除。因此，队列中的元素一定严格单调递增。
+
+回到这道题目上，我们遍历前缀和数组 $s$，对于遍历到的下标 $i$，如果 $s[i] - s[q.front] \geq k$，说明当前遇到了一个可行解，我们可以更新答案。此时，我们需要将队首元素出队，直到队列为空或者 $s[i] - s[q.front] \lt k$ 为止。
+
+如果此时队列不为空，为了维持队列的严格单调递增，我们还需要判断队尾元素是否需要出队，如果 $s[q.back] \geq s[i]$，则需要循环将队尾元素出队，直到队列为空或者 $s[q.back] \lt s[i]$ 为止。然后，我们将下标 $i$ 入队。
+
+遍历结束，如果我们没有找到可行解，那么返回 $-1$。否则，返回答案。
+
+时间复杂度 $O(n)$，空间复杂度 $O(n)$。其中 $n$ 是数组 $nums$ 的长度。
+
+
+
+
+#### Python3
+
+
+```python
+class Solution:
+    def shortestSubarray(self, nums: List[int], k: int) -> int:
+        s = list(accumulate(nums, initial=0))
+        q = deque()
+        ans = inf
+        for i, v in enumerate(s):
+            while q and v - s[q[0]] >= k:
+                ans = min(ans, i - q.popleft())
+            while q and s[q[-1]] >= v:
+                q.pop()
+            q.append(i)
+        return -1 if ans == inf else ans
+```
+
+
+#### TypeScript
+
+
+```ts
+function shortestSubarray(nums: number[], k: number): number {
+    const [n, MAX] = [nums.length, Number.POSITIVE_INFINITY];
+    const s = Array(n + 1).fill(0);
+    const q: number[] = [];
+    let ans = MAX;
+
+    for (let i = 0; i < n; i++) {
+        s[i + 1] = s[i] + nums[i];
+    }
+
+    for (let i = 0; i < n + 1; i++) {
+        while (q.length && s[i] - s[q[0]] >= k) {
+            ans = Math.min(ans, i - q.shift()!);
+        }
+
+        while (q.length && s[i] <= s[q.at(-1)!]) {
+            q.pop();
+        }
+
+        q.push(i);
+    }
+
+    return ans === MAX ? -1 : ans;
+}
+```

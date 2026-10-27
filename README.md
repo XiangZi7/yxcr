@@ -37,6 +37,7 @@ pnpm build
 - 题目元数据位于 `lib/interview/data.ts`，正文优先读取 `content/questions/{slug}.md`。没有对应文件时，由原有结构化内容生成 Markdown。
 - 示例正文：`content/questions/vue-3.md`。可直接导入的示例文件：`content/examples/markdown-demo.md`。
 - 使用 `react-markdown`、`remark-gfm`、`rehype-highlight` 渲染标题、列表、表格、引用、任务列表与代码高亮；目录使用真实 Markdown 语法树生成。
+- 对未标注语言的常见代码进行保守识别，显式纯文本与字符图保持原样。支持 TypeScript、JavaScript、Vue/XML、Python、Shell、HTTP、Dockerfile、PowerShell 等语法；使用 KaTeX 渲染算法公式。
 - 代码块支持三色圆点、语言名称、行号、横向滚动和复制。支持的常见语言包括 JavaScript、TypeScript、TSX、CSS、Python、JSON、Shell 等。
 - 文件导入支持 `.md`、`.markdown`，单文件不超过 512 KB；导入的文档保存在当前浏览器中。编辑后点击保存，可导出标准 Markdown。
 - 文件正文由 Next.js 缓存。修改仓库内的 Markdown 后，重启开发服务；生产环境重新构建即可更新。
@@ -56,6 +57,9 @@ pnpm build
 - `scripts/import-knowledge.py` 导入公开许可仓库的 Markdown，校验 Git blob 哈希，保留源文件及许可证清单，转换文档语法与内部章节链接。使用 Python 标准库即可运行，不需要额外抓取依赖。
 - 首次运行会读取 GitHub 的公开文件树与许可证，原始 Markdown 缓存到忽略的 `.tmp-resources/markdown/`。仓库正文更新后，删除对应 `.tmp-resources/*-tree.json` 再执行导入以刷新快照。
 - 独立维护的补充文章位于 `content/guides/`。旧的 `scripts/sync-resources.py` 只用于分析公开目录，输出独立索引，不会覆盖可阅读正文目录。
+- 独立补写的 71 道网络题位于 `content/authored/network.md`，手写与算法讲义位于 `content/authored/handwritten.md`。`handwritten-topics.json` 维护明确的题目别名，重复入口跳转到同一篇实际讲义。
+- `python -X utf8 scripts/sync-algorithms.py` 按现有算法目录稀疏下载对应开放许可题解，只导入解法与选定语言代码。首次运行需要 Git 和网络；保留 CC BY-SA 4.0 署名、许可与修改说明，题目描述正文不复制。
+- 更新流程：先运行 `scripts/sync-resources.py` 核对公开目录，按需运行 `scripts/sync-algorithms.py`，再运行 `scripts/import-knowledge.py` 汇总正文，最后运行 `scripts/audit-knowledge.py`。后者在 `content/resources/coverage.json` 记录覆盖情况，`remaining-knowledge.json` 记录尚未关联的目录项；`complete: false` 表示全量补写尚未完成。
 - `content/knowledge/manifest.json` 记录每篇改编文档的原路径、blob、作者、许可证及修改声明；完整许可证和通知保存在 `public/licenses/`。界面按知识主题组织，不按来源分组。
 - 原站会员或未声明可再分发的正文不导入。构建和站内阅读均使用本地正文，不依赖来源站实时响应。
 

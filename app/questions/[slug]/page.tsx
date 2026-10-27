@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { InterviewWorkspace } from "@/components/interview/InterviewWorkspace";
 import { articles } from "@/lib/interview/data";
 import { getArticleMarkdown } from "@/lib/markdown/content";
@@ -33,7 +33,7 @@ export async function generateMetadata({
       ? pageMetadata(
           knowledge.title,
           knowledge.description || `${knowledge.section}知识解析与代码示例。`,
-          `/questions/${slug}`,
+          `/questions/${knowledge.id}`,
         )
       : { title: "题目未找到", robots: { index: false, follow: false } };
 }
@@ -46,6 +46,7 @@ export default async function QuestionPage({
   if (!article) {
     const resource = findKnowledge(slug);
     if (!resource) notFound();
+    if (resource.id !== slug) permanentRedirect(`/questions/${resource.id}`);
     const markdown = await getKnowledgeMarkdown(slug);
     if (!markdown) notFound();
     return (

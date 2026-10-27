@@ -133,6 +133,12 @@ export function KnowledgeWorkspace({
             <ArrowLeft size={14} />
             继续探索知识
           </Link>
+          <a
+            href="/licenses/NOTICE.txt"
+            className="ml-5 text-[10px] text-muted"
+          >
+            内容许可
+          </a>
         </article>
       </main>
       <aside

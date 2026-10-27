@@ -1,0 +1,92 @@
+## 解法
+
+
+
+
+### 方法一：记忆化搜索
+
+
+
+> **思考**
+>
+> 每步上下左右，最多 $k$ 步，统计走出网格的路径数。不记忆的搜索会重复同一格子与剩余步数。
+>
+> $dfs(i,j,k)$ 表示在 $(i,j)$ 还剩 $k$ 步时的出界路径数。已出界且步数仍非负则计 $1$；步数用尽则计 $0$。四向转移并对 $10^9+7$ 取模。记忆化保证每个三元组只算一次。
+
+
+
+我们定义一个函数 $\textit{dfs}(i, j, k)$ 表示从坐标 $(i, j)$ 出发，还剩下 $k$ 步可以移动的情况下，可以移出边界的路径数量。
+
+在函数 $\textit{dfs}(i, j, k)$ 中，我们首先处理边界情况，如果当前坐标 $(i, j)$ 不在网格范围内，如果 $k \geq 0$，则返回 $1$，否则返回 $0$。如果 $k \leq 0$，说明还在网格内，但是已经没有移动次数了，返回 $0$。接下来，我们遍历四个方向，移动到下一个坐标 $(x, y)$，然后递归调用 $\textit{dfs}(x, y, k - 1)$，并将结果累加到答案中。
+
+在主函数中，我们调用 $\textit{dfs}(startRow, startColumn, maxMove)$，即从起始坐标 $(\textit{startRow}, \textit{startColumn})$ 出发，还剩下 $\textit{maxMove}$ 步可以移动的情况下，可以移出边界的路径数量。
+
+为了避免重复计算，我们可以使用记忆化搜索。
+
+时间复杂度 $O(m \times n \times k)$，空间复杂度 $O(m \times n \times k)$。其中 $m$ 和 $n$ 分别是网格的行数和列数，而 $k$ 是可以移动的步数，本题中 $k = \textit{maxMove} \leq 50$。
+
+
+
+
+#### Python3
+
+
+```python
+class Solution:
+    def findPaths(
+        self, m: int, n: int, maxMove: int, startRow: int, startColumn: int
+    ) -> int:
+        @cache
+        def dfs(i: int, j: int, k: int) -> int:
+            if not 0 <= i < m or not 0 <= j < n:
+                return int(k >= 0)
+            if k <= 0:
+                return 0
+            ans = 0
+            for a, b in pairwise(dirs):
+                x, y = i + a, j + b
+                ans = (ans + dfs(x, y, k - 1)) % mod
+            return ans
+
+        mod = 10**9 + 7
+        dirs = (-1, 0, 1, 0, -1)
+        return dfs(startRow, startColumn, maxMove)
+```
+
+
+#### TypeScript
+
+
+```ts
+function findPaths(
+    m: number,
+    n: number,
+    maxMove: number,
+    startRow: number,
+    startColumn: number,
+): number {
+    const f = Array.from({ length: m }, () =>
+        Array.from({ length: n }, () => Array(maxMove + 1).fill(-1)),
+    );
+    const mod = 1000000007;
+    const dirs = [-1, 0, 1, 0, -1];
+    const dfs = (i: number, j: number, k: number): number => {
+        if (i < 0 || i >= m || j < 0 || j >= n) {
+            return k >= 0 ? 1 : 0;
+        }
+        if (k <= 0) {
+            return 0;
+        }
+        if (f[i][j][k] !== -1) {
+            return f[i][j][k];
+        }
+        let ans = 0;
+        for (let d = 0; d < 4; ++d) {
+            const [x, y] = [i + dirs[d], j + dirs[d + 1]];
+            ans = (ans + dfs(x, y, k - 1)) % mod;
+        }
+        return (f[i][j][k] = ans);
+    };
+    return dfs(startRow, startColumn, maxMove);
+}
+```
