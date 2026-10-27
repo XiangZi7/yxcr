@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound, permanentRedirect } from "next/navigation";
 import { InterviewWorkspace } from "@/components/interview/InterviewWorkspace";
+import { QuestionSkeleton } from "@/components/interview/QuestionSkeleton";
 import { articles } from "@/lib/interview/data";
 import { getArticleMarkdown } from "@/lib/markdown/content";
 import { articleMetadata, articleStructuredData } from "@/lib/seo";
@@ -38,9 +40,19 @@ export async function generateMetadata({
       : { title: "题目未找到", robots: { index: false, follow: false } };
 }
 
-export default async function QuestionPage({
+export default function QuestionPage({
   params,
 }: PageProps<"/questions/[slug]">) {
+  return (
+    <Suspense fallback={<QuestionSkeleton />}>
+      <QuestionContent params={params} />
+    </Suspense>
+  );
+}
+
+async function QuestionContent({
+  params,
+}: Pick<PageProps<"/questions/[slug]">, "params">) {
   const { slug } = await params;
   const article = articles.find((item) => item.slug === slug);
   if (!article) {

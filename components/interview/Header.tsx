@@ -211,8 +211,7 @@ export function Header({
           onClick={onTheme}
           aria-pressed={dark}
         >
-          <Sun size={17} />
-          <Moon size={15} />
+          {dark ? <Moon size={15} /> : <Sun size={17} />}
         </button>
         <button
           className="learning-progress flex items-center gap-2"

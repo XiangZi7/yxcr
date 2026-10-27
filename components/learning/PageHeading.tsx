@@ -3,13 +3,9 @@ import { ChevronRight } from "lucide-react";
 import type { ReactNode } from "react";
 
 export function PageHeading({
-  title,
-  description,
   label,
   action,
 }: {
-  title: string;
-  description: string;
   label: string;
   action?: ReactNode;
 }) {
@@ -24,10 +20,6 @@ export function PageHeading({
         <span aria-current="page">{label}</span>
       </nav>
       <div className="flex flex-wrap items-end justify-between gap-5">
-        <div>
-          <h1 className="text-[26px] font-semibold tracking-tight">{title}</h1>
-          <p className="mt-2 text-sm leading-6 text-muted">{description}</p>
-        </div>
         {action}
       </div>
     </header>

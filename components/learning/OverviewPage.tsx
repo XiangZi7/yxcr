@@ -109,8 +109,6 @@ export function OverviewPage() {
   return (
     <main className="dashboard-page">
       <PageHeading
-        title={`你好，${displayName}`}
-        description="保持好奇，慢慢积累。今天也向理想的 offer 走近一点。"
         label="学习概览"
         action={
           <Link href="/today" className="outline-button">
