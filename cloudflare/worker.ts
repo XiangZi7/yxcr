@@ -1,12 +1,9 @@
 import config from "../content/resources/sources.json";
 import { knowledgePath } from "../lib/resources/links";
 import { categoryHref, collectionHref, topicCategories } from "../lib/resources/sections";
-import { normalizeResourceSearch } from "../lib/resources/query";
 import { parseLibraryPage } from "../lib/resources/listing";
-import type { LearningResource } from "../lib/resources/types";
 
 interface Env { ASSETS: { fetch: (request: Request) => Promise<Response> } }
-let catalog: { resource: LearningResource; text: string }[] | undefined;
 
 const worker = {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -20,26 +17,6 @@ const worker = {
     if (url.pathname === "/resources") {
       url.pathname = "/library";
       return Response.redirect(url, 308);
-    }
-    if (url.pathname === "/api/resources") {
-      const query = (url.searchParams.get("q") || "").slice(0, 200);
-      const response = await env.ASSETS.fetch(new Request(url.origin + "/api/resources"));
-      if (!response.ok) return response;
-      if (!query) {
-        const headers = new Headers(response.headers);
-        headers.set("Content-Type", "application/json; charset=utf-8");
-        return new Response(request.method === "HEAD" ? null : response.body, { headers });
-      }
-      catalog ??= (await response.json() as LearningResource[]).map((resource) => ({ resource,
-        text: normalizeResourceSearch(`${resource.title} ${resource.section} ${resource.description || ""} ${(resource.searchAliases || []).join(" ")}`),
-      }));
-      const terms = normalizeResourceSearch(query).split(" ").filter(Boolean);
-      const matches: LearningResource[] = [];
-      for (const item of catalog) {
-        if (terms.every((term) => item.text.includes(term))) matches.push(item.resource);
-        if (matches.length === 8) break;
-      }
-      return Response.json(matches, { headers: { "Cache-Control": "public, max-age=3600" } });
     }
     if (url.pathname === "/library") {
       const collection = url.searchParams.get("collection");

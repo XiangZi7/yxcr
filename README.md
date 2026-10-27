@@ -18,11 +18,9 @@ pnpm test
 pnpm build
 ```
 
-## 部署到 Cloudflare Workers
+## 免费部署到 Cloudflare Workers
 
-项目使用 [OpenNext](https://developers.cloudflare.com/workers/framework-guides/web-apps/opennext/) 适配 Next.js 服务端功能。Worker 配置在 `wrangler.jsonc`，缓存配置在 `open-next.config.ts`。
-
-部署前需在[当前账号的 Workers 套餐页面](https://dash.cloudflare.com/268729d711fadbb19006ad3ec3b26c32/workers/plans)开通 **Workers Paid**。文章服务端 Markdown 渲染会超出免费套餐的 10ms CPU 上限；当前配置将单次请求 CPU 上限设为 30,000ms。免费套餐会拒绝该配置并返回 `100328`，不能仅通过重新部署解除限制。参见 [Cloudflare CPU 限额](https://developers.cloudflare.com/workers/platform/limits/#cpu-time)。
+项目使用 Next.js `output: "export"`，将全部文章、专题和公开分页生成为 `out/` 下的 HTML，部署到 [Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/)。正文由静态资源服务直接响应，适用于 Cloudflare 免费套餐。
 
 ```bash
 pnpm exec wrangler login
@@ -30,28 +28,28 @@ pnpm preview
 pnpm run deploy
 ```
 
-- `pnpm preview` 构建并在本地 Workers 运行时预览，默认地址为 `http://localhost:8787`。
-- `pnpm run deploy` 构建、复制 Markdown 正文、填充 KV 缓存并发布 `yxcr` Worker。已有构建时可运行 `pnpm exec opennextjs-cloudflare deploy`。
-- 当前配置绑定此账号下的 `NEXT_INC_CACHE_KV`。更换 Cloudflare 账号时，修改 `account_id`，运行 `pnpm exec wrangler kv namespace create NEXT_INC_CACHE_KV`，再将返回的 ID 填入 `kv_namespaces`。
-- 内容随代码部署更新，使用 KV 缓存，无需开通 R2。Durable Object 队列处理后台页面重验证；没有配置按标签缓存失效。后续如接入在线内容编辑或 `revalidateTag`，应补充 Tag Cache 和失效机制。
-- `content/knowledge` 与 `content/questions` 的 `.md` 文件由 `scripts/copy-cloudflare-content.mjs` 复制到构建资源目录；线上通过 `ASSETS` 绑定读取，本地开发和普通 Node.js 部署仍读取原文件。
-- Cloudflare 构建关闭当前 Next.js 16.4 与 OpenNext 组合存在兼容问题的 Cache Components / Partial Prefetching，使用常规 SSR 和静态预渲染，并通过构建别名改用 React 请求内缓存。本地开发和普通 `pnpm build` 保持原配置。
-- `pnpm cf:typegen` 可生成本地 Cloudflare 绑定类型。生成文件、Worker 构建产物与本地运行状态均已加入忽略列表。
+- `pnpm preview` 构建并在 `http://localhost:8787` 预览；已有构建时运行 `pnpm exec wrangler dev --port 8787`。`pnpm start` 在 3002 端口预览构建结果。
+- `pnpm run deploy` 构建、校验全部文章和资源数量，再发布 `yxcr`。已有构建时运行 `pnpm exec wrangler deploy`。
+- `wrangler.jsonc` 配置账号和资源路由。更换账号时修改 `account_id`。部署不依赖 KV、R2、Durable Objects 或付费 CPU 配置。
+- `cloudflare/worker.ts` 兼容旧文章链接和旧分页查询，不在请求时渲染文章。未知地址使用静态 `404.html` 并返回 404。
+- 公开分页使用 `/library/page/2`、`/library/base/page/2`、`/topics/frontend/page/2`，每页有预生成卡片和独立 canonical；旧 `?page=2` 地址通过 HTTP 308 跳转。
+- 搜索和个人筛选在浏览器读取静态目录后执行；查询地址使用 `X-Robots-Tag: noindex, follow`。收藏、笔记和学习记录仍保存在当前浏览器。
+- `/api/resources` 是完整的静态 JSON 目录；关键词筛选由浏览器执行，该文件不再根据 `q` 参数筛选响应。
+- 正文在构建时读取 `content/knowledge` 和 `content/questions`，更新后重新部署。`scripts/check-static-export.mjs` 校验全部文章已导出，并检查资源数量不超过当前免费套餐的 20,000 文件限制。
+- `pnpm cf:typegen` 可生成本地 Cloudflare 类型。生成文件、构建产物和本地运行状态均已忽略。
 
-在 Cloudflare 控制台关联 Git 仓库实现自动部署时，选择 **Workers** 项目，使用以下设置：
+在 Cloudflare 控制台关联 Git 仓库自动部署时，选择 **Workers** 项目：
 
 | 设置 | 值 |
 | --- | --- |
 | 根目录 | 仓库根目录 |
 | 构建命令 | `pnpm build:cloudflare` |
-| 部署命令 | `pnpm exec opennextjs-cloudflare deploy` |
+| 部署命令 | `pnpm exec wrangler deploy` |
 | 构建环境变量 | `NEXT_PUBLIC_SITE_URL=https://yxcr.top` |
 
-使用 Node.js 22，安装依赖使用 `pnpm install --frozen-lockfile`。`NEXT_PUBLIC_SITE_URL` 会写入浏览器与预渲染输出，必须配置为**构建变量**；只修改 Worker 运行变量不会更新这些网址。更换域名时同步修改 `wrangler.jsonc` 中的值并重新构建。
+使用 Node.js 22，安装命令为 `pnpm install --frozen-lockfile`。`NEXT_PUBLIC_SITE_URL` 会写入浏览器和静态输出，须配置为构建变量；更换域名后重新构建。
 
-首次发布后可先访问部署输出的 `workers.dev` 地址。绑定正式域名时，在 Worker 的 **Settings → Domains & Routes → Add → Custom Domain** 添加 `yxcr.top`；域名需位于对应 Cloudflare 账号中。正式域名默认用于 canonical 和 sitemap。
-
-构建脚本在 Windows 上为 OpenNext 的目录符号链接提供 junction 回退，无需修改系统设置。OpenNext 对原生 Windows 的支持仍有限；遇到其他平台问题时，使用 WSL 或 Cloudflare 的 Linux 构建环境。
+首次发布后先访问部署输出的 `workers.dev` 地址。绑定正式域名时，在 Worker 的 **Settings → Domains & Routes → Add → Custom Domain** 添加 `yxcr.top`，域名需位于对应 Cloudflare 账号中。
 
 ## 页面
 
@@ -62,8 +60,8 @@ pnpm run deploy
 | `/questions/[slug]`       | 旧文章地址，308 永久跳转到新网址        |
 | `/overview`              | 学习概览、每日统计与知识版图            |
 | `/library`               | 分类筛选、搜索、收藏与掌握状态          |
-| `/library/[section]`     | 独立栏目入口，支持 `?page=2` 服务端分页 |
-| `/topics/[topic]`        | 学习方向与语言专题，支持服务端分页      |
+| `/library/[section]`     | 独立栏目入口，支持预生成分页 |
+| `/topics/[topic]`        | 学习方向与语言专题，支持预生成分页      |
 | `/resources`             | 兼容旧地址，308 重定向到 `/library`     |
 | `/today`                 | 每日目标与学习计划                      |
 | `/practice`              | 限时自测、参考思路与练习复盘            |
@@ -82,7 +80,7 @@ pnpm run deploy
 - 对未标注语言的常见代码进行保守识别，显式纯文本与字符图保持原样。支持 TypeScript、JavaScript、Vue/XML、Python、Shell、HTTP、Dockerfile、PowerShell 等语法；使用 KaTeX 渲染算法公式。
 - 代码块支持三色圆点、语言名称、行号、横向滚动和复制。支持的常见语言包括 JavaScript、TypeScript、TSX、CSS、Python、JSON、Shell 等。
 - 文件导入支持 `.md`、`.markdown`，单文件不超过 512 KB；导入的文档保存在当前浏览器中。编辑后点击保存，可导出标准 Markdown。
-- 文件正文由 Next.js 缓存。修改仓库内的 Markdown 后，重启开发服务；生产环境重新构建即可更新。
+- 正文在构建时渲染；生产环境修改 Markdown 后重新构建即可更新。
 
 ## 字体与状态
 

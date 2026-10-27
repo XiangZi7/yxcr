@@ -10,7 +10,6 @@ export default function PrivacyPage() {
   return <InfoPage title="隐私政策" description={description} path="/privacy" sections={[
     { id: "scope", title: "适用范围与维护者", content: <>
       <p>本政策适用于 {site.name}（{site.url}）的页面与学习功能。维护者为 {author.name}，隐私联系邮箱为 <a href={`mailto:${author.email}`}>{author.email}</a>。</p>
-      <p>当前本站无需注册或登录，没有在线 AI 服务，也未启用 Google AdSense、Google Analytics 或广告追踪脚本。下文的广告处理说明仅在未来实际启用相关服务时适用。</p>
     </> },
     { id: "data", title: "我们处理哪些信息", content: <>
       <ul>
@@ -24,13 +23,6 @@ export default function PrivacyPage() {
       <p>本地存储用于保存你主动使用的学习功能与偏好；网站请求用于提供内容和搜索、保障运行及处理异常；联系信息用于处理你提出的事项。我们不会将私人笔记或学习记录出售给广告商。</p>
       <p>托管、网络与邮件服务会在提供相应服务时处理必要数据。点击外部链接后，数据处理由目标网站及其政策决定。依法需要或为处理安全、侵权事项提供信息时，我们仅在必要范围内处理。</p>
       <p>外部服务的数据处理地点可能与你所在地区不同。我们会在增加会改变数据处理方式的服务时更新政策；需要授权或同意的处理，以适用规则要求及实际选择为准。</p>
-    </> },
-    { id: "advertising", title: "Google AdSense 与广告隐私", content: <>
-      <p><strong>当前状态：</strong>本站正在进行广告接入准备，当前版本没有加载 AdSense 广告代码或设置广告 Cookie。</p>
-      <p>未来启用广告后，Google 等第三方供应商可能使用 Cookie、网络信标、IP 地址及其他标识符，根据你此前访问本站或其他网站的情况投放、衡量广告和防范欺诈。Google 的广告 Cookie 可使其及合作伙伴依据这些访问活动展示个性化广告；实际处理取决于地区、广告设置和适用的同意选择。</p>
-      <p>你可以在 <a href="https://myadcenter.google.com/" target="_blank" rel="noopener noreferrer">Google 我的广告中心</a>管理或关闭个性化广告，也可以通过 <a href="https://optout.aboutads.info/" target="_blank" rel="noopener noreferrer">第三方广告退出工具</a>管理参与供应商的选择。退出个性化不等于不再显示广告。</p>
-      <p>Google 的处理方式请参阅<a href="https://policies.google.com/technologies/partner-sites?hl=zh-CN" target="_blank" rel="noopener noreferrer">使用 Google 服务的网站和应用中的信息使用说明</a>及其<a href="https://policies.google.com/privacy?hl=zh-CN" target="_blank" rel="noopener noreferrer">隐私政策</a>。实际启用的广告合作方及其信息会在相关同意管理界面或本政策中披露。</p>
-      <p>面向欧洲经济区、英国与瑞士等适用地区启用广告时，我们将按照适用要求提供披露和同意管理。涉及个性化广告的同意收集将采用符合 Google 要求的认证平台，并提供重新选择或撤回入口。当前无需作出广告同意选择。</p>
     </> },
     { id: "choices", title: "查看、导出、删除与撤回", content: <>
       <ul>

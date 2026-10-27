@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { BrandMark } from "@/components/brand/BrandMark";
 import { author, site } from "@/lib/site";
+export const dynamic = "force-static";
 export const alt = `${site.name} — Learn. Practice. Grow. by ${author.name}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";

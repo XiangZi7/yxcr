@@ -139,11 +139,6 @@ export function Sidebar({
         </div>
         <footer className="sidebar-credits">
           <CreatorLinks compact />
-          <nav className="sidebar-info" aria-label="关于本站">
-            <Link href="/about" onClick={onClose}>关于我们</Link>
-            <Link href="/contact" onClick={onClose}>联系我们</Link>
-            <Link href="/privacy" onClick={onClose}>隐私政策</Link>
-          </nav>
         </footer>
       </aside>
     </>

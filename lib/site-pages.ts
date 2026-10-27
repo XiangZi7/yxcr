@@ -6,6 +6,4 @@ export const sitePages = [
   { href: "/contact", title: "联系我们" },
   { href: "/privacy", title: "隐私政策" },
   { href: "/terms", title: "服务条款" },
-  { href: "/cookies", title: "Cookie 与广告" },
-  { href: "/copyright", title: "版权声明" },
 ] as const;

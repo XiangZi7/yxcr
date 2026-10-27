@@ -7,19 +7,19 @@
 - `/learn/canvas-barrage`：原 `/questions/res-56b6faa875af330a`。
 - `/learn/vue-reactivity`：原 `/questions/vue-3`。
 - 其他文章使用由标题生成的可读中文或英文名称。中文路径在浏览器地址栏可读，链接和 XML 中按 URL 标准编码。
-- `/library?page=2`：全部知识的第二页，每页 24 篇。
+- `/library/page/2`：全部知识的第二页，每页 24 篇；旧 `/library?page=2` 返回 308。
 - `/library/canvas`、`/library/computer-network`：独立栏目入口。
 - `/topics/frontend`、`/topics/python`、`/topics/mcp`：学习方向与语言专题入口。
 
-分页直接在服务器上按 URL 筛选并输出当前页的文章和可点击的翻页链接，不依赖爬虫点击按钮加载整份目录。每页有自身 canonical，第一页使用不带 `page` 的地址。
+公开分页在构建时生成当前页文章和可点击的翻页链接，不依赖爬虫执行 JavaScript 加载目录。栏目和专题同样使用 `/page/2` 路径，每页有自身 canonical，第一页使用基础地址。
 
-站内搜索 `q` 和个人学习状态筛选使用 `noindex, follow`。私人记录继续从当前浏览器读取，服务器不能据此返回个人数据。栏目与类别的组合筛选也不作为独立收录入口。
+站内搜索 `q` 和个人学习状态筛选在浏览器中执行，查询响应使用 `X-Robots-Tag: noindex, follow`。私人记录继续从当前浏览器读取，服务器不能据此返回个人数据。栏目与类别的组合筛选也不作为独立收录入口。
 
 ## 永久跳转
 
-`app/questions/[slug]/route.ts` 使用真实 HTTP 308，将原 ID、原文章短名及可识别的历史别名直接跳到最终文章地址。跳转保留查询参数，浏览器会在目标不指定新片段时继承原书签锚点；页面内旧 Markdown 链接在渲染时转换为新链接并保留锚点。
+`cloudflare/worker.ts` 使用真实 HTTP 308，将原 ID、原文章短名及可识别的历史别名直接跳到最终文章地址。跳转保留查询参数，浏览器会在目标不指定新片段时继承原书签锚点；页面内旧 Markdown 链接在渲染时转换为新链接并保留锚点。
 
-旧 `/library?collection=...` 与 `/library?category=...` 通过 `proxy.ts` 在渲染前返回 HTTP 308。搜索、页码和个人状态参数保留。未知旧文章返回 404。
+旧 `/library?collection=...` 与 `/library?category=...` 通过 `cloudflare/worker.ts` 返回 HTTP 308。搜索、页码和个人状态参数保留。未知旧文章返回 404。
 
 ## 稳定网址注册表
 

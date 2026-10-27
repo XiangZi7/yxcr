@@ -8,6 +8,7 @@ import { resourceCollections } from "@/lib/resources/config";
 import { filterResources } from "@/lib/resources/query";
 import { libraryPageSize, listingHref, paginateKnowledge } from "@/lib/resources/listing";
 import { knowledgeLastModified } from "@/lib/seo";
+export const dynamic = "force-static";
 
 function listingEntries(path: string, items: typeof resources): MetadataRoute.Sitemap {
   return Array.from({ length: Math.max(1, Math.ceil(items.length / libraryPageSize)) }, (_, index) => {
