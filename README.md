@@ -1,6 +1,6 @@
 # YXCR OS
 
-基于 Next.js 16、React、TypeScript 与 Tailwind CSS v4 的面试学习工作台，沿用 `ui/ui.png` 中的浅蓝灰视觉风格。
+基于 Next.js 16、React、TypeScript 与 Tailwind CSS v4 的编程与 AI 学习网站，沿用 `ui/ui.png` 中的浅蓝灰视觉风格。
 
 ## 开发
 
@@ -22,7 +22,8 @@ pnpm build
 
 | 地址                     | 页面                                    |
 | ------------------------ | --------------------------------------- |
-| `/`、`/questions/[slug]` | Markdown 题目详情、文章目录与学习笔记   |
+| `/`                      | 编程与 AI 学习首页、主题入口与学习方法  |
+| `/questions/[slug]`       | Markdown 知识详情、文章目录与学习笔记   |
 | `/overview`              | 学习概览、每日统计与知识版图            |
 | `/library`               | 分类筛选、搜索、收藏与掌握状态          |
 | `/resources`             | 兼容旧地址，308 重定向到 `/library`     |
@@ -31,6 +32,9 @@ pnpm build
 | `/saved`                 | 收藏题目与错题本                        |
 | `/notes`                 | Markdown 文档导入、编辑、分屏预览与导出 |
 | `/profile`               | 个人资料、主题偏好与学习记录导出        |
+| `/about`、`/contact`      | 关于我们、联系邮箱与分类反馈入口        |
+| `/privacy`、`/terms`      | 隐私政策与服务条款                      |
+| `/cookies`、`/copyright`  | Cookie 与广告说明、版权与来源许可       |
 
 ## Markdown
 
@@ -48,9 +52,9 @@ pnpm build
 - 等宽字体按 `JetBrains Mono Variable → JetBrains Mono → SF Mono → Cascadia Code → Menlo → Consolas → 系统中文字体` 回退。
 - 两种拉丁字体都仅引用本地 latin 可变字体文件，不加载其他语言子集。
 - 图标使用 Lucide React，交互动画使用 Motion。Zustand 管理主题、学习状态、收藏、错题、笔记、计划与练习记录，并迁移旧版浏览器本地记录。
-- 当前为前端本地学习工作台，模拟面试尚未接入在线 AI 服务。
+- 当前为前端本地学习工作台，自测练习尚未接入在线 AI 服务。
 
-## 统一知识题库
+## 统一知识知识库
 
 - `/library` 统一呈现原有题目与新增知识，使用一套栏目、搜索、收藏、计划和笔记。所有知识卡片及搜索结果都进入 `/questions/[slug]` 阅读正文。
 - 正文存于 `content/knowledge/{id}.md`；目录元数据存于 `lib/resources/catalog.json`。只有实际存在正文的内容才进入列表和 sitemap，不将外站标题索引计为可阅读题目。
@@ -70,6 +74,13 @@ pnpm build
 - 正式域名默认为 `https://yxcr.top`，可通过 `.env.example` 中的 `NEXT_PUBLIC_SITE_URL` 覆盖。生产环境修改后需要重新构建。
 - 每页配置独立标题、摘要、canonical、Open Graph 和 Twitter 分享卡片，分享图片由 `/opengraph-image` 生成。
 - `/robots.txt` 与 `/sitemap.xml` 自动生成。站点地图仅包含公开页面与题目详情；今日计划、收藏、私人笔记和个人档案使用 `noindex, follow`。
-- `/` 与 `/questions/vue-3` 展示相同内容，以 `/questions/vue-3` 为规范地址，避免重复收录。
+- `/` 为独立学习首页，使用自身 canonical；知识详情保留 `/questions/[slug]` 地址。
 - 使用 `main`、`article`、`nav`、`aside`、`header`、`footer` 和分级标题；题目正文在服务端输出。JSON-LD 包含 WebSite、Person、TechArticle 与 BreadcrumbList，并转义 HTML 特殊字符。
 - 部署到正式域名后，可向搜索引擎站长平台提交 `https://yxcr.top/sitemap.xml`。当前修改不包含域名解析或线上部署。
+
+## 站点信息与广告准备
+
+- 全站页脚提供关于我们、联系我们、隐私政策、服务条款、Cookie 与广告、版权声明六个入口；这些页面在服务端输出，并加入 sitemap。
+- 公开维护者为 `XiangZi7`，联系邮箱为 `xiangzi777777@gmail.com`，统一在 `lib/site.ts` 维护；政策生效日期与页面清单位于 `lib/site-pages.ts`。
+- 当前没有广告、统计追踪脚本或广告 Cookie；页面区分现有本地学习功能和未来 AdSense 数据处理。此次准备不代表广告账户或网站已获批准。
+- 真实发布商 ID、站点验证、`ads.txt`、同意管理与上线检查见 [AdSense 接入准备](docs/adsense-readiness.md)。启用广告、统计或在线服务时，必须同步更新政策中的当前状态及数据处理说明。

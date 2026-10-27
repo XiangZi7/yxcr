@@ -44,10 +44,11 @@ export function Sidebar({
     };
   }, [mobileOpen, onClose]);
   const links = [
+    { label: "学习首页", icon: House, href: "/" },
     { label: "学习概览", icon: House, href: "/overview" },
-    { label: "全部题库", icon: LayoutGrid, href: "/library" },
+    { label: "全部知识库", icon: LayoutGrid, href: "/library" },
     { label: "今日学习", icon: ClipboardCheck, href: "/today" },
-    { label: "AI 模拟面试", icon: Bot, href: "/practice" },
+    { label: "自测练习", icon: Bot, href: "/practice" },
     { label: "收藏与错题", icon: Star, href: "/saved" },
     { label: "我的笔记", icon: NotebookPen, href: "/notes" },
   ] as const;
@@ -70,7 +71,7 @@ export function Sidebar({
             <Link
               key={label}
               href={href}
-              className={`primary-nav ${pathname === href || (href === "/library" && (pathname === "/" || pathname.startsWith("/questions/"))) ? "is-active" : ""}`}
+              className={`primary-nav ${pathname === href || (href === "/library" && pathname.startsWith("/questions/")) ? "is-active" : ""}`}
               aria-current={pathname === href ? "page" : undefined}
               onClick={onClose}
             >
@@ -171,7 +172,7 @@ export function Sidebar({
             className="mb-3 text-[#234a82]"
           />
           <p className="relative z-10 font-semibold">每天进步一点点</p>
-          <p className="relative z-10 mt-1 text-muted">让面试更有底气</p>
+          <p className="relative z-10 mt-1 text-muted">让学习更有方向</p>
           <svg
             className="mountains absolute inset-x-0 bottom-0 w-full"
             viewBox="0 0 220 78"
@@ -219,6 +220,11 @@ export function Sidebar({
         </div>
         <footer className="sidebar-credits">
           <CreatorLinks compact />
+          <nav className="sidebar-info" aria-label="关于本站">
+            <Link href="/about" onClick={onClose}>关于我们</Link>
+            <Link href="/contact" onClick={onClose}>联系我们</Link>
+            <Link href="/privacy" onClick={onClose}>隐私政策</Link>
+          </nav>
         </footer>
       </aside>
     </>

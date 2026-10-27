@@ -128,7 +128,7 @@ function SavedKnowledge({
           <Star size={30} className="mx-auto mb-4 text-muted" />
           <h2>这里还没有匹配的知识点</h2>
           <p className="my-4 text-sm text-muted">
-            试试其他关键词，或去题库收藏值得复习的知识。
+            试试其他关键词，或去知识库收藏值得复习的知识。
           </p>
           <Link href="/library" className="solid-button">
             去探索知识

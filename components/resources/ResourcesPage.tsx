@@ -181,7 +181,7 @@ function ResourceLibrary({
       <PageHeading
         title="让零散的知识，连成体系"
         description="从基础到进阶，从网络到 AI。在阅读、实践与复习之间，构建自己的知识体系。"
-        label="全部题库"
+        label="全部知识库"
         action={
           <Link href="/today" className="outline-button">
             我的学习计划
@@ -189,7 +189,7 @@ function ResourceLibrary({
           </Link>
         }
       />
-      <section className="resource-summary-grid" aria-label="题库概览">
+      <section className="resource-summary-grid" aria-label="知识库概览">
         {[
           {
             label: "知识点",
@@ -242,7 +242,7 @@ function ResourceLibrary({
             全部
           </Link>
           {resourceCollections
-            .filter((item) => item.group === "面试专栏")
+            .filter((item) => item.group === "学习专栏")
             .map((item) => (
               <Link
                 href={filterHref({ collection: item.id })}
@@ -257,7 +257,7 @@ function ResourceLibrary({
         </div>
         <div className="resource-dropdown-menus">
           {resourceGroups
-            .filter((group) => group !== "面试专栏")
+            .filter((group) => group !== "学习专栏")
             .map((group) => (
               <details className="resource-category-dropdown" key={group}>
                 <summary

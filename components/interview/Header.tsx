@@ -107,7 +107,7 @@ export function Header({
         <Menu size={21} />
       </button>
       <Link
-        href="/overview"
+        href="/"
         className="brand flex shrink-0 items-center gap-3"
         aria-label={`${site.name} 首页`}
       >

@@ -106,17 +106,17 @@ function PracticeContent({ topic }: { topic: string | null }) {
       <PageHeading
         title={
           stage === "setup"
-            ? "把准备，变成从容的表达"
+            ? "在练习中，检验自己的理解"
             : stage === "result"
               ? "每一次练习，都比上一次更好"
               : "专注当下，把思路说清楚"
         }
         description={
           stage === "setup"
-            ? "选择一个方向，留一点不被打扰的时间，提前进入面试状态。"
+            ? "选择一个方向，留一点不被打扰的时间，用自测检查自己的理解。"
             : "先独立思考，再对照复盘。"
         }
-        label="模拟面试"
+        label="自测练习"
         action={
           <span className="local-mode-badge">
             <span />
@@ -208,7 +208,7 @@ function PracticeContent({ topic }: { topic: string | null }) {
                   },
                   {
                     id: "interview",
-                    title: "面试模式",
+                    title: "挑战模式",
                     detail: "完成回答后，再查看参考思路",
                     icon: MessageSquareText,
                   },
@@ -299,7 +299,7 @@ function PracticeContent({ topic }: { topic: string | null }) {
                 </div>
               )}
               <p className="mt-4 border-t border-line pt-3 text-[11px] leading-5 text-muted">
-                当前提供题库自测与参考思路，尚未连接在线 AI 面试官。
+                当前提供本地知识自测与参考思路，练习回答不会上传，暂未接入在线 AI 服务。
               </p>
             </section>
           </aside>
@@ -313,7 +313,7 @@ function PracticeContent({ topic }: { topic: string | null }) {
                 <Settings2 size={16} className="text-brand" />
                 {category}
                 <span className="tag ml-2">
-                  {mode === "guided" ? "学习模式" : "面试模式"}
+                  {mode === "guided" ? "学习模式" : "挑战模式"}
                 </span>
               </span>
               <span

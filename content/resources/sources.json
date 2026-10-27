@@ -5,14 +5,14 @@
       "name": "前端进阶之旅",
       "author": "poetries",
       "url": "https://feinterview.poetries.top",
-      "description": "从基础面试到工程实践的系统学习资源。"
+      "description": "从编程基础到工程实践的系统学习资源。"
     },
     {
       "id": "bingkele",
       "name": "冰可乐的前端笔记",
       "author": "冰可乐",
       "url": "https://bingkele.cc/interview/new/network/",
-      "description": "计算机网络面试题与知识点整理。"
+      "description": "计算机网络原理与知识点整理。"
     },
     {
       "id": "aifuture",
@@ -26,7 +26,7 @@
     {
       "id": "base",
       "title": "基础篇",
-      "group": "面试专栏",
+      "group": "学习专栏",
       "icon": "foundation",
       "description": "HTML、CSS、JavaScript 与 Web 基本功。",
       "source": "poetries",
@@ -36,7 +36,7 @@
     {
       "id": "advanced",
       "title": "进阶篇",
-      "group": "面试专栏",
+      "group": "学习专栏",
       "icon": "layers",
       "description": "深入语言机制、性能与工程能力。",
       "source": "poetries",
@@ -46,9 +46,9 @@
     {
       "id": "frequent",
       "title": "高频篇",
-      "group": "面试专栏",
+      "group": "学习专栏",
       "icon": "flame",
-      "description": "围绕面试重点进行集中复习。",
+      "description": "围绕核心概念进行集中复习。",
       "source": "poetries",
       "path": "/docs/docs/base/high-frequency",
       "prefixes": ["/docs/docs/base/high-frequency"]
@@ -56,9 +56,9 @@
     {
       "id": "curated",
       "title": "精选篇",
-      "group": "面试专栏",
+      "group": "学习专栏",
       "icon": "sparkles",
-      "description": "按技术模块组织的面试知识。",
+      "description": "按技术模块组织的学习知识。",
       "source": "poetries",
       "path": "/docs/docs/excellent-docs/1-HTML模块",
       "prefixes": ["/docs/docs/excellent-docs/"]
@@ -66,7 +66,7 @@
     {
       "id": "handwritten",
       "title": "手写篇",
-      "group": "面试专栏",
+      "group": "学习专栏",
       "icon": "code",
       "description": "用代码理解常见实现与边界。",
       "source": "poetries",
@@ -75,10 +75,10 @@
     },
     {
       "id": "experience",
-      "title": "面经篇",
-      "group": "面试专栏",
+      "title": "学习路线",
+      "group": "学习专栏",
       "icon": "messages",
-      "description": "了解真实面试流程与复盘方法。",
+      "description": "建立学习路线与实践复盘方法。",
       "source": "poetries",
       "path": "/docs/interview-exp/前端面经汇总",
       "prefixes": ["/docs/interview-exp/"]
@@ -86,7 +86,7 @@
     {
       "id": "ai",
       "title": "AI 篇",
-      "group": "面试专栏",
+      "group": "学习专栏",
       "icon": "brain",
       "description": "大模型、RAG、MCP 与 Agent 工程。",
       "source": "poetries",
@@ -96,7 +96,7 @@
     {
       "id": "principles",
       "title": "原理篇",
-      "group": "面试专栏",
+      "group": "学习专栏",
       "icon": "workflow",
       "description": "框架、构建工具与运行机制。",
       "source": "poetries",
@@ -106,7 +106,7 @@
     {
       "id": "daily",
       "title": "每日一题",
-      "group": "面试专栏",
+      "group": "学习专栏",
       "icon": "calendar",
       "description": "把学习拆成每天一个小问题。",
       "source": "poetries",
@@ -115,10 +115,10 @@
     },
     {
       "id": "weapp",
-      "title": "小程序题库",
-      "group": "面试专栏",
+      "title": "小程序知识库",
+      "group": "学习专栏",
       "icon": "phone",
-      "description": "连接原站的小程序与网页题库。",
+      "description": "连接原站的小程序与网页知识库。",
       "source": "poetries",
       "path": "/weapp-interview",
       "prefixes": ["/weapp-interview"]
@@ -126,7 +126,7 @@
     {
       "id": "flashcards",
       "title": "知识卡片",
-      "group": "面试专栏",
+      "group": "学习专栏",
       "icon": "cards",
       "description": "按知识主题进行主动回忆。",
       "source": "poetries",
@@ -145,17 +145,17 @@
     },
     {
       "id": "yearly",
-      "title": "历年面经",
+      "title": "阶段复盘",
       "group": "专项练习",
       "icon": "history",
-      "description": "按年份整理面试经验与考点。",
+      "description": "按主题整理学习经验与实践重点。",
       "source": "poetries",
       "path": "/docs/yearly-interview",
       "prefixes": ["/docs/yearly-interview"]
     },
     {
       "id": "algorithm",
-      "title": "算法题库",
+      "title": "算法知识库",
       "group": "专项练习",
       "icon": "network",
       "description": "数据结构、算法思路与编码练习。",
@@ -315,10 +315,10 @@
     },
     {
       "id": "network-interview",
-      "title": "网络面试专题",
+      "title": "计算机网络专题",
       "group": "技术专题",
       "icon": "globe",
-      "description": "冰可乐整理的计算机网络面试题。",
+      "description": "冰可乐整理的计算机网络知识与自测。",
       "source": "bingkele",
       "path": "/interview/new/network/",
       "prefixes": ["/interview/new/network/"]

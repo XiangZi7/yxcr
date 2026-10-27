@@ -101,8 +101,8 @@
 - [Function.prototype.bind() —— MDN](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind)
 - 相关学习文章
   - [JavaScript 深入之 bind 的模拟实现](https://github.com/mqyqingfeng/Blog/issues/12)
-  - [从一道面试题的进阶，到“我可能看了假源码”](https://zhuanlan.zhihu.com/p/25379434)
-  - [从一道面试题的进阶，到“我可能看了假源码”（2）](https://zhuanlan.zhihu.com/p/25483361)
+  - [从一道练习的进阶，到“我可能看了假源码”](https://zhuanlan.zhihu.com/p/25379434)
+  - [从一道练习的进阶，到“我可能看了假源码”（2）](https://zhuanlan.zhihu.com/p/25483361)
 
 ## 工具方法系列
 

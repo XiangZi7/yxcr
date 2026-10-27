@@ -60,7 +60,7 @@ export function KnowledgeWorkspace({
               className="breadcrumbs flex items-center gap-2"
               aria-label="面包屑"
             >
-              <Link href="/library">题库</Link>
+              <Link href="/library">知识库</Link>
               <ChevronRight size={13} />
               <Link href={`/library?collection=${resource.collection}`}>
                 {collection?.title ?? resource.section}

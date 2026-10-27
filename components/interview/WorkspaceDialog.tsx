@@ -9,7 +9,7 @@ import { Modal } from "@/components/ui/Modal";
 const helpItems = [
   {
     title: "找到自己的学习方向",
-    text: "在学习概览查看知识版图，前往全部题库按方向、掌握状态与关键词筛选题目。按 Ctrl K / ⌘ K 可以快速打开顶部搜索。",
+    text: "在学习概览查看知识版图，前往全部知识库按方向、掌握状态与关键词筛选题目。按 Ctrl K / ⌘ K 可以快速打开顶部搜索。",
   },
   {
     title: "给今天安排一点新知识",
@@ -21,7 +21,7 @@ const helpItems = [
   },
   {
     title: "在表达中检验理解",
-    text: "模拟面试提供技术方向、题数、时长和练习模式设置。当前支持本地自测、参考思路和作答复盘，尚未连接在线 AI 服务。",
+    text: "自测练习提供技术方向、题数、时长和练习模式设置。当前支持本地自测、参考思路和作答复盘，尚未连接在线 AI 服务。",
   },
 ];
 
@@ -45,7 +45,7 @@ export function WorkspaceDialog({
       : article.summary;
   return (
     <Modal
-      title={panel === "help" ? "让学习更有方向" : "面试追问练习"}
+      title={panel === "help" ? "让学习更有方向" : "拓展思考练习"}
       onClose={onClose}
     >
       {panel === "help" ? (

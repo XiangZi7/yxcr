@@ -8,4 +8,4 @@
 | `clip-path: inset(0)` | 占位 | 不响应 | 裁剪隐藏 |
 | `transform: scale(0)` | 占位 | 不响应 | 缩放为 0 |
 
-> 面试常追问：`display:none` 与 `visibility:hidden` 的区别（是否占位、是否重排/重绘）。
+> 进一步思考：`display:none` 与 `visibility:hidden` 的区别（是否占位、是否重排/重绘）。

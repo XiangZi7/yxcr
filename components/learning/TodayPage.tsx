@@ -195,7 +195,7 @@ export function TodayPage() {
                   <BookOpen size={30} className="mx-auto mb-4 text-muted" />
                   <h3 className="font-medium">给今天安排一点新知识</h3>
                   <p className="mb-5 mt-2 text-sm text-muted">
-                    从题库挑选几道感兴趣的题目，开始你的学习计划。
+                    从知识库挑选几道感兴趣的题目，开始你的学习计划。
                   </p>
                   <button
                     className="outline-button"

@@ -2,15 +2,17 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./workspace.css";
 import "./resources.css";
+import "./site.css";
 import "katex/dist/katex.min.css";
 import { AppShell } from "@/components/layout/AppShell";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { absoluteUrl, author, site } from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} · 让面试更有底气`,
+    default: `${site.name} · 编程与 AI 学习`,
     template: `%s · ${site.name}`,
   },
   description: site.description,
@@ -23,7 +25,7 @@ export const metadata: Metadata = {
   formatDetection: { telephone: false },
   icons: { icon: "/icon.svg", shortcut: "/icon.svg" },
   openGraph: {
-    title: `${site.name} · 让面试更有底气`,
+    title: `${site.name} · 编程与 AI 学习`,
     description: site.description,
     siteName: site.name,
     locale: "zh_CN",
@@ -61,7 +63,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 "@type": "WebSite",
                 "@id": absoluteUrl("/#website"),
                 name: site.name,
-                alternateName: `${site.name} 面试学习工作台`,
+                alternateName: `${site.name} 编程与 AI 学习网站`,
                 url: site.url,
                 inLanguage: "zh-CN",
                 publisher: { "@id": absoluteUrl("/#author") },
@@ -77,7 +79,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             ],
           }}
         />
-        <AppShell>{children}</AppShell>
+        <AppShell>
+          {children}
+          <SiteFooter />
+        </AppShell>
       </body>
     </html>
   );

@@ -88,7 +88,7 @@ export function articleStructuredData(article: Article) {
           {
             "@type": "ListItem",
             position: 1,
-            name: "题库",
+            name: "知识库",
             item: absoluteUrl("/library"),
           },
           {

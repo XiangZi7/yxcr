@@ -25,7 +25,7 @@ export default function NotFound() {
           这个知识点，还没到这里
         </h1>
         <p className="mx-auto mb-8 mt-4 max-w-xs text-sm leading-7 text-muted">
-          页面可能已移动，或链接暂不可用。回到题库，继续探索下一个值得理解的问题。
+          页面可能已移动，或链接暂不可用。回到知识库，继续探索下一个值得理解的问题。
         </p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link href="/overview" className="outline-button">
@@ -34,7 +34,7 @@ export default function NotFound() {
           </Link>
           <Link href="/library" className="solid-button">
             <BookOpen size={15} />
-            浏览题库
+            浏览知识库
           </Link>
         </div>
       </section>

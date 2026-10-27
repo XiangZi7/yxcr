@@ -130,7 +130,7 @@ export function OverviewPage() {
             都成为你的底气。
           </h2>
           <p className="mb-6 mt-3 text-sm leading-7 text-secondary">
-            从一个知识点开始，建立属于自己的面试知识体系。
+            从一个知识点开始，建立属于自己的学习体系。
           </p>
           <Link
             href={articleHref(recommendations[0]?.slug ?? "vue-3")}
@@ -143,7 +143,7 @@ export function OverviewPage() {
             href="/library"
             className="ml-5 inline-flex items-center gap-1 text-sm text-secondary hover:text-brand"
           >
-            探索全部题库
+            探索全部知识库
             <ArrowUpRight size={14} />
           </Link>
         </div>
@@ -345,13 +345,13 @@ export function OverviewPage() {
               知识会了，也要说出来
             </h2>
             <p className="text-[13px] leading-6 text-muted">
-              把知识组织成清晰的表达，提前进入面试状态。
+              把知识组织成清晰的表达，用自测发现理解中的盲区。
             </p>
             <Link
               href="/practice"
               className="outline-button mt-5 w-full justify-center"
             >
-              开始一场模拟面试
+              开始一次自测练习
               <ArrowRight size={14} />
             </Link>
           </section>

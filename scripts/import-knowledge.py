@@ -37,7 +37,7 @@ GROUPS = {
 }
 LABELS = {'JS': 'JavaScript', 'TS': 'TypeScript', 'Network': '计算机网络',
           'AIFuture': 'AI 工程', 'CommonSense': '计算机基础', '前端进阶': '前端工程',
-          'ProblemNotes': '开发实践', 'Aliyun': '云服务', 'Ecology': '前端生态', 'Interview': '面试复习'}
+          'ProblemNotes': '开发实践', 'Aliyun': '云服务', 'Ecology': '前端生态', 'Interview': '知识复习'}
 
 
 def snapshot(source, repo, kind):
@@ -216,7 +216,7 @@ def main():
             if len(part) < 1000 and len(parts) > 1: tags.append('flashcards')
             group = p.split('/')[2] if source == 'aifuture' else ''
             category = 'AI / LLM' if group == 'AIFuture' else '后端' if group in {'Python', 'Node', '数据库', 'Docker', 'Linux', 'Nginx', 'Aliyun'} else '计算机网络' if core == 'network-interview' else '前端'
-            section = LABELS.get(group, group) or {'network-interview': '计算机网络', 'frequent': '面试复习'}.get(core, '前端基础')
+            section = LABELS.get(group, group) or {'network-interview': '计算机网络', 'frequent': '知识复习'}.get(core, '前端基础')
             body = re.sub(r'\A#{1,3}\s+[^\n]+\n*', '', part).strip()
             description = excerpt(body)
             entries.append(dict(id=id, title=title, url=f'/questions/{id}', source=source, collection=core, collections=tags, section=section, category=category, kind='knowledge' if len(parts) > 1 else 'document', description=description))

@@ -73,7 +73,7 @@ export function RightSidebar({
         </div>
       </section>
       <section className="side-card followups-card">
-        <h2>面试追问</h2>
+        <h2>拓展思考</h2>
         <ul className="mt-3.5 flex flex-col gap-3">
           {article.followups.map((question) => (
             <li key={question}>

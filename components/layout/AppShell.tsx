@@ -34,9 +34,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const setTheme = useLearningStore((state) => state.setTheme);
   const notify = useLearningStore((state) => state.notify);
   const currentArticle = articles.find(
-    (article) =>
-      pathname === `/questions/${article.slug}` ||
-      (pathname === "/" && article.slug === "vue-3"),
+    (article) => pathname === `/questions/${article.slug}`,
   );
   const closeMenu = useCallback(() => setMobileOpen(false), []);
   useEffect(() => {
@@ -74,7 +72,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             mobileOpen={mobileOpen}
             onClose={closeMenu}
           />
-          <div id="main-content" tabIndex={-1} className="min-w-0">
+          <div id="main-content" tabIndex={-1} className="workspace-content min-w-0">
             {children}
           </div>
         </div>

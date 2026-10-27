@@ -7,6 +7,8 @@ export function PageHeading({
   action,
 }: {
   label: string;
+  title?: string;
+  description?: string;
   action?: ReactNode;
 }) {
   return (

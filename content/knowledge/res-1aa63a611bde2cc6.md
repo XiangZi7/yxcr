@@ -14,7 +14,7 @@
 
 ![浅拷贝](https://raw.githubusercontent.com/hcer1999/vitepress_blog/main/docs/fe/javascript/images/clone.webp)
 
-> 图片来源于[如何写出一个惊艳面试官的深拷贝?](https://juejin.cn/post/6844903929705136141)
+> 图片来源于[如何实现一个可靠的深拷贝?](https://juejin.cn/post/6844903929705136141)
 
 浅拷贝是创建一个新对象，这个对象有着原始对象属性值的一份精确拷贝：基本类型拷贝的是值，引用类型拷贝的就是内存地址；所以当我们**操作新对象中的引用类型时会影响源对象**
 
