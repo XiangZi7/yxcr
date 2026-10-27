@@ -1,4 +1,5 @@
 import type { Article } from "./types";
+import { knowledgePath } from "../resources/links";
 
 export const vueArticle: Article = {
   slug: "vue-3",
@@ -218,12 +219,17 @@ export const navigationGroups = [
   },
   { title: "后端", icon: "backend", topics: ["Python", "FastAPI"] },
   {
+    title: "计算机网络",
+    icon: "network",
+    topics: ["计算机网络专题", "HTTP"],
+  },
+  {
     title: "AI / LLM",
     icon: "ai",
-    topics: ["RAG", "MCP", "Agent", "模型推理"],
+    topics: ["RAG", "MCP", "Agent", "模型推理", "AI 工程实战"],
   },
 ] as const;
 
 export function articleHref(slug: string) {
-  return `/questions/${slug}`;
+  return knowledgePath(slug) ?? `/library?q=${encodeURIComponent(slug)}`;
 }

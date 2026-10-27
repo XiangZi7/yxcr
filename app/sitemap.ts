@@ -1,35 +1,35 @@
 import type { MetadataRoute } from "next";
-import { articles } from "@/lib/interview/data";
 import { absoluteUrl } from "@/lib/site";
 import { resources } from "@/lib/resources/catalog";
 import { policyUpdatedAt, sitePages } from "@/lib/site-pages";
+import { knowledgeHref } from "@/lib/resources/links";
+import { collectionHref, learningTopics } from "@/lib/resources/sections";
+import { resourceCollections } from "@/lib/resources/config";
+import { filterResources } from "@/lib/resources/query";
+import { libraryPageSize, listingHref, paginateKnowledge } from "@/lib/resources/listing";
+import { knowledgeLastModified } from "@/lib/seo";
+
+function listingEntries(path: string, items: typeof resources): MetadataRoute.Sitemap {
+  return Array.from({ length: Math.max(1, Math.ceil(items.length / libraryPageSize)) }, (_, index) => {
+    const dates = paginateKnowledge(items, index + 1).map((item) => knowledgeLastModified(item.id)).filter((date): date is string => Boolean(date)).sort((a, b) => Date.parse(a) - Date.parse(b));
+    return { url: absoluteUrl(listingHref(path, {}, index + 1)), ...(dates.length ? { lastModified: dates.at(-1) } : {}) };
+  });
+}
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    { url: absoluteUrl("/"), changeFrequency: "weekly", priority: 1 },
+  const entries: MetadataRoute.Sitemap = [
+    { url: absoluteUrl("/") },
     ...sitePages.map((page) => ({
       url: absoluteUrl(page.href),
       lastModified: policyUpdatedAt,
-      changeFrequency: "yearly" as const,
-      priority: 0.3,
     })),
-    { url: absoluteUrl("/overview"), changeFrequency: "weekly", priority: 0.8 },
-    { url: absoluteUrl("/library"), changeFrequency: "weekly", priority: 0.9 },
-    {
-      url: absoluteUrl("/practice"),
-      changeFrequency: "monthly",
-      priority: 0.6,
-    },
-    ...articles.map((article) => ({
-      url: absoluteUrl(`/questions/${article.slug}`),
-      changeFrequency: "monthly" as const,
-      priority: 0.7,
+    { url: absoluteUrl("/practice") },
+    ...listingEntries("/library", resources),
+    ...learningTopics.flatMap((topic) => listingEntries(`/topics/${topic.slug}`, filterResources(resources, { category: topic.category, query: topic.query }))),
+    ...resourceCollections.flatMap((collection) => listingEntries(collectionHref(collection.id), filterResources(resources, { collection: collection.id }))),
+    ...resources.map((item) => ({
+      url: absoluteUrl(knowledgeHref(item)),
+      lastModified: knowledgeLastModified(item.id),
     })),
-    ...resources
-      .filter((item) => !item.originalSlug)
-      .map((item) => ({
-        url: absoluteUrl(`/questions/${item.id}`),
-        changeFrequency: "monthly" as const,
-        priority: 0.6,
-      })),
   ];
+  return [...new Map(entries.map((entry) => [entry.url, entry])).values()];
 }

@@ -18,6 +18,7 @@ import {
   initializeLearningState,
   useLearningStore,
 } from "@/lib/learning/store";
+import { articleHref } from "@/lib/interview/data";
 
 export function AppShell({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -34,7 +35,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const setTheme = useLearningStore((state) => state.setTheme);
   const notify = useLearningStore((state) => state.notify);
   const currentArticle = articles.find(
-    (article) => pathname === `/questions/${article.slug}`,
+    (article) => pathname === articleHref(article.slug),
   );
   const closeMenu = useCallback(() => setMobileOpen(false), []);
   useEffect(() => {

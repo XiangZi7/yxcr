@@ -3,6 +3,7 @@ import "./globals.css";
 import "./workspace.css";
 import "./resources.css";
 import "./site.css";
+import "./seo.css";
 import "katex/dist/katex.min.css";
 import { AppShell } from "@/components/layout/AppShell";
 import { SiteFooter } from "@/components/layout/SiteFooter";

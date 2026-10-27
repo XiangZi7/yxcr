@@ -19,7 +19,6 @@ export function CreatorLinks({ compact = false }: { compact?: boolean }) {
           >
             {author.name}
           </a>
-          <p className="mt-1 text-[11px] text-muted">一起学习，一起成长。</p>
         </div>
       </div>
       <nav className="creator-socials" aria-label="作者社交主页">

@@ -10,10 +10,10 @@ export const metadata = pageMetadata(
 );
 
 const directions = [
-  { title: "前端开发", icon: Code2, href: "/library?category=前端", text: "从 JavaScript 的语言机制出发，连接浏览器、组件框架与工程实践。", topics: "JavaScript · TypeScript · Vue · React" },
-  { title: "计算机基础", icon: Network, href: "/library?collection=network-interview", text: "理解一次请求如何到达服务器，把协议、缓存与系统运行串起来。", topics: "HTTP · TCP/IP · 浏览器 · 操作系统" },
-  { title: "Python 与后端", icon: BookOpen, href: "/library?category=后端", text: "通过语言基础与接口示例，练习数据处理和服务端开发。", topics: "Python · FastAPI · 数据处理" },
-  { title: "AI 应用", icon: Sparkles, href: "/library?category=AI%20%2F%20LLM", text: "从检索增强到工具调用，逐步理解大模型应用的构建与评估。", topics: "RAG · MCP · Skills · Agent" },
+  { title: "前端开发", icon: Code2, href: "/topics/frontend", text: "从 JavaScript 的语言机制出发，连接浏览器、组件框架与工程实践。", topics: "JavaScript · TypeScript · Vue · React" },
+  { title: "计算机基础", icon: Network, href: "/topics/network", text: "理解一次请求如何到达服务器，把协议、缓存与系统运行串起来。", topics: "HTTP · TCP/IP · 浏览器 · 操作系统" },
+  { title: "Python 与后端", icon: BookOpen, href: "/topics/backend", text: "通过语言基础与接口示例，练习数据处理和服务端开发。", topics: "Python · FastAPI · 数据处理" },
+  { title: "AI 应用", icon: Sparkles, href: "/topics/ai-llm", text: "从检索增强到工具调用，逐步理解大模型应用的构建与评估。", topics: "RAG · MCP · Skills · Agent" },
 ];
 
 export default function Home() {
@@ -59,7 +59,7 @@ export default function Home() {
       </section>
       <section className="learning-start" aria-labelledby="start-title">
         <div><NotebookPen size={22} aria-hidden="true" /><h2 id="start-title">今天就留下一个新的理解</h2><p>读一篇讲解、做一次自测，或写一段自己的笔记。</p></div>
-        <nav aria-label="学习工具"><Link href="/questions/vue-3">阅读一篇讲解</Link><Link href="/practice">开始自测练习</Link><Link href="/notes">写下学习笔记</Link></nav>
+        <nav aria-label="学习工具"><Link href="/learn/vue-reactivity">阅读一篇讲解</Link><Link href="/practice">开始自测练习</Link><Link href="/notes">写下学习笔记</Link></nav>
       </section>
     </main>
   );

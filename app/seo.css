@@ -1,0 +1,13 @@
+.library-introduction { margin: 0 0 22px; max-width: 780px; }
+.library-introduction h1 { color: var(--ink); font-size: clamp(24px, 2.5vw, 32px); font-weight: 650; line-height: 1.5; letter-spacing: -.03em; }
+.library-introduction p { margin-top: 12px; color: var(--secondary); font-size: 13px; line-height: 1.9; }
+.library-topic-links { display: flex; flex-wrap: wrap; gap: 9px; margin: 0 0 22px; }
+.library-topic-links a { display: block; padding: 8px 13px; border: 1px solid var(--line); border-radius: 7px; background: var(--surface); color: var(--secondary); font-size: 12px; }
+.library-topic-links a:hover, .library-topic-links a[aria-current="page"] { background: var(--active); color: var(--color-brand); border-color: var(--color-brand); }
+.resource-pagination > div { align-items: center; }
+.pagination-current { padding: 8px 10px; color: var(--secondary); font-size: 12px; }
+.knowledge-provenance { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: -12px 0 24px; color: var(--secondary); font-size: 11px; line-height: 1.9; }
+.knowledge-provenance a { color: var(--color-brand); }
+.related-knowledge a { display: block; margin-top: 14px; color: var(--secondary); font-size: 12px; line-height: 1.8; }
+.related-knowledge a:hover { color: var(--color-brand); }
+@media (max-width: 760px) { .library-topic-links { gap: 7px; } .library-topic-links a { padding: 7px 10px; font-size: 11px; } }

@@ -37,10 +37,13 @@ export function BrandIcon({
     frontend: Component,
     backend: Server,
     ai: BrainCircuit,
+    network: Network,
     JavaScript: Workflow,
     TypeScript: FileCode2,
     React: Atom,
     浏览器与网络: Globe2,
+    计算机网络专题: Globe2,
+    HTTP: Globe2,
     工程化: Component,
     Python: CodeXml,
     FastAPI: Braces,
@@ -48,6 +51,7 @@ export function BrandIcon({
     MCP: Box,
     Agent: Bot,
     模型推理: Network,
+    "AI 工程实战": BrainCircuit,
   };
   const Icon = icons[name as keyof typeof icons] ?? Cable;
   return (

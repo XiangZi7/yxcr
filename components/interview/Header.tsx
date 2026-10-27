@@ -19,6 +19,7 @@ import { AuthorAvatar } from "@/components/brand/AuthorAvatar";
 import { site } from "@/lib/site";
 import type { LearningResource } from "@/lib/resources/types";
 import { resourceSummary } from "@/lib/resources/config";
+import { knowledgeHref } from "@/lib/resources/links";
 
 export function Header({
   dark,
@@ -166,7 +167,7 @@ export function Header({
                 results.map((item) => (
                   <Link
                     className="search-result flex items-center justify-between gap-3"
-                    href={`/questions/${item.id}`}
+                    href={knowledgeHref(item)}
                     key={item.id}
                     onClick={() => {
                       setSearchOpen(false);

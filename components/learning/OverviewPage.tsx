@@ -26,6 +26,7 @@ import {
   resourceSummary,
   categoryKnowledgeCount,
 } from "@/lib/resources/config";
+import { categoryHref } from "@/lib/resources/sections";
 
 export function OverviewPage() {
   const {
@@ -312,7 +313,7 @@ export function OverviewPage() {
                   ).length;
                 return (
                   <Link
-                    href={`/library?category=${encodeURIComponent(group.title)}`}
+                    href={categoryHref(group.title)}
                     className="block"
                     key={group.title}
                   >

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   BookOpen,
@@ -38,8 +38,13 @@ import type {
 } from "@/lib/resources/types";
 import { ResourceIcon } from "./ResourceIcon";
 import { ResourceCard } from "./ResourceCard";
+import { libraryPageSize, listingHref, paginateKnowledge, type LibraryPageData } from "@/lib/resources/listing";
+import { categoryHref, collectionHref, topicCategories } from "@/lib/resources/sections";
+import { useLearningStore } from "@/lib/learning/store";
+import { useResourceStore } from "@/lib/resources/store";
 
-const pageSize = 24;
+const pageSize = libraryPageSize;
+const emptyCatalog: LearningResource[] = [];
 const statuses: { value: ResourceStatus; label: string }[] = [
   { value: "all", label: "全部状态" },
   { value: "saved", label: "我的收藏" },
@@ -48,132 +53,60 @@ const statuses: { value: ResourceStatus; label: string }[] = [
   { value: "planned", label: "学习计划" },
 ];
 
-export function ResourceLibraryPage({
-  initialResources,
-}: {
-  initialResources: LearningResource[];
-}) {
-  const params = useSearchParams();
-  const status = params.get("status") as ResourceStatus;
-  return (
-    <ResourceLibrary
-      key={params.toString()}
-      initialResources={initialResources}
-      initialFilters={{
-        query: params.get("q") ?? "",
-        category: params.get("category") ?? "",
-        collection: params.get("collection") ?? "all",
-        status: statuses.some((item) => item.value === status) ? status : "all",
-      }}
-    />
-  );
-}
-export function ResourceLibraryPreview({
-  initialResources,
-}: {
-  initialResources: LearningResource[];
-}) {
-  return <ResourceLibrary initialResources={initialResources} />;
+export function ResourceLibraryPage({ data }: { data: LibraryPageData }) {
+  return <ResourceLibrary key={listingHref(data.basePath, data.filters, data.page)} data={data} />;
 }
 
-function ResourceLibrary({
-  initialResources,
-  initialFilters = {},
-}: {
-  initialResources: LearningResource[];
-  initialFilters?: ResourceFilters;
-}) {
+function ResourceLibrary({ data }: { data: LibraryPageData }) {
+  const { initialResources, filters, basePath, title, description } = data;
   const router = useRouter();
-  const [catalog, setCatalog] = useState(
-    getCachedResources() ?? initialResources,
-  );
-  const [ready, setReady] = useState(Boolean(getCachedResources()));
+  const personalView = filters.status !== "all";
+  const [privateCatalog, setPrivateCatalog] = useState<LearningResource[] | undefined>(getCachedResources());
   const [error, setError] = useState(false);
-  const [query, setQuery] = useState(initialFilters.query ?? "");
-  const [category, setCategory] = useState(initialFilters.category ?? "");
-  const [collection, setCollection] = useState(
-    resourceCollections.some((item) => item.id === initialFilters.collection)
-      ? initialFilters.collection!
-      : "all",
-  );
-  const [status, setStatus] = useState<ResourceStatus>(
-    initialFilters.status ?? "all",
-  );
-  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState(filters.query ?? "");
+  const category = filters.category ?? "";
+  const collection = filters.collection ?? "all";
+  const status = filters.status ?? "all";
   const [list, setList] = useState(false);
+  const catalog = personalView ? privateCatalog ?? emptyCatalog : initialResources;
+  const ready = !personalView || Boolean(privateCatalog);
   const records = useKnowledgeRecords(catalog);
-  const values = Object.values(records);
-  const savedCount = values.filter((item) => item.saved).length;
-  const masteredCount = values.filter((item) => item.mastered).length;
+  const resourceRecords = useResourceStore((state) => state.records);
+  const originalSaved = useLearningStore((state) => state.saved.length);
+  const originalMastered = useLearningStore((state) => state.mastered.length);
+  const savedCount = originalSaved + Object.values(resourceRecords).filter((item) => item.saved).length;
+  const masteredCount = originalMastered + Object.values(resourceRecords).filter((item) => item.mastered).length;
 
   useEffect(() => {
+    if (!personalView || privateCatalog) return;
     let active = true;
     loadResourceCatalog()
-      .then((data) => {
-        if (active) {
-          setCatalog(data);
-          setReady(true);
-        }
-      })
-      .catch(() => {
-        if (active) setError(true);
-      });
-    return () => {
-      active = false;
-    };
-  }, []);
+      .then((items) => { if (active) setPrivateCatalog(items); })
+      .catch(() => { if (active) setError(true); });
+    return () => { active = false; };
+  }, [personalView, privateCatalog]);
 
   const matches = useMemo(
-    () =>
-      filterResources(
-        catalog,
-        { query, category, collection, status },
-        records,
-      ),
-    [catalog, query, category, collection, status, records],
+    () => personalView ? filterResources(catalog, { ...filters, query: [data.topicQuery, filters.query].filter(Boolean).join(" ") }, records) : initialResources,
+    [personalView, catalog, filters, records, initialResources, data.topicQuery],
   );
-  const total = ready
-    ? matches.length
-    : !query && !category && collection === "all" && status === "all"
-      ? resourceSummary.total
-      : matches.length;
+  const total = personalView ? matches.length : data.total;
   const pages = Math.max(1, Math.ceil(total / pageSize));
-  const safePage = Math.min(page, pages);
-  const shown = matches.slice((safePage - 1) * pageSize, safePage * pageSize);
-  const currentCollection = resourceCollections.find(
-    (item) => item.id === collection,
-  );
+  const safePage = personalView ? Math.min(data.page, pages) : data.page;
+  const shown = personalView ? paginateKnowledge(matches, safePage) : initialResources;
+  const currentCollection = resourceCollections.find((item) => item.id === collection);
 
-  function filterHref(patch: ResourceFilters = {}) {
-    const filters = { query, category, collection, status, ...patch };
-    const params = new URLSearchParams();
-    if (filters.query) params.set("q", filters.query);
-    if (filters.category) params.set("category", filters.category);
-    if (filters.collection !== "all")
-      params.set("collection", filters.collection);
-    if (filters.status !== "all") params.set("status", filters.status);
-    return `/library${params.size ? `?${params}` : ""}`;
+  function filterHref(patch: ResourceFilters = {}, page = 1) {
+    return listingHref(basePath, { ...filters, query, ...patch }, page);
   }
-  function reset() {
-    setQuery("");
-    setCategory("");
-    setCollection("all");
-    setStatus("all");
-    setPage(1);
-    router.replace("/library", { scroll: false });
-  }
+  function reset() { router.push(basePath); }
   function submit(event: FormEvent) {
     event.preventDefault();
-    router.replace(filterHref(), { scroll: false });
+    router.push(filterHref());
   }
   function retry() {
     setError(false);
-    void loadResourceCatalog()
-      .then((data) => {
-        setCatalog(data);
-        setReady(true);
-      })
-      .catch(() => setError(true));
+    void loadResourceCatalog().then(setPrivateCatalog).catch(() => setError(true));
   }
 
   return (
@@ -181,7 +114,7 @@ function ResourceLibrary({
       <PageHeading
         title="让零散的知识，连成体系"
         description="从基础到进阶，从网络到 AI。在阅读、实践与复习之间，构建自己的知识体系。"
-        label="全部知识库"
+        label={title}
         action={
           <Link href="/today" className="outline-button">
             我的学习计划
@@ -189,6 +122,15 @@ function ResourceLibrary({
           </Link>
         }
       />
+      <header className="library-introduction">
+        <h1>{title}</h1>
+        <p>{description}</p>
+      </header>
+      <nav className="library-topic-links" aria-label="学习方向">
+        {topicCategories.map((topic) => (
+          <Link href={categoryHref(topic.category)} key={topic.slug} aria-current={category === topic.category ? "page" : undefined}>{topic.title}</Link>
+        ))}
+      </nav>
       <section className="resource-summary-grid" aria-label="知识库概览">
         {[
           {
@@ -235,7 +177,7 @@ function ResourceLibrary({
       <nav className="resource-category-menu" aria-label="知识栏目">
         <div className="resource-main-categories">
           <Link
-            href={filterHref({ collection: "all" })}
+            href="/library"
             className={collection === "all" ? "is-active" : ""}
             prefetch={false}
           >
@@ -245,7 +187,7 @@ function ResourceLibrary({
             .filter((item) => item.group === "学习专栏")
             .map((item) => (
               <Link
-                href={filterHref({ collection: item.id })}
+                href={collectionHref(item.id)}
                 className={collection === item.id ? "is-active" : ""}
                 aria-current={collection === item.id ? "page" : undefined}
                 prefetch={false}
@@ -274,9 +216,7 @@ function ResourceLibrary({
                     .map((item) => (
                       <Link
                         key={item.id}
-                        href={filterHref({
-                          collection: item.id,
-                        })}
+                        href={collectionHref(item.id)}
                         prefetch={false}
                         className={collection === item.id ? "is-active" : ""}
                       >
@@ -291,17 +231,17 @@ function ResourceLibrary({
         </div>
       </nav>
       <section className="panel resource-filter" aria-label="筛选知识点">
-        <form className="resource-search-form" onSubmit={submit}>
+        <form className="resource-search-form" action={basePath} method="get" onSubmit={submit}>
           <label className="filter-search flex min-w-0 flex-1 items-center gap-2">
             <Search size={17} className="shrink-0 text-muted" />
             <input
               type="search"
+              name="q"
               aria-label="搜索知识点"
               placeholder="搜索事件循环、HTTP、MCP、Agent…"
               value={query}
               onChange={(event) => {
                 setQuery(event.target.value);
-                setPage(1);
               }}
             />
             {query && (
@@ -311,7 +251,7 @@ function ResourceLibrary({
                 aria-label="清空搜索"
                 onClick={() => {
                   setQuery("");
-                  setPage(1);
+                  router.push(filterHref({ query: "" }));
                 }}
               >
                 <X size={14} />
@@ -323,11 +263,9 @@ function ResourceLibrary({
           </button>
           <select
             className="filter-select"
+            name="status"
             value={status}
-            onChange={(event) => {
-              setStatus(event.target.value as ResourceStatus);
-              setPage(1);
-            }}
+            onChange={(event) => router.push(filterHref({ status: event.target.value as ResourceStatus }))}
             aria-label="学习状态"
           >
             {statuses.map((item) => (
@@ -420,24 +358,9 @@ function ResourceLibrary({
             第 {safePage} / {pages} 页 · 每页 {pageSize} 条
           </span>
           <div>
-            <button
-              className="outline-button"
-              disabled={!ready || safePage === 1}
-              onClick={() => setPage(safePage - 1)}
-              aria-label="上一页"
-            >
-              <ChevronLeft size={15} />
-              上一页
-            </button>
-            <button
-              className="outline-button"
-              disabled={!ready || safePage === pages}
-              onClick={() => setPage(safePage + 1)}
-              aria-label="下一页"
-            >
-              下一页
-              <ChevronRight size={15} />
-            </button>
+            {safePage > 1 && <Link className="outline-button" href={filterHref({}, safePage - 1)} prefetch={false} aria-label="上一页"><ChevronLeft size={15} />上一页</Link>}
+            <span className="pagination-current" aria-current="page">{safePage}</span>
+            {safePage < pages && <Link className="outline-button" href={filterHref({}, safePage + 1)} prefetch={false} aria-label="下一页">下一页<ChevronRight size={15} /></Link>}
           </div>
         </nav>
       )}

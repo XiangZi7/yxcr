@@ -31,6 +31,7 @@ import { Modal } from "@/components/ui/Modal";
 import { PageHeading, PageSkeleton } from "./PageHeading";
 import { useResourceStore } from "@/lib/resources/store";
 import { knowledgeHref } from "@/lib/resources/links";
+import { articleHref } from "@/lib/interview/data";
 
 export function NotesPage() {
   const params = useSearchParams();
@@ -435,5 +436,5 @@ function NotesContent({ selectedId }: { selectedId: string }) {
   );
 }
 function articleHrefForNote(slug: string) {
-  return `/questions/${slug}`;
+  return articleHref(slug);
 }

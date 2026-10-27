@@ -17,6 +17,7 @@ import rehypeKatex from "rehype-katex";
 import { CodeBlock } from "@/components/interview/CodeBlock";
 import { remarkCodeLanguage } from "@/lib/markdown/code-language";
 import { highlightOptions } from "@/lib/markdown/highlight";
+import { resolveKnowledgeLink } from "@/lib/resources/links";
 
 function plainText(node: ReactNode): string {
   if (typeof node === "string" || typeof node === "number") return String(node);
@@ -94,7 +95,7 @@ export const MarkdownRenderer = memo(function MarkdownRenderer({
             const external = /^https?:\/\//.test(href ?? "");
             return (
               <a
-                href={href}
+                href={resolveKnowledgeLink(href)}
                 target={external ? "_blank" : undefined}
                 rel={external ? "noopener noreferrer" : undefined}
               >

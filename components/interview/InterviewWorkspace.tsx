@@ -25,6 +25,7 @@ import { ArticleContent } from "./ArticleContent";
 import { RightSidebar } from "./RightSidebar";
 import { WorkspaceDialog } from "./WorkspaceDialog";
 import { author } from "@/lib/site";
+import { categoryHref } from "@/lib/resources/sections";
 
 export function InterviewWorkspace({
   article,
@@ -100,7 +101,7 @@ export function InterviewWorkspace({
               <Link href="/library">知识库</Link>
               <ChevronRight size={13} />
               <Link
-                href={`/library?category=${encodeURIComponent(article.category)}`}
+                href={categoryHref(article.category)}
               >
                 {article.category}
               </Link>

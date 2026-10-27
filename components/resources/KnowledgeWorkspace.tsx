@@ -21,13 +21,21 @@ import { getResourceCollection } from "@/lib/resources/config";
 import { useKnowledgeProgress } from "@/lib/resources/progress";
 import type { LearningResource } from "@/lib/resources/types";
 import { ResourceNoteDialog } from "./ResourceCard";
+import { knowledgeHref } from "@/lib/resources/links";
+import { collectionHref } from "@/lib/resources/sections";
 
 export function KnowledgeWorkspace({
   resource,
   markdown,
+  relatedResources = [],
+  lastModified,
+  provenance,
 }: {
   resource: LearningResource;
   markdown: string;
+  relatedResources?: LearningResource[];
+  lastModified?: string;
+  provenance?: { name: string; url: string; license: string };
 }) {
   const progress = useKnowledgeProgress(resource);
   const [editing, setEditing] = useState(false);
@@ -62,7 +70,7 @@ export function KnowledgeWorkspace({
             >
               <Link href="/library">知识库</Link>
               <ChevronRight size={13} />
-              <Link href={`/library?collection=${resource.collection}`}>
+              <Link href={collectionHref(resource.collection)}>
                 {collection?.title ?? resource.section}
               </Link>
             </nav>
@@ -109,6 +117,10 @@ export function KnowledgeWorkspace({
               <Clock3 size={14} />约 {minutes} 分钟
             </p>
           </header>
+          <div className="knowledge-provenance">
+            {lastModified && <span>本站更新：<time dateTime={lastModified}>{lastModified.slice(0, 10)}</time></span>}
+            {provenance && <span>来源：<a href={provenance.url} target="_blank" rel="noopener noreferrer">{provenance.name}</a> · <Link href="/copyright">{provenance.license} · 已改编</Link></span>}
+          </div>
           <MarkdownRenderer content={markdown} className="article-markdown" />
           <footer className="knowledge-footer">
             <div>
@@ -189,6 +201,11 @@ export function KnowledgeWorkspace({
             {progress.note.trim() ? "查看我的笔记" : "写下我的理解"}
           </button>
         </section>
+        {relatedResources.length > 0 && <nav className="side-card related-knowledge" aria-label="同栏目继续学习">
+          <h2>同栏目继续学习</h2>
+          {relatedResources.map((item) => <Link key={item.id} href={knowledgeHref(item)}>{item.title}</Link>)}
+          <Link href={collectionHref(resource.collection)}>浏览{collection?.title ?? "本栏目"}全部内容 →</Link>
+        </nav>}
       </aside>
       {editing && (
         <ResourceNoteDialog

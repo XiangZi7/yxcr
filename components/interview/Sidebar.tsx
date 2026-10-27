@@ -15,8 +15,10 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { navigationGroups } from "@/lib/interview/data";
+import { resourceCollections } from "@/lib/resources/config";
 import { BrandIcon } from "./BrandIcon";
 import { CreatorLinks } from "@/components/layout/CreatorLinks";
+import { collectionHref, topicHref } from "@/lib/resources/sections";
 
 export function Sidebar({
   topic,
@@ -71,7 +73,7 @@ export function Sidebar({
             <Link
               key={label}
               href={href}
-              className={`primary-nav ${pathname === href || (href === "/library" && pathname.startsWith("/questions/")) ? "is-active" : ""}`}
+              className={`primary-nav ${pathname === href || (href === "/library" && (pathname.startsWith("/learn/") || pathname.startsWith("/library/") || pathname.startsWith("/topics/"))) ? "is-active" : ""}`}
               aria-current={pathname === href ? "page" : undefined}
               onClick={onClose}
             >
@@ -135,20 +137,22 @@ export function Sidebar({
                           className="overflow-hidden"
                         >
                           {group.topics.map((name) => {
+                            const collection = resourceCollections.find(
+                              (item) => item.title === name,
+                            );
+                            const href = collection
+                              ? collectionHref(collection.id)
+                              : topicHref(name);
+                            const active =
+                              topic === name ||
+                              (Boolean(collection) && pathname === href);
+
                             return (
                               <Link
-                                href={
-                                  name === "浏览器与网络"
-                                    ? "/library?collection=network-interview"
-                                    : name === "工程化"
-                                      ? "/library?collection=frontend-system"
-                                      : `/library?q=${encodeURIComponent(name === "Vue 3" ? "Vue" : name)}`
-                                }
+                                href={href}
                                 key={name}
-                                className={`topic-link flex items-center gap-3 ${topic === name ? "is-active" : ""}`}
-                                aria-current={
-                                  topic === name ? "page" : undefined
-                                }
+                                className={`topic-link flex items-center gap-3 ${active ? "is-active" : ""}`}
+                                aria-current={active ? "page" : undefined}
                                 onClick={onClose}
                               >
                                 <BrandIcon name={name} />
