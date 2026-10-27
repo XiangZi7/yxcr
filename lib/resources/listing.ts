@@ -21,8 +21,11 @@ export function listingHref(basePath: string, filters: ResourceFilters = {}, pag
   if (filters.query) params.set("q", filters.query);
   if (basePath.startsWith("/library/") && filters.category) params.set("category", filters.category);
   if (filters.status && filters.status !== "all") params.set("status", filters.status);
-  if (page > 1) params.set("page", String(page));
-  return `${basePath}${params.size ? `?${params}` : ""}`;
+  if (params.size) {
+    if (page > 1) params.set("page", String(page));
+    return `${basePath}?${params}`;
+  }
+  return page > 1 ? `${basePath}/page/${page}` : basePath;
 }
 export function paginateKnowledge(resources: LearningResource[], page: number) {
   return resources.slice((page - 1) * libraryPageSize, page * libraryPageSize);

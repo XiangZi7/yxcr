@@ -42,7 +42,6 @@ export function Sidebar({
     };
   }, [mobileOpen, onClose]);
   const links = [
-    { label: "学习首页", icon: House, href: "/" },
     { label: "学习概览", icon: House, href: "/overview" },
     { label: "全部知识库", icon: LayoutGrid, href: "/library" },
     { label: "今日学习", icon: ClipboardCheck, href: "/today" },

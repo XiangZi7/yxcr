@@ -1,15 +1,15 @@
 import { ResourceLibraryPage } from "./ResourcesPage";
-import { getLibraryPage, type LibraryLanding, type SearchValues } from "@/lib/resources/listing-server";
+import { getLibraryPage, type LibraryLanding } from "@/lib/resources/listing-server";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { absoluteUrl } from "@/lib/site";
 import { knowledgeHref } from "@/lib/resources/links";
 import { listingHref } from "@/lib/resources/listing";
 
-export async function LibraryListing({ searchParams, landing }: {
-  searchParams: Promise<SearchValues>;
+export function LibraryListing({ page = 1, landing }: {
+  page?: number;
   landing?: LibraryLanding;
 }) {
-  const data = getLibraryPage(await searchParams, landing);
+  const data = getLibraryPage({ page: String(page) }, landing);
   return <>
     {data.filters.status === "all" && <JsonLd data={{
       "@context": "https://schema.org", "@type": "CollectionPage",

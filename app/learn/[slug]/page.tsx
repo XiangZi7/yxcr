@@ -13,9 +13,9 @@ import { getKnowledgeSlug } from "@/lib/resources/links";
 import { filterResources } from "@/lib/resources/query";
 import { articleMetadata, articleStructuredData, knowledgeLastModified, knowledgeMetadata, knowledgeProvenance, knowledgeStructuredData } from "@/lib/seo";
 
+export const dynamicParams = false;
 export function generateStaticParams() {
-  return [...resources.filter((item) => item.originalSlug), ...resources.filter((item) => !item.originalSlug).slice(0, 4)]
-    .map((item) => ({ slug: getKnowledgeSlug(item.id)! }));
+  return resources.map((item) => ({ slug: getKnowledgeSlug(item.id)! }));
 }
 export async function generateMetadata({ params }: PageProps<"/learn/[slug]">): Promise<Metadata> {
   const resource = findKnowledgeBySlug((await params).slug);

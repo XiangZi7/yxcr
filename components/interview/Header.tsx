@@ -18,7 +18,8 @@ import { BrandMark } from "@/components/brand/BrandMark";
 import { AuthorAvatar } from "@/components/brand/AuthorAvatar";
 import { site } from "@/lib/site";
 import type { LearningResource } from "@/lib/resources/types";
-import { resourceSummary } from "@/lib/resources/config";
+import { loadResourceCatalog } from "@/lib/resources/client";
+import { filterResources } from "@/lib/resources/query";
 import { knowledgeHref } from "@/lib/resources/links";
 
 export function Header({
@@ -59,17 +60,10 @@ export function Header({
     if (!query.trim()) return;
     const controller = new AbortController();
     const timer = setTimeout(() => {
-      void fetch(
-        `/api/resources?q=${encodeURIComponent(query)}&v=${encodeURIComponent(resourceSummary.syncedAt)}`,
-        {
-          signal: controller.signal,
-        },
-      )
-        .then(async (response) => {
-          if (!response.ok) return;
-          const items: LearningResource[] = await response.json();
+      void loadResourceCatalog()
+        .then((items) => {
           if (!controller.signal.aborted)
-            setResourceSearch({ query, items: items.slice(0, 5) });
+            setResourceSearch({ query, items: filterResources(items, { query }).slice(0, 5) });
         })
         .catch(() => {});
     }, 250);

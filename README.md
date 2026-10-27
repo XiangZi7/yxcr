@@ -22,17 +22,20 @@ pnpm build
 
 项目使用 [OpenNext](https://developers.cloudflare.com/workers/framework-guides/web-apps/opennext/) 适配 Next.js 服务端功能。Worker 配置在 `wrangler.jsonc`，缓存配置在 `open-next.config.ts`。
 
+部署前需在[当前账号的 Workers 套餐页面](https://dash.cloudflare.com/268729d711fadbb19006ad3ec3b26c32/workers/plans)开通 **Workers Paid**。文章服务端 Markdown 渲染会超出免费套餐的 10ms CPU 上限；当前配置将单次请求 CPU 上限设为 30,000ms。免费套餐会拒绝该配置并返回 `100328`，不能仅通过重新部署解除限制。参见 [Cloudflare CPU 限额](https://developers.cloudflare.com/workers/platform/limits/#cpu-time)。
+
 ```bash
 pnpm exec wrangler login
 pnpm preview
-pnpm deploy
+pnpm run deploy
 ```
 
 - `pnpm preview` 构建并在本地 Workers 运行时预览，默认地址为 `http://localhost:8787`。
-- `pnpm deploy` 构建、复制 Markdown 正文、填充 KV 缓存并发布 `yxcr` Worker。已有构建时可运行 `pnpm exec opennextjs-cloudflare deploy`。
+- `pnpm run deploy` 构建、复制 Markdown 正文、填充 KV 缓存并发布 `yxcr` Worker。已有构建时可运行 `pnpm exec opennextjs-cloudflare deploy`。
 - 当前配置绑定此账号下的 `NEXT_INC_CACHE_KV`。更换 Cloudflare 账号时，修改 `account_id`，运行 `pnpm exec wrangler kv namespace create NEXT_INC_CACHE_KV`，再将返回的 ID 填入 `kv_namespaces`。
-- 内容随代码部署更新，使用 KV 缓存，无需开通 R2；没有配置按需缓存失效。后续如接入在线内容编辑或 `revalidateTag`，应重新配置缓存和失效机制。
+- 内容随代码部署更新，使用 KV 缓存，无需开通 R2。Durable Object 队列处理后台页面重验证；没有配置按标签缓存失效。后续如接入在线内容编辑或 `revalidateTag`，应补充 Tag Cache 和失效机制。
 - `content/knowledge` 与 `content/questions` 的 `.md` 文件由 `scripts/copy-cloudflare-content.mjs` 复制到构建资源目录；线上通过 `ASSETS` 绑定读取，本地开发和普通 Node.js 部署仍读取原文件。
+- Cloudflare 构建关闭当前 Next.js 16.4 与 OpenNext 组合存在兼容问题的 Cache Components / Partial Prefetching，使用常规 SSR 和静态预渲染，并通过构建别名改用 React 请求内缓存。本地开发和普通 `pnpm build` 保持原配置。
 - `pnpm cf:typegen` 可生成本地 Cloudflare 绑定类型。生成文件、Worker 构建产物与本地运行状态均已加入忽略列表。
 
 在 Cloudflare 控制台关联 Git 仓库实现自动部署时，选择 **Workers** 项目，使用以下设置：

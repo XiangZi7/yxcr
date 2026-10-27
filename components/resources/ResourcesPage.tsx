@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowRight,
   BookOpen,
@@ -16,7 +16,6 @@ import {
   LoaderCircle,
   RefreshCw,
   Search,
-  X,
 } from "lucide-react";
 import { PageHeading } from "@/components/learning/PageHeading";
 import {
@@ -37,10 +36,12 @@ import type {
 } from "@/lib/resources/types";
 import { ResourceIcon } from "./ResourceIcon";
 import { ResourceCard } from "./ResourceCard";
-import { libraryPageSize, listingHref, paginateKnowledge, type LibraryPageData } from "@/lib/resources/listing";
+import { libraryPageSize, listingHref, paginateKnowledge, parseLibraryPage, type LibraryPageData } from "@/lib/resources/listing";
 import { categoryHref, collectionHref, topicCategories } from "@/lib/resources/sections";
 import { useLearningStore } from "@/lib/learning/store";
 import { useResourceStore } from "@/lib/resources/store";
+import { SearchInput } from "@/components/ui/SearchInput";
+import { Select } from "@/components/ui/Select";
 
 const pageSize = libraryPageSize;
 const emptyCatalog: LearningResource[] = [];
@@ -53,13 +54,32 @@ const statuses: { value: ResourceStatus; label: string }[] = [
 ];
 
 export function ResourceLibraryPage({ data }: { data: LibraryPageData }) {
-  return <ResourceLibrary key={listingHref(data.basePath, data.filters, data.page)} data={data} />;
+  const [search, setSearch] = useState("");
+  return <>
+    <Suspense fallback={null}><QuerySync onChange={setSearch} /></Suspense>
+    <ResourceLibrary key={`${data.basePath}:${data.page}:${search}`} data={data} search={search} />
+  </>;
 }
 
-function ResourceLibrary({ data }: { data: LibraryPageData }) {
-  const { initialResources, filters, basePath, title, description } = data;
+function QuerySync({ onChange }: { onChange: (value: string) => void }) {
+  const params = useSearchParams();
+  const search = params.toString();
+  useEffect(() => onChange(search), [search, onChange]);
+  return null;
+}
+
+function ResourceLibrary({ data, search }: { data: LibraryPageData; search: string }) {
+  const { initialResources, basePath, title, description } = data;
+  const params = useMemo(() => new URLSearchParams(search), [search]);
+  const requestedStatus = params.get("status") || "all";
+  const clientView = ["q", "category", "status", "page"].some((key) => params.has(key));
+  const filters = useMemo<ResourceFilters>(() => clientView ? {
+    ...data.filters,
+    query: (params.get("q") || "").trim().slice(0, 200),
+    category: data.filters.category || params.get("category") || "",
+    status: statuses.some(({ value }) => value === requestedStatus) ? requestedStatus as ResourceStatus : "all",
+  } : data.filters, [clientView, data.filters, params, requestedStatus]);
   const router = useRouter();
-  const personalView = filters.status !== "all";
   const [privateCatalog, setPrivateCatalog] = useState<LearningResource[] | undefined>();
   const [error, setError] = useState(false);
   const [query, setQuery] = useState(filters.query ?? "");
@@ -68,8 +88,8 @@ function ResourceLibrary({ data }: { data: LibraryPageData }) {
   const status = filters.status ?? "all";
   const [list, setList] = useState(false);
   const dropdownMenus = useRef<HTMLDivElement>(null);
-  const catalog = personalView ? privateCatalog ?? emptyCatalog : initialResources;
-  const ready = !personalView || Boolean(privateCatalog);
+  const catalog = clientView ? privateCatalog ?? emptyCatalog : initialResources;
+  const ready = !clientView || Boolean(privateCatalog);
   const records = useKnowledgeRecords(catalog);
   const resourceRecords = useResourceStore((state) => state.records);
   const originalSaved = useLearningStore((state) => state.saved.length);
@@ -78,22 +98,22 @@ function ResourceLibrary({ data }: { data: LibraryPageData }) {
   const masteredCount = originalMastered + Object.values(resourceRecords).filter((item) => item.mastered).length;
 
   useEffect(() => {
-    if (!personalView || privateCatalog) return;
+    if (!clientView || privateCatalog) return;
     let active = true;
     loadResourceCatalog()
       .then((items) => { if (active) setPrivateCatalog(items); })
       .catch(() => { if (active) setError(true); });
     return () => { active = false; };
-  }, [personalView, privateCatalog]);
+  }, [clientView, privateCatalog]);
 
   const matches = useMemo(
-    () => personalView ? filterResources(catalog, { ...filters, query: [data.topicQuery, filters.query].filter(Boolean).join(" ") }, records) : initialResources,
-    [personalView, catalog, filters, records, initialResources, data.topicQuery],
+    () => clientView ? filterResources(catalog, { ...filters, query: [data.topicQuery, filters.query].filter(Boolean).join(" ") }, records) : initialResources,
+    [clientView, catalog, filters, records, initialResources, data.topicQuery],
   );
-  const total = personalView ? matches.length : data.total;
+  const total = clientView ? matches.length : data.total;
   const pages = Math.max(1, Math.ceil(total / pageSize));
-  const safePage = personalView ? Math.min(data.page, pages) : data.page;
-  const shown = personalView ? paginateKnowledge(matches, safePage) : initialResources;
+  const safePage = clientView ? Math.min(parseLibraryPage(params.get("page") || undefined), pages) : data.page;
+  const shown = clientView ? paginateKnowledge(matches, safePage) : initialResources;
   const currentCollection = resourceCollections.find((item) => item.id === collection);
 
   useEffect(() => {
@@ -266,48 +286,14 @@ function ResourceLibrary({ data }: { data: LibraryPageData }) {
       <section className="panel resource-filter" aria-label="筛选知识点">
         <form className="resource-search-form" action={basePath} method="get" onSubmit={submit}>
           {basePath.startsWith("/library/") && category && <input type="hidden" name="category" value={category} />}
-          <label className="filter-search flex min-w-0 flex-1 items-center gap-2">
-            <Search size={17} className="shrink-0 text-muted" />
-            <input
-              type="search"
-              name="q"
-              aria-label="搜索知识点"
-              placeholder="搜索事件循环、HTTP、MCP、Agent…"
-              value={query}
-              onChange={(event) => {
-                setQuery(event.target.value);
-              }}
-            />
-            {query && (
-              <button
-                type="button"
-                className="icon-button text-muted"
-                aria-label="清空搜索"
-                onClick={() => {
-                  setQuery("");
-                  router.push(filterHref({ query: "" }));
-                }}
-              >
-                <X size={14} />
-              </button>
-            )}
-          </label>
+          <SearchInput className="filter-search min-w-0 flex-1" name="q" label="搜索知识点"
+            placeholder="搜索事件循环、HTTP、MCP、Agent…" value={query} onValueChange={setQuery}
+            onClear={() => router.push(filterHref({ query: "" }))} />
           <button type="submit" className="outline-button">
             搜索
           </button>
-          <select
-            className="filter-select"
-            name="status"
-            value={status}
-            onChange={(event) => router.push(filterHref({ status: event.target.value as ResourceStatus }))}
-            aria-label="学习状态"
-          >
-            {statuses.map((item) => (
-              <option key={item.value} value={item.value}>
-                {item.label}
-              </option>
-            ))}
-          </select>
+          <Select name="status" label="学习状态" value={status} options={statuses}
+            onValueChange={(value) => router.push(filterHref({ status: value as ResourceStatus }))} />
         </form>
         {(query || category || collection !== "all" || status !== "all") && (
           <button className="resource-reset mt-3" onClick={reset}>
