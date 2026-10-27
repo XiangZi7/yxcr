@@ -17,7 +17,7 @@ import {
   Target,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { articles, articleHref, navigationGroups } from "@/lib/interview/data";
+import { articles, articleHref } from "@/lib/interview/data";
 import { dayKey, useLearningStore } from "@/lib/learning/store";
 import { PageHeading } from "./PageHeading";
 import { BrandIcon } from "@/components/interview/BrandIcon";
@@ -26,7 +26,12 @@ import {
   resourceSummary,
   categoryKnowledgeCount,
 } from "@/lib/resources/config";
-import { categoryHref } from "@/lib/resources/sections";
+import { categoryHref, topicCategories } from "@/lib/resources/sections";
+import { ResourceIcon } from "@/components/resources/ResourceIcon";
+
+const directionIcons: Record<string, string> = {
+  frontend: "code", backend: "python", network: "globe", algorithms: "network", "ai-llm": "brain",
+};
 
 export function OverviewPage() {
   const {
@@ -108,24 +113,26 @@ export function OverviewPage() {
     },
   ];
   return (
-    <main className="dashboard-page">
-      <PageHeading
-        label="学习概览"
-        action={
-          <Link href="/today" className="outline-button">
-            <CalendarDays size={15} />
-            今日计划
-            <ChevronRight size={14} />
-          </Link>
-        }
-      />
+    <main className="dashboard-page overview-page">
+      <PageHeading label="学习概览" />
+      <div className="overview-topbar">
+        <div>
+          <h1>学习概览</h1>
+          <p>{displayName || "你好"}，每一点积累，都在让你走得更远。</p>
+        </div>
+        <Link href="/today" className="outline-button">
+          <CalendarDays size={16} />
+          今日学习计划
+          <ChevronRight size={14} />
+        </Link>
+      </div>
       <section className="overview-hero relative overflow-hidden">
-        <div className="relative z-10">
+        <div className="overview-hero-copy relative z-10">
           <span className="hero-eyebrow">
             <Sparkles size={14} />
             每天进步一点点
           </span>
-          <h2 className="mt-5 text-[27px] font-semibold leading-[1.5] tracking-tight">
+          <h2>
             让每一次准备，
             <br />
             都成为你的底气。
@@ -133,20 +140,31 @@ export function OverviewPage() {
           <p className="mb-6 mt-3 text-sm leading-7 text-secondary">
             从一个知识点开始，建立属于自己的学习体系。
           </p>
-          <Link
-            href={articleHref(recommendations[0]?.slug ?? "vue-3")}
-            className="solid-button"
-          >
-            继续学习
-            <ArrowRight size={15} />
-          </Link>
-          <Link
-            href="/library"
-            className="ml-5 inline-flex items-center gap-1 text-sm text-secondary hover:text-brand"
-          >
-            探索全部知识库
-            <ArrowUpRight size={14} />
-          </Link>
+          <div className="overview-hero-actions">
+            <Link
+              href={articleHref(recommendations[0]?.slug ?? "vue-3")}
+              className="solid-button"
+            >
+              继续学习
+              <ArrowRight size={15} />
+            </Link>
+            <Link
+              href="/library"
+              className="inline-flex items-center gap-1 text-sm text-secondary hover:text-brand"
+            >
+              探索全部知识库
+              <ArrowUpRight size={14} />
+            </Link>
+          </div>
+          <div className="overview-daily-goal">
+            <div>
+              <span>今日目标</span>
+              <strong>{learnedToday} / {dailyGoal} 题</strong>
+            </div>
+            <div className="progress-track">
+              <div style={{ width: `${Math.min(100, (learnedToday / Math.max(1, dailyGoal)) * 100)}%` }} />
+            </div>
+          </div>
         </div>
         <div className="hero-illustration" aria-hidden="true">
           <div className="illustration-orbit orbit-one" />
@@ -174,7 +192,7 @@ export function OverviewPage() {
           </span>
         </div>
       </section>
-      <div className="my-6 grid grid-cols-2 gap-4 xl:grid-cols-4">
+      <div className="overview-stats">
         {stats.map(({ label, value, unit, detail, icon: Icon, color }) => (
           <section className="metric-card" key={label}>
             <div className="flex items-center justify-between">
@@ -298,28 +316,28 @@ export function OverviewPage() {
               </span>
             </div>
             <div className="space-y-5">
-              {navigationGroups.map((group) => {
+              {topicCategories.map((group) => {
                 const groupArticles = articles.filter(
-                  (article) => article.category === group.title,
+                  (article) => article.category === group.category,
                 );
-                const groupTotal = categoryKnowledgeCount(group.title);
+                const groupTotal = categoryKnowledgeCount(group.category);
                 const completed =
                   groupArticles.filter((article) =>
                     mastered.includes(article.slug),
                   ).length +
                   resourceValues.filter(
                     (item) =>
-                      item.mastered && item.resource.category === group.title,
+                      item.mastered && item.resource.category === group.category,
                   ).length;
                 return (
                   <Link
-                    href={categoryHref(group.title)}
+                    href={categoryHref(group.category)}
                     className="block"
-                    key={group.title}
+                    key={group.slug}
                   >
                     <div className="mb-2 flex items-center justify-between text-xs">
                       <span className="flex items-center gap-2">
-                        <BrandIcon name={group.icon} />
+                        <ResourceIcon name={directionIcons[group.slug]} size={18} />
                         {group.title}
                       </span>
                       <span className="text-muted">

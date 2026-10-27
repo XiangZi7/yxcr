@@ -1,4 +1,4 @@
-import { articles } from "@/lib/interview/data";
+import { articles, articleHref } from "@/lib/interview/data";
 import type { LearningResource } from "./types";
 export const originalKnowledge: LearningResource[] = articles.map(
   (article) => ({
@@ -7,7 +7,7 @@ export const originalKnowledge: LearningResource[] = articles.map(
     category: article.category,
     title: article.title,
     description: article.description,
-    url: `/questions/${article.slug}`,
+    url: articleHref(article.slug),
     source: "yxcr",
     collection: article.category === "AI / LLM" ? "ai" : "frequent",
     collections: ["curated", "frequent", "principles"],

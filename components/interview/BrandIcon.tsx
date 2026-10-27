@@ -1,19 +1,12 @@
-import {
-  Atom,
-  Bot,
-  Box,
-  Braces,
-  BrainCircuit,
-  Cable,
-  CodeXml,
-  Component,
-  FileCode2,
-  Globe2,
-  Layers3,
-  Network,
-  Server,
-  Workflow,
-} from "lucide-react";
+import { ResourceIcon } from "@/components/resources/ResourceIcon";
+
+const names: Record<string, string> = {
+  frontend: "code", backend: "python", ai: "brain", network: "globe", algorithms: "network",
+  JavaScript: "javascript", TypeScript: "typescript", "Vue 3": "vuedotjs", React: "react",
+  浏览器与网络: "globe", 计算机网络专题: "globe", HTTP: "globe", 工程化: "vite",
+  Python: "python", FastAPI: "fastapi", RAG: "layers", MCP: "modelcontextprotocol",
+  Agent: "bot", 模型推理: "cpu", "AI 工程实战": "brain",
+};
 
 export function BrandIcon({
   name,
@@ -22,44 +15,9 @@ export function BrandIcon({
   name: string;
   className?: string;
 }) {
-  if (name === "Vue 3")
-    return (
-      <svg
-        viewBox="0 0 24 24"
-        className={`topic-icon ${className}`}
-        aria-hidden="true"
-      >
-        <path fill="#35b995" d="M1 3h5l6 10.4L18 3h5L12 22z" />
-        <path fill="#386b83" d="M6 3h4l2 3.6L14 3h4l-6 10.4z" />
-      </svg>
-    );
-  const icons = {
-    frontend: Component,
-    backend: Server,
-    ai: BrainCircuit,
-    network: Network,
-    JavaScript: Workflow,
-    TypeScript: FileCode2,
-    React: Atom,
-    浏览器与网络: Globe2,
-    计算机网络专题: Globe2,
-    HTTP: Globe2,
-    工程化: Component,
-    Python: CodeXml,
-    FastAPI: Braces,
-    RAG: Layers3,
-    MCP: Box,
-    Agent: Bot,
-    模型推理: Network,
-    "AI 工程实战": BrainCircuit,
-  };
-  const Icon = icons[name as keyof typeof icons] ?? Cable;
   return (
-    <Icon
-      size={17}
-      strokeWidth={1.8}
-      className={`topic-icon ${className} ${["frontend", "React", "FastAPI", "Python"].includes(name) ? `topic-${name.toLowerCase()}` : ""}`}
-      aria-hidden="true"
-    />
+    <span className={`topic-icon inline-flex ${className}`} aria-hidden="true">
+      <ResourceIcon name={names[name] ?? name} size={17} />
+    </span>
   );
 }

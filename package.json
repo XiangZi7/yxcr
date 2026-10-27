@@ -6,6 +6,7 @@
     "dev": "next dev --port 3002",
     "build": "node scripts/sync-seo.mjs && next build",
     "seo:sync": "node scripts/sync-seo.mjs",
+    "test:article-routes": "node scripts/check-article-routes.mjs",
     "start": "next start",
     "lint": "eslint",
     "test": "node --experimental-strip-types --test lib/markdown/*.test.mjs lib/resources/*.test.mjs"

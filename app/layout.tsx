@@ -9,6 +9,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { absoluteUrl, author, site } from "@/lib/site";
+import { sidebarGroups } from "@/lib/resources/navigation";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -80,7 +81,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             ],
           }}
         />
-        <AppShell>
+        <AppShell navigation={sidebarGroups}>
           {children}
           <SiteFooter />
         </AppShell>

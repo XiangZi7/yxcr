@@ -1,3 +1,4 @@
+main.resources-page { width: 100%; min-width: 0; }
 .library-introduction { margin: 0 0 22px; max-width: 780px; }
 .library-introduction h1 { color: var(--ink); font-size: clamp(24px, 2.5vw, 32px); font-weight: 650; line-height: 1.5; letter-spacing: -.03em; }
 .library-introduction p { margin-top: 12px; color: var(--secondary); font-size: 13px; line-height: 1.9; }

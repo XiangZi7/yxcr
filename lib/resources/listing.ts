@@ -19,6 +19,7 @@ export function parseLibraryPage(value: string | undefined) {
 export function listingHref(basePath: string, filters: ResourceFilters = {}, page = 1) {
   const params = new URLSearchParams();
   if (filters.query) params.set("q", filters.query);
+  if (basePath.startsWith("/library/") && filters.category) params.set("category", filters.category);
   if (filters.status && filters.status !== "all") params.set("status", filters.status);
   if (page > 1) params.set("page", String(page));
   return `${basePath}${params.size ? `?${params}` : ""}`;

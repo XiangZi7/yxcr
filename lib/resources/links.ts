@@ -3,6 +3,17 @@ import routes from "./route-map.json" with { type: "json" };
 
 const slugs: Record<string, string> = routes;
 
+export function normalizeKnowledgeSlug(value: string) {
+  try {
+    // Route params can arrive encoded when a cached/partial route is resumed.
+    // Decode a single segment once, keeping lookup identical to the URL guard.
+    const slug = decodeURIComponent(value);
+    return /^[\p{L}\p{N}-]+$/u.test(slug) ? slug : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function getKnowledgeSlug(id: string) {
   return Object.hasOwn(slugs, id) ? slugs[id] : undefined;
 }

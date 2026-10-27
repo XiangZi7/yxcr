@@ -25,7 +25,7 @@ export function getLibraryPage(query: SearchValues, landing = libraryLanding): L
   const status: ResourceStatus = ["saved", "mastered", "unlearned", "planned"].includes(requestedStatus || "") ? requestedStatus as ResourceStatus : "all";
   const filters: ResourceFilters = {
     query: (scalar(query.q) || "").trim().slice(0, 200),
-    category: landing.category || "", collection: landing.collection || "all", status,
+    category: landing.category || scalar(query.category) || "", collection: landing.collection || "all", status,
   };
   const matches = filterResources(resources, { ...filters, query: [landing.topicQuery, filters.query].filter(Boolean).join(" "), status: "all" });
   const page = parseLibraryPage(scalar(query.page));
@@ -33,7 +33,7 @@ export function getLibraryPage(query: SearchValues, landing = libraryLanding): L
   return { ...landing, filters, page, total: matches.length, initialResources: paginateKnowledge(matches, page) };
 }
 export function libraryMetadata(data: LibraryPageData) {
-  const privateView = Boolean(data.filters.query || data.filters.status !== "all");
+  const privateView = Boolean(data.filters.query || data.filters.status !== "all" || (data.filters.category && data.filters.collection !== "all"));
   return pageMetadata(
     `${data.title}${data.page > 1 ? ` · 第 ${data.page} 页` : ""}`,
     data.description,

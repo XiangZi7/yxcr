@@ -23,9 +23,12 @@ pnpm build
 | 地址                     | 页面                                    |
 | ------------------------ | --------------------------------------- |
 | `/`                      | 编程与 AI 学习首页、主题入口与学习方法  |
-| `/questions/[slug]`       | Markdown 知识详情、文章目录与学习笔记   |
+| `/learn/[slug]`           | 使用稳定可读网址的知识详情与学习笔记   |
+| `/questions/[slug]`       | 旧文章地址，308 永久跳转到新网址        |
 | `/overview`              | 学习概览、每日统计与知识版图            |
 | `/library`               | 分类筛选、搜索、收藏与掌握状态          |
+| `/library/[section]`     | 独立栏目入口，支持 `?page=2` 服务端分页 |
+| `/topics/[topic]`        | 学习方向与语言专题，支持服务端分页      |
 | `/resources`             | 兼容旧地址，308 重定向到 `/library`     |
 | `/today`                 | 每日目标与学习计划                      |
 | `/practice`              | 限时自测、参考思路与练习复盘            |
@@ -54,9 +57,9 @@ pnpm build
 - 图标使用 Lucide React，交互动画使用 Motion。Zustand 管理主题、学习状态、收藏、错题、笔记、计划与练习记录，并迁移旧版浏览器本地记录。
 - 当前为前端本地学习工作台，自测练习尚未接入在线 AI 服务。
 
-## 统一知识知识库
+## 统一知识库
 
-- `/library` 统一呈现原有题目与新增知识，使用一套栏目、搜索、收藏、计划和笔记。所有知识卡片及搜索结果都进入 `/questions/[slug]` 阅读正文。
+- `/library` 统一呈现原有题目与新增知识，使用一套栏目、搜索、收藏、计划和笔记。所有知识卡片及搜索结果都进入 `/learn/[slug]` 阅读正文。内部文章 ID、正文文件名和本地学习记录保持稳定。
 - 正文存于 `content/knowledge/{id}.md`；目录元数据存于 `lib/resources/catalog.json`。只有实际存在正文的内容才进入列表和 sitemap，不将外站标题索引计为可阅读题目。
 - `scripts/import-knowledge.py` 导入公开许可仓库的 Markdown，校验 Git blob 哈希，保留源文件及许可证清单，转换文档语法与内部章节链接。使用 Python 标准库即可运行，不需要额外抓取依赖。
 - 首次运行会读取 GitHub 的公开文件树与许可证，原始 Markdown 缓存到忽略的 `.tmp-resources/markdown/`。仓库正文更新后，删除对应 `.tmp-resources/*-tree.json` 再执行导入以刷新快照。
@@ -73,10 +76,12 @@ pnpm build
 - 作者头像来自 GitHub 公开头像，内置于 `public/images/xiangzi7-avatar.png`。Logo 为浅银蓝底色的几何折叠 X，与浏览器图标、分享卡片保持一致。
 - 正式域名默认为 `https://yxcr.top`，可通过 `.env.example` 中的 `NEXT_PUBLIC_SITE_URL` 覆盖。生产环境修改后需要重新构建。
 - 每页配置独立标题、摘要、canonical、Open Graph 和 Twitter 分享卡片，分享图片由 `/opengraph-image` 生成。
-- `/robots.txt` 与 `/sitemap.xml` 自动生成。站点地图仅包含公开页面与题目详情；今日计划、收藏、私人笔记和个人档案使用 `noindex, follow`。
-- `/` 为独立学习首页，使用自身 canonical；知识详情保留 `/questions/[slug]` 地址。
+- `/robots.txt` 与 `/sitemap.xml` 自动生成。站点地图包含公开信息页、规范文章地址、学习方向、栏目及其分页；学习概览、今日计划、收藏、私人笔记、个人档案及站内搜索/个人筛选使用 `noindex, follow`。
+- `/` 为独立学习首页，使用自身 canonical；知识详情使用 `/learn/[slug]`。旧文章和别名通过 HTTP 308 跳转，分页使用自身 canonical，第一页省略 `page` 参数。
 - 使用 `main`、`article`、`nav`、`aside`、`header`、`footer` 和分级标题；题目正文在服务端输出。JSON-LD 包含 WebSite、Person、TechArticle 与 BreadcrumbList，并转义 HTML 特殊字符。
 - 部署到正式域名后，可向搜索引擎站长平台提交 `https://yxcr.top/sitemap.xml`。当前修改不包含域名解析或线上部署。
+
+- `pnpm seo:sync` 更新稳定网址与文章修订记录；`pnpm build` 会自动先执行此同步。同步后的两个 JSON 注册文件应随内容修改一起提交，避免标题修改后改变既有地址。维护方法见 [SEO 路由与分页](docs/seo-migration.md)。
 
 ## 站点信息与广告准备
 

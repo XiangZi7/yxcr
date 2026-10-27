@@ -12,7 +12,7 @@ import {
   Sun,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { articles } from "@/lib/interview/data";
+import { articles, articleHref } from "@/lib/interview/data";
 import type { Panel } from "@/lib/interview/types";
 import { BrandMark } from "@/components/brand/BrandMark";
 import { AuthorAvatar } from "@/components/brand/AuthorAvatar";
@@ -49,7 +49,7 @@ export function Header({
     : articles.slice(0, 6).map((article) => ({
         id: article.slug,
         title: article.title,
-        url: `/questions/${article.slug}`,
+        url: articleHref(article.slug),
         source: "yxcr",
         collection: "frequent",
         section: article.topic,

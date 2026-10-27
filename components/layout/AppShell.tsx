@@ -19,8 +19,9 @@ import {
   useLearningStore,
 } from "@/lib/learning/store";
 import { articleHref } from "@/lib/interview/data";
+import type { SidebarGroup } from "@/lib/resources/navigation";
 
-export function AppShell({ children }: { children: ReactNode }) {
+export function AppShell({ children, navigation }: { children: ReactNode; navigation: SidebarGroup[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -69,6 +70,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         />
         <div className="workspace-layout">
           <Sidebar
+            navigation={navigation}
             topic={currentArticle?.topic ?? ""}
             mobileOpen={mobileOpen}
             onClose={closeMenu}

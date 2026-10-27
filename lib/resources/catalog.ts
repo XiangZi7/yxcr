@@ -2,7 +2,7 @@ import "server-only";
 import catalog from "./catalog.json";
 import type { LearningResource } from "./types";
 import { originalKnowledge } from "./original";
-import { getKnowledgeSlug, knowledgeHref } from "./links";
+import { getKnowledgeSlug, knowledgeHref, normalizeKnowledgeSlug } from "./links";
 
 export const resources: LearningResource[] = [
   ...originalKnowledge,
@@ -12,7 +12,8 @@ export const resources: LearningResource[] = [
 const bySlug = new Map(resources.map((resource) => [getKnowledgeSlug(resource.id), resource]));
 
 export function findKnowledgeBySlug(slug: string) {
-  return bySlug.get(slug);
+  const normalized = normalizeKnowledgeSlug(slug);
+  return normalized ? bySlug.get(normalized) : undefined;
 }
 
 export function findKnowledge(id: string) {

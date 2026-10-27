@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowRight,
@@ -26,7 +26,6 @@ import {
   collectionResourceCount,
 } from "@/lib/resources/config";
 import {
-  getCachedResources,
   loadResourceCatalog,
 } from "@/lib/resources/client";
 import { filterResources } from "@/lib/resources/query";
@@ -61,13 +60,14 @@ function ResourceLibrary({ data }: { data: LibraryPageData }) {
   const { initialResources, filters, basePath, title, description } = data;
   const router = useRouter();
   const personalView = filters.status !== "all";
-  const [privateCatalog, setPrivateCatalog] = useState<LearningResource[] | undefined>(getCachedResources());
+  const [privateCatalog, setPrivateCatalog] = useState<LearningResource[] | undefined>();
   const [error, setError] = useState(false);
   const [query, setQuery] = useState(filters.query ?? "");
   const category = filters.category ?? "";
   const collection = filters.collection ?? "all";
   const status = filters.status ?? "all";
   const [list, setList] = useState(false);
+  const dropdownMenus = useRef<HTMLDivElement>(null);
   const catalog = personalView ? privateCatalog ?? emptyCatalog : initialResources;
   const ready = !personalView || Boolean(privateCatalog);
   const records = useKnowledgeRecords(catalog);
@@ -95,6 +95,32 @@ function ResourceLibrary({ data }: { data: LibraryPageData }) {
   const safePage = personalView ? Math.min(data.page, pages) : data.page;
   const shown = personalView ? paginateKnowledge(matches, safePage) : initialResources;
   const currentCollection = resourceCollections.find((item) => item.id === collection);
+
+  useEffect(() => {
+    function closeMenu(restoreFocus = false) {
+      const open = dropdownMenus.current?.querySelector<HTMLDetailsElement>(
+        "details[open]",
+      );
+      if (!open) return;
+      open.open = false;
+      if (restoreFocus) open.querySelector("summary")?.focus();
+    }
+    function onPointerDown(event: PointerEvent) {
+      if (
+        event.target instanceof Node &&
+        !dropdownMenus.current?.contains(event.target)
+      ) closeMenu();
+    }
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") closeMenu(true);
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, []);
 
   function filterHref(patch: ResourceFilters = {}, page = 1) {
     return listingHref(basePath, { ...filters, query, ...patch }, page);
@@ -197,11 +223,15 @@ function ResourceLibrary({ data }: { data: LibraryPageData }) {
               </Link>
             ))}
         </div>
-        <div className="resource-dropdown-menus">
+        <div className="resource-dropdown-menus" ref={dropdownMenus}>
           {resourceGroups
             .filter((group) => group !== "学习专栏")
             .map((group) => (
-              <details className="resource-category-dropdown" key={group}>
+              <details
+                className="resource-category-dropdown"
+                name="knowledge-collection-dropdown"
+                key={group}
+              >
                 <summary
                   className={
                     currentCollection?.group === group ? "is-active" : ""
@@ -219,6 +249,9 @@ function ResourceLibrary({ data }: { data: LibraryPageData }) {
                         href={collectionHref(item.id)}
                         prefetch={false}
                         className={collection === item.id ? "is-active" : ""}
+                        onClick={(event) =>
+                          event.currentTarget.closest("details")?.removeAttribute("open")
+                        }
                       >
                         <ResourceIcon name={item.icon} size={15} />
                         <span>{item.title}</span>
@@ -232,6 +265,7 @@ function ResourceLibrary({ data }: { data: LibraryPageData }) {
       </nav>
       <section className="panel resource-filter" aria-label="筛选知识点">
         <form className="resource-search-form" action={basePath} method="get" onSubmit={submit}>
+          {basePath.startsWith("/library/") && category && <input type="hidden" name="category" value={category} />}
           <label className="filter-search flex min-w-0 flex-1 items-center gap-2">
             <Search size={17} className="shrink-0 text-muted" />
             <input

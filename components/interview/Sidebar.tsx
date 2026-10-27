@@ -2,36 +2,32 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   AudioLines,
   Bot,
-  ChevronDown,
   ClipboardCheck,
   House,
   LayoutGrid,
   Star,
   NotebookPen,
 } from "lucide-react";
-import { AnimatePresence, motion } from "motion/react";
-import { navigationGroups } from "@/lib/interview/data";
-import { resourceCollections } from "@/lib/resources/config";
-import { BrandIcon } from "./BrandIcon";
+import { SidebarCatalog } from "./SidebarCatalog";
 import { CreatorLinks } from "@/components/layout/CreatorLinks";
-import { collectionHref, topicHref } from "@/lib/resources/sections";
+import type { SidebarGroup } from "@/lib/resources/navigation";
 
 export function Sidebar({
+  navigation,
   topic,
   mobileOpen,
   onClose,
 }: {
+  navigation: SidebarGroup[];
   topic: string;
   mobileOpen: boolean;
   onClose: () => void;
 }) {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState<string[]>([]);
-  const [categoriesOpen, setCategoriesOpen] = useState(true);
   useEffect(() => {
     if (!mobileOpen) return;
     const previousOverflow = document.body.style.overflow;
@@ -82,93 +78,13 @@ export function Sidebar({
             </Link>
           ))}
         </nav>
-        <button
-          className="category-label flex w-full items-center justify-between"
-          onClick={() => setCategoriesOpen(!categoriesOpen)}
-          aria-expanded={categoriesOpen}
-        >
-          技术分类
-          <ChevronDown
-            size={13}
-            className={!categoriesOpen ? "-rotate-90" : ""}
-          />
-        </button>
-        <AnimatePresence initial={false}>
-          {categoriesOpen && (
-            <motion.nav
-              key="categories"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden"
-              aria-label="技术分类"
-            >
-              {navigationGroups.map((group) => {
-                const open = !collapsed.includes(group.title);
-                return (
-                  <div className="nav-group" key={group.title}>
-                    <button
-                      className="group-heading flex w-full items-center gap-3"
-                      aria-expanded={open}
-                      onClick={() =>
-                        setCollapsed(
-                          open
-                            ? [...collapsed, group.title]
-                            : collapsed.filter((item) => item !== group.title),
-                        )
-                      }
-                    >
-                      <BrandIcon name={group.icon} />
-                      <span>{group.title}</span>
-                      <motion.span
-                        className="ml-auto"
-                        animate={{ rotate: open ? 180 : 0 }}
-                      >
-                        <ChevronDown size={15} />
-                      </motion.span>
-                    </button>
-                    <AnimatePresence initial={false}>
-                      {open && (
-                        <motion.div
-                          key={group.title}
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="overflow-hidden"
-                        >
-                          {group.topics.map((name) => {
-                            const collection = resourceCollections.find(
-                              (item) => item.title === name,
-                            );
-                            const href = collection
-                              ? collectionHref(collection.id)
-                              : topicHref(name);
-                            const active =
-                              topic === name ||
-                              (Boolean(collection) && pathname === href);
-
-                            return (
-                              <Link
-                                href={href}
-                                key={name}
-                                className={`topic-link flex items-center gap-3 ${active ? "is-active" : ""}`}
-                                aria-current={active ? "page" : undefined}
-                                onClick={onClose}
-                              >
-                                <BrandIcon name={name} />
-                                <span>{name}</span>
-                              </Link>
-                            );
-                          })}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
-            </motion.nav>
-          )}
-        </AnimatePresence>
+        <SidebarCatalog
+          groups={navigation}
+          key={pathname}
+          pathname={pathname}
+          topic={topic}
+          onNavigate={onClose}
+        />
         <div className="encouragement relative overflow-hidden rounded-lg">
           <AudioLines
             size={17}
