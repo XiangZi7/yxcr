@@ -27,7 +27,9 @@ export default defineConfig({
     lineNumbers: false,
     languageAlias: { mermaid: "txt", gitattributes: "txt", gitignore: "txt", liunx: "bash", plain: "txt" },
     config(md) {
-      md.use(katex, { delimiters: "dollars" });
+      md.use(katex, { delimiters: "dollars", strict: false, logger: () => {} });
+      // `<<< path` is VitePress snippet import syntax; imported articles use it as plain text.
+      md.block.ruler.disable("snippet");
       // Imported articles are plain Markdown: disable raw HTML (the old renderer ignored it too)
       // and wrap them in v-pre so `{{ }}` in prose is not compiled as a Vue template.
       const parse = md.parse.bind(md);

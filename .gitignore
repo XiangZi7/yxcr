@@ -60,3 +60,4 @@ next-env.d.ts
 /site/.vitepress/generated/
 /site/.vitepress/cache/
 /site/.vitepress/dist/
+/site/library.md

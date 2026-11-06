@@ -5,7 +5,7 @@
   "scripts": {
     "gen": "node scripts/build-site.mjs",
     "dev": "pnpm gen && vitepress dev site --port 3002",
-    "build": "pnpm gen && vitepress build site",
+    "build": "pnpm gen && node --max-old-space-size=12288 node_modules/vitepress/bin/vitepress.js build site",
     "preview": "vitepress preview site --port 3002",
     "deploy": "pnpm build && wrangler deploy"
   },

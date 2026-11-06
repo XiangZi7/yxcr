@@ -101,6 +101,7 @@ function provenance(item) {
 
 // ---------- Pages ----------
 
+rmSync(path.join(site, "library.md"), { force: true });
 for (const dir of ["learn", "topics", "library", ".vitepress/generated"]) {
   rmSync(path.join(site, dir), { recursive: true, force: true });
   mkdirSync(path.join(site, dir), { recursive: true });
@@ -190,7 +191,7 @@ for (const collection of collectionPages) {
   }));
 }
 
-write("library/index.md", `---\ntitle: 知识库\ndescription: 按学习方向与专栏浏览全部 ${resources.length} 篇编程与 AI 知识。\n---\n\n# 知识库\n\n按学习方向与专栏浏览全部 **${resources.length}** 篇编程与 AI 知识，也可以按 <kbd>/</kbd> 或 <kbd>Ctrl</kbd> <kbd>K</kbd> 搜索。\n\n## 学习方向\n\n${topicPages.map((topic) => `- [${topic.title}](/topics/${topic.slug})（${topic.count}）：${topic.description}`).join("\n")}\n\n${groups.map((group) => `## ${group}\n\n${collectionPages.filter((item) => item.group === group).map((item) => `- [${item.title}](${collectionHref(item.id)})（${item.items.length}）：${item.description}`).join("\n")}`).join("\n\n")}\n`);
+write("library.md", `---\ntitle: 知识库\ndescription: 按学习方向与专栏浏览全部 ${resources.length} 篇编程与 AI 知识。\n---\n\n# 知识库\n\n按学习方向与专栏浏览全部 **${resources.length}** 篇编程与 AI 知识，也可以按 <kbd>/</kbd> 或 <kbd>Ctrl</kbd> <kbd>K</kbd> 搜索。\n\n## 学习方向\n\n${topicPages.map((topic) => `- [${topic.title}](/topics/${topic.slug})（${topic.count}）：${topic.description}`).join("\n")}\n\n${groups.map((group) => `## ${group}\n\n${collectionPages.filter((item) => item.group === group).map((item) => `- [${item.title}](${collectionHref(item.id)})（${item.items.length}）：${item.description}`).join("\n")}`).join("\n\n")}\n`);
 
 // ---------- Theme data ----------
 
