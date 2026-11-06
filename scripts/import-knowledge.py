@@ -272,7 +272,7 @@ def main():
         manifest.update(json.loads((ROOT / 'content/knowledge/algorithms-manifest.json').read_text(encoding='utf8')))
     authored = ROOT / 'content/authored/network.md'
     if authored.exists():
-        directory = {item['id']: item for item in json.loads((ROOT / 'lib/resources/directory-index.json').read_text(encoding='utf8'))}
+        directory = {item['id']: item for item in json.loads((ROOT / 'content/resources/directory-index.json').read_text(encoding='utf8'))}
         parts = re.split(r'^## (res-[a-f0-9]{16})\s*\n', authored.read_text(encoding='utf8'), flags=re.M)
         for index in range(1, len(parts), 2):
             id, body = parts[index], parts[index + 1].strip()
@@ -283,7 +283,7 @@ def main():
             (DEST / f'{id}.md').write_text(body + '\n', encoding='utf8')
     handbook = ROOT / 'content/authored/handwritten.md'
     if handbook.exists():
-        directory_items = json.loads((ROOT / 'lib/resources/directory-index.json').read_text(encoding='utf8'))
+        directory_items = json.loads((ROOT / 'content/resources/directory-index.json').read_text(encoding='utf8'))
         topics = json.loads((ROOT / 'content/authored/handwritten-topics.json').read_text(encoding='utf8'))
         parts = re.split(r'^## ([a-z0-9-]+) \| ([^\n]+)\n', handbook.read_text(encoding='utf8'), flags=re.M)
         for index in range(1, len(parts), 3):
@@ -295,7 +295,7 @@ def main():
             body = re.sub(r'^### ', '## ', body, flags=re.M)
             entries.append(dict(id=id, title=title, url=f'/questions/{id}', source='yxcr', collection=topic.get('collection', 'handwritten'), collections=['handwritten', 'algorithm', 'principles'], category=topic.get('category', '前端'), section='算法与数据结构' if topic.get('category') == '算法' else '手写与原理', kind='document', description=excerpt(body), searchAliases=sorted(set(aliases + [item['title'] for item in matching])), aliasIds=[item['id'] for item in matching]))
             (DEST / f'{id}.md').write_text(body + '\n', encoding='utf8')
-    directory_file = ROOT / 'lib/resources/directory-index.json'
+    directory_file = ROOT / 'content/resources/directory-index.json'
     if directory_file.exists():
         directory_items = json.loads(directory_file.read_text(encoding='utf8'))
         def normalized_path(url):
@@ -318,9 +318,9 @@ def main():
                 by_title[title].setdefault('aliasIds', []).append(item['id'])
                 used.add(item['id'])
         for item in entries: item['aliasIds'] = sorted(set(item.get('aliasIds', [])))
-    (ROOT / 'lib/resources/catalog.json').write_text(json.dumps(entries, ensure_ascii=False, separators=(',', ':')), encoding='utf8')
+    (ROOT / 'content/resources/catalog.json').write_text(json.dumps(entries, ensure_ascii=False, separators=(',', ':')), encoding='utf8')
     counts = Counter(tag for item in entries for tag in item['collections'])
-    (ROOT / 'lib/resources/summary.json').write_text(json.dumps(dict(total=len(entries), syncedAt=datetime.now(timezone.utc).isoformat(), collections=dict(counts), categories=dict(Counter(item['category'] for item in entries))), ensure_ascii=False, indent=2), encoding='utf8')
+    (ROOT / 'content/resources/summary.json').write_text(json.dumps(dict(total=len(entries), syncedAt=datetime.now(timezone.utc).isoformat(), collections=dict(counts), categories=dict(Counter(item['category'] for item in entries))), ensure_ascii=False, indent=2), encoding='utf8')
     (ROOT / 'content/knowledge/manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf8')
     notices = ROOT / 'public' / 'licenses'
     notices.mkdir(parents=True, exist_ok=True)

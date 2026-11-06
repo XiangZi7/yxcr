@@ -25,7 +25,7 @@ export default defineConfig({
   ],
   markdown: {
     lineNumbers: false,
-    languageAlias: { mermaid: "txt", gitattributes: "txt", gitignore: "txt", liunx: "bash", plain: "txt" },
+    languageAlias: { mysql: "sql", mermaid: "txt", gitattributes: "txt", gitignore: "txt", liunx: "bash", plain: "txt" },
     config(md) {
       md.use(katex, { delimiters: "dollars", strict: false, logger: () => {} });
       // `<<< path` is VitePress snippet import syntax; imported articles use it as plain text.

@@ -20,7 +20,7 @@ def prepare():
     normalize = lambda text: re.sub(r'[^a-z0-9]', '', text.lower())
     by_name = {normalize(p.split('/')[-2].split('.', 1)[1]): p for p in paths}
     by_id = {int(re.search(r'/(\d+)\.', p)[1]): p for p in paths}
-    directory = json.loads((ROOT / 'lib/resources/directory-index.json').read_text(encoding='utf8'))
+    directory = json.loads((ROOT / 'content/resources/directory-index.json').read_text(encoding='utf8'))
     aliases = json.loads((ROOT / 'content/resources/algorithm-aliases.json').read_text(encoding='utf8'))
     matches = []
     for item in directory:

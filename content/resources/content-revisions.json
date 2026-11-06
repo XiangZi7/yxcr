@@ -1,50 +1,50 @@
 {
   "vue-3": {
-    "hash": "b3c8cacfdf5392bedde04c0ab8ec279ca4ac1e4c06063aaf6401d37d06463ef2",
+    "hash": "9fad74382c2ba28c2c182446fa1bca3b005a942cb284a524d63741445bbadd88",
     "lastModified": "2026-10-27T03:03:30.229Z"
   },
   "javascript": {
-    "hash": "c5bbef8c7e5307de67ee4dcffa9a24f30813364b78b2d32ad848d4eec5d5a01c",
+    "hash": "91560262da683465ff730514b027a5cdd3d36b4da4c8191a0c22e7d28e92af24",
     "lastModified": "2026-10-27T03:03:30.229Z"
   },
   "typescript": {
-    "hash": "c5bbef8c7e5307de67ee4dcffa9a24f30813364b78b2d32ad848d4eec5d5a01c",
+    "hash": "d1da60c8a98035a4f7bade5d830664bfa65c2b58f3ff9fa3c086fb216212cf78",
     "lastModified": "2026-10-27T03:03:30.229Z"
   },
   "react": {
-    "hash": "c5bbef8c7e5307de67ee4dcffa9a24f30813364b78b2d32ad848d4eec5d5a01c",
+    "hash": "cf307fcc99f263fa9eaecef97b5d3b4d373cfc0b8993646bb5594c708f2562f8",
     "lastModified": "2026-10-27T03:03:30.229Z"
   },
   "browser": {
-    "hash": "c5bbef8c7e5307de67ee4dcffa9a24f30813364b78b2d32ad848d4eec5d5a01c",
+    "hash": "35b7787d9a634fd4160b39a8418680f0f0fc871848f83cbf0b4c3e1a2b943f40",
     "lastModified": "2026-10-27T03:03:30.229Z"
   },
   "engineering": {
-    "hash": "c5bbef8c7e5307de67ee4dcffa9a24f30813364b78b2d32ad848d4eec5d5a01c",
+    "hash": "95a3c9a64da8f5064d9a4f0a02fd8c8cd55cd7c704ab814f40655a03225945d4",
     "lastModified": "2026-10-27T03:03:30.229Z"
   },
   "python": {
-    "hash": "c5bbef8c7e5307de67ee4dcffa9a24f30813364b78b2d32ad848d4eec5d5a01c",
+    "hash": "36f1ebb9ddb2d8646dbf1aea339ef8bd09ebc022eacb7c3c9d2fc3255b0313f5",
     "lastModified": "2026-10-27T03:03:30.229Z"
   },
   "fastapi": {
-    "hash": "c5bbef8c7e5307de67ee4dcffa9a24f30813364b78b2d32ad848d4eec5d5a01c",
+    "hash": "569f0b29c5ea8e66274b7566a9164e3f6060595d6d08d87651c288f4836810c5",
     "lastModified": "2026-10-27T03:03:30.229Z"
   },
   "rag": {
-    "hash": "c5bbef8c7e5307de67ee4dcffa9a24f30813364b78b2d32ad848d4eec5d5a01c",
+    "hash": "5ec44dae93934fb19a61a5b978e6ca450016594d1f79829e8794e9ff3083a75c",
     "lastModified": "2026-10-27T03:03:30.229Z"
   },
   "mcp": {
-    "hash": "c5bbef8c7e5307de67ee4dcffa9a24f30813364b78b2d32ad848d4eec5d5a01c",
+    "hash": "74b097f0b2fadd0371492dd463584e4c91228f6cdfedc129cc9ad92b50b3cffb",
     "lastModified": "2026-10-27T03:03:30.229Z"
   },
   "agent": {
-    "hash": "c5bbef8c7e5307de67ee4dcffa9a24f30813364b78b2d32ad848d4eec5d5a01c",
+    "hash": "3ff295e6a230f02ecd133b8c026aba5379936508f78002c6b648e391f341e4c7",
     "lastModified": "2026-10-27T03:03:30.229Z"
   },
   "inference": {
-    "hash": "c5bbef8c7e5307de67ee4dcffa9a24f30813364b78b2d32ad848d4eec5d5a01c",
+    "hash": "9b2e6d7574adcddf94a229751ce87ef582c30dc1cc5a3a6aecbf7402c0e433eb",
     "lastModified": "2026-10-27T03:03:30.229Z"
   },
   "res-b5c0f2358d2f19da": {

@@ -4,8 +4,8 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-directory = json.loads((ROOT / 'lib/resources/directory-index.json').read_text(encoding='utf8'))
-catalog = json.loads((ROOT / 'lib/resources/catalog.json').read_text(encoding='utf8'))
+directory = json.loads((ROOT / 'content/resources/directory-index.json').read_text(encoding='utf8'))
+catalog = json.loads((ROOT / 'content/resources/catalog.json').read_text(encoding='utf8'))
 local = {id: item for item in catalog for id in [item['id'], *item.get('aliasIds', [])]}
 remaining = [item for item in directory if item['id'] not in local]
 by_collection = Counter(item['collection'] for item in directory)

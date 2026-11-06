@@ -1,4 +1,4 @@
-// Generate VitePress pages from content/ and lib/resources/ metadata.
+// Generate VitePress pages from content/.
 // Output (site/learn, site/topics, site/library, site/.vitepress/generated) is gitignored.
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -8,10 +8,10 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const site = path.join(root, "site");
 const json = (file) => JSON.parse(readFileSync(path.join(root, file), "utf8"));
 
-const catalog = json("lib/resources/catalog.json");
+const catalog = json("content/resources/catalog.json");
 const articles = json("content/questions/articles.json");
-const routes = json("lib/resources/route-map.json");
-const revisions = json("lib/resources/content-revisions.json");
+const routes = json("content/resources/route-map.json");
+const revisions = json("content/resources/content-revisions.json");
 const { sources, collections } = json("content/resources/sources.json");
 const { categories, topics } = json("content/resources/topics.json");
 const manifest = {
@@ -33,7 +33,7 @@ const resources = [
     id: article.slug, title: article.title, description: article.description,
     category: article.category, section: article.topic, source: "yxcr",
     collection: article.category === "AI / LLM" ? "ai" : "frequent",
-    collections: ["curated", "frequent", "principles"], markdown: article.markdown,
+    collections: ["curated", "frequent", "principles"], original: true,
   })),
   ...catalog,
 ].map((item) => ({ ...item, slug: routes[item.id], href: `/learn/${routes[item.id]}` }));
@@ -118,7 +118,7 @@ for (const item of resources) {
 const link = (item) => item ? { text: item.title, link: item.href } : false;
 
 for (const item of resources) {
-  const body = item.markdown ?? readFileSync(path.join(root, "content/knowledge", `${item.id}.md`), "utf8");
+  const body = readFileSync(path.join(root, item.original ? "content/questions" : "content/knowledge", `${item.id}.md`), "utf8");
   const sequence = sequences.get(`${item.collection}|${item.section}`);
   const index = sequence.indexOf(item);
   const collection = collections.find((entry) => entry.id === item.collection);

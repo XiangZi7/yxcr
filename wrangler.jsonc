@@ -6,13 +6,13 @@
   "compatibility_date": "2026-10-27",
   "minify": true,
   "assets": {
-    "directory": "out",
+    "directory": "site/.vitepress/dist",
     "binding": "ASSETS",
     "html_handling": "drop-trailing-slash",
     "not_found_handling": "404-page",
     "run_worker_first": [
-      "/questions/*", "/resources",
-      "/library", "/library/*", "/topics/*"
+      "/questions/*", "/resources", "/overview", "/today", "/practice",
+      "/saved", "/notes", "/profile", "/library", "/library/*", "/topics/*"
     ]
   },
   "observability": {

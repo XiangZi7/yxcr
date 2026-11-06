@@ -197,7 +197,7 @@ def main() -> None:
     add("AI Agent 系统学习指南：Harness 工程、上下文与评估", BASE + "/blog/ai-agent-harness-engineering", ai, "Agent 工程实践", "document", True)
     snapshot = sorted(items.values(), key=lambda item: (not item.get("featured", False), next(index for index, collection in enumerate(COLLECTIONS) if collection["id"] == item["collection"]), item["title"]))
     summary = {"syncedAt": datetime.now(timezone.utc).isoformat(), "total": len(snapshot), "collections": {collection["id"]: sum(item["collection"] == collection["id"] for item in snapshot) for collection in COLLECTIONS}, "sources": {source: sum(item["source"] == source for item in snapshot) for source in SOURCES}}
-    output = ROOT / "lib/resources"
+    output = ROOT / "content/resources"
     output.mkdir(parents=True, exist_ok=True)
     (output / "directory-index.json").write_text(json.dumps(snapshot, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
     (output / "directory-summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

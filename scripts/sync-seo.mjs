@@ -7,11 +7,11 @@ import { fileURLToPath } from "node:url";
 const root = fileURLToPath(new URL("../", import.meta.url));
 const read = (file) => readFileSync(path.join(root, file), "utf8");
 const json = (file) => JSON.parse(read(file));
-const oldRoutes = json("lib/resources/route-map.json");
-const oldRevisions = json("lib/resources/content-revisions.json");
-const catalog = json("lib/resources/catalog.json");
-const articleSource = read("lib/interview/data.ts");
-const originalIds = [...articleSource.matchAll(/^\s+slug: "([^"]+)",/gm)].map((match) => match[1]);
+const oldRoutes = json("content/resources/route-map.json");
+const oldRevisions = json("content/resources/content-revisions.json");
+const catalog = json("content/resources/catalog.json");
+const articles = json("content/questions/articles.json");
+const originalIds = articles.map((article) => article.slug);
 const overrides = {
   "vue-3": "vue-reactivity", javascript: "javascript-event-loop",
   typescript: "typescript-type-and-interface", react: "react-hooks",
@@ -23,7 +23,7 @@ const overrides = {
 };
 const files = new Map();
 try {
-  const history = execFileSync("git", ["log", "--format=@@%cI", "--name-only", "--", "content/knowledge", "content/questions", "lib/interview/data.ts"], { cwd: root, encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
+  const history = execFileSync("git", ["log", "--format=@@%cI", "--name-only", "--", "content/knowledge", "content/questions"], { cwd: root, encoding: "utf8", maxBuffer: 32 * 1024 * 1024 });
   let date;
   for (const line of history.split(/\r?\n/)) {
     if (line.startsWith("@@")) date = line.slice(2);
@@ -65,12 +65,12 @@ for (const record of records) {
   const file = record.original ? `content/questions/${record.id}.md` : `content/knowledge/${record.id}.md`;
   const body = existsSync(path.join(root, file)) ? read(file) : "";
   const metadata = record.original
-    ? articleSource.split("export const navigationGroups")[0].replace(/^import .*;\r?\n/gm, "")
+    ? JSON.stringify(articles.find((article) => article.slug === record.id))
     : JSON.stringify([record.title, record.description, record.section, record.category, record.collection, record.collections]);
   const hash = createHash("sha256").update(metadata + "\n" + body).digest("hex");
   const previous = oldRevisions[record.id];
-  const candidates = [files.get(file), ...(record.original ? [files.get("lib/interview/data.ts")] : [])].filter(Boolean).sort();
-  const changed = dirty.has(file) || (record.original && dirty.has("lib/interview/data.ts"));
+  const candidates = [files.get(file), ...(record.original ? [files.get("content/questions/articles.json")] : [])].filter(Boolean).sort();
+  const changed = dirty.has(file) || (record.original && dirty.has("content/questions/articles.json"));
   const lastModified = previous?.hash === hash ? previous.lastModified
     : previous || changed ? now : candidates.at(-1);
   revisions[record.id] = { hash, ...(lastModified ? { lastModified } : {}) };
@@ -83,7 +83,7 @@ for (const record of records) {
     routes[alias] = routes[record.id];
   }
 }
-for (const [file, data] of [["lib/resources/route-map.json", routes], ["lib/resources/content-revisions.json", revisions]]) {
+for (const [file, data] of [["content/resources/route-map.json", routes], ["content/resources/content-revisions.json", revisions]]) {
   const output = JSON.stringify(data, null, 2) + "\n";
   if (read(file) !== output) writeFileSync(path.join(root, file), output);
 }
