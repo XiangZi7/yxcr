@@ -2,7 +2,7 @@
 layout: home
 title: 编程与 AI 学习
 titleTemplate: YXCR OS
-description: XiangZi7 的编程与 AI 学习网站：系统学习 JavaScript、TypeScript、Vue、React、Python 与 AI 大模型知识，通过原理解析、代码实践与学习笔记构建自己的知识体系。
+description: XiangZi7 的编程与 AI 学习网站：系统学习 JavaScript、TypeScript、Vue、React、Python 与 AI 大模型知识，通过原理解析与代码实践构建自己的知识体系。
 
 hero:
   name: YXCR OS

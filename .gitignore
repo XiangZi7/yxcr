@@ -13,14 +13,10 @@
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
-/.open-next/
+# cloudflare
 /.wrangler/
 .dev.vars*
 !.dev.vars.example
-/cloudflare-env.d.ts
 
 # production
 /build
@@ -39,9 +35,6 @@ yarn-error.log*
 .env*
 !.env.example
 
-# vercel
-.vercel
-
 # pnpm
 .pnpm-lock.yaml
 .pnpm-store
@@ -49,7 +42,6 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
 .pnpm-store/
 .tmp-resources/
 
