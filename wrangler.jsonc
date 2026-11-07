@@ -5,6 +5,10 @@
   "main": "cloudflare/worker.ts",
   "compatibility_date": "2026-10-27",
   "minify": true,
+  "workers_dev": true,
+  "routes": [
+    { "pattern": "yxcr.top", "custom_domain": true }
+  ],
   "assets": {
     "directory": "site/.vitepress/dist",
     "binding": "ASSETS",
