@@ -14,6 +14,8 @@ export default defineConfig({
   description,
   cleanUrls: true,
   lastUpdated: true,
+  // Keep parallel SSR within Cloudflare Builds' 8 GB memory limit.
+  buildConcurrency: 8,
   sitemap: { hostname: siteUrl },
   head: [
     ["link", { rel: "icon", href: "/icon.svg", type: "image/svg+xml" }],

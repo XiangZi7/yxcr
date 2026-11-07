@@ -11,7 +11,7 @@ pnpm build      # 输出到 site/.vitepress/dist
 pnpm preview    # 预览构建结果
 ```
 
-首次 `pnpm dev` 需要先生成约 2000 个页面，稍等片刻。完整构建约需 8 分钟，`build` 脚本已为 Node 分配 12 GB 堆内存。
+首次 `pnpm dev` 需要先生成约 2000 个页面，稍等片刻。完整构建会渲染全部文章；`build` 脚本将 Node 堆内存上限设为 6 GB，并将 VitePress 页面渲染并发限制为 8，以适配 Cloudflare Builds 的 8 GB 构建环境。
 
 ## 目录
 
